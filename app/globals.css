@@ -8,6 +8,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-franklin: var(--font-franklin-gothic);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -41,6 +42,22 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  
+  /* Custom font families */
+  --font-family-franklin: var(--font-franklin-gothic), ui-sans-serif, system-ui, sans-serif;
+  --font-family-franklin-condensed: var(--font-franklin-gothic), ui-sans-serif, system-ui, sans-serif;
+  
+  /* Gold color palette */
+  --color-gold-50: #fffdf7;
+  --color-gold-100: #fffae5;
+  --color-gold-200: #fff2b3;
+  --color-gold-300: #ffea80;
+  --color-gold-400: #ffe14d;
+  --color-gold-500: #ffd700;
+  --color-gold-600: #e6c200;
+  --color-gold-700: #b8a000;
+  --color-gold-800: #8a7700;
+  --color-gold-900: #5c4e00;
 }
 
 :root {
@@ -118,5 +135,26 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-family-franklin);
+  }
+}
+
+@layer utilities {
+  .font-franklin {
+    font-family: var(--font-family-franklin);
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  .font-franklin-italic {
+    font-family: var(--font-family-franklin);
+    font-weight: 400;
+    font-style: italic;
+  }
+  
+  .font-franklin-condensed {
+    font-family: var(--font-family-franklin);
+    font-weight: 600;
+    font-style: normal;
   }
 }
