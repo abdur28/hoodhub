@@ -1,4 +1,4 @@
-import Hero from "@/components/Hero";
+import Hero from "@/components/sections/Hero";
 
 export default function Home() {
   return (
@@ -6,7 +6,7 @@ export default function Home() {
       <Hero />
       
       {/* Placeholder content to demonstrate floating navbar */}
-      <section className="h-screen bg-white dark:bg-gray-900 flex items-center justify-center">
+      <section className="h-screen bg-white dark:bg-gray-900 -my-5 rounded-t-3xl relative">
         <div className="text-center">
           <h2 className="text-4xl font-franklin-condensed font-bold text-gray-900 dark:text-white mb-4">
             Our Services
