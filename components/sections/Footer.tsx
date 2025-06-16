@@ -1,0 +1,427 @@
+"use client";
+import React, { useState } from "react";
+import { motion } from "motion/react";
+import { Button } from "@/components/ui/button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { 
+  MapPin, 
+  Phone, 
+  Mail, 
+  Clock, 
+  Instagram, 
+  Facebook, 
+  Twitter, 
+  Youtube,
+  Scissors,
+  PaintBucket,
+  Diamond,
+  ArrowRight,
+  Heart,
+  ChevronDown
+} from "lucide-react";
+import Link from "next/link";
+
+const Footer = () => {
+  const [email, setEmail] = useState("");
+  const [contactOpen, setContactOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const [quickLinksOpen, setQuickLinksOpen] = useState(false);
+
+  const handleNewsletterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle newsletter subscription
+    console.log("Newsletter subscription:", email);
+    setEmail("");
+  };
+
+  const socialLinks = [
+    { icon: Instagram, href: "#", label: "Instagram" },
+    { icon: Facebook, href: "#", label: "Facebook" },
+    { icon: Twitter, href: "#", label: "Twitter" },
+    { icon: Youtube, href: "#", label: "YouTube" },
+  ];
+
+  const services = [
+    { name: "Professional Haircuts", href: "/barbing", icon: Scissors },
+    { name: "Beard Styling", href: "/barbing", icon: Scissors },
+    { name: "Custom Tattoos", href: "/tattoo", icon: PaintBucket },
+    { name: "Tattoo Consultations", href: "/tattoo", icon: PaintBucket },
+    { name: "Spa & Wellness", href: "/lifestyle", icon: Diamond },
+    { name: "Style Consultation", href: "/lifestyle", icon: Diamond },
+  ];
+
+  const quickLinks = [
+    { name: "About Us", href: "/about" },
+    { name: "Book Appointment", href: "/booking" },
+    { name: "Gift Cards", href: "/gift-cards" },
+    { name: "Careers", href: "/careers" },
+    { name: "Press", href: "/press" },
+    { name: "Contact", href: "/contact" },
+  ];
+
+  const legalLinks = [
+    { name: "Privacy Policy", href: "/privacy" },
+    { name: "Terms of Service", href: "/terms" },
+    { name: "Cookie Policy", href: "/cookies" },
+  ];
+
+  return (
+    <footer className="bg-white relative overflow-hidden rounded-t-4xl -mt-8">
+      {/* Decorative Background Elements */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-10 w-40 h-40 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full blur-3xl" />
+      </div>
+
+      <div className="relative z-10">
+        {/* Newsletter Section */}
+        <section className="border-b border-gray-200 pb-8 pt-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+              <motion.div
+                className="text-center lg:text-left"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                viewport={{ once: true }}
+              >
+                <h3 className="text-2xl  font-franklin font-semibold mb-4">
+                  Stay Connected with{" "}
+                  <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
+                    HoodHub
+                  </span>
+                </h3>
+                <p className="text-gray-600 font-franklin  max-w-md">
+                  Get exclusive updates, style tips, and special offers delivered to your inbox.
+                </p>
+              </motion.div>
+
+              <motion.form
+                onSubmit={handleNewsletterSubmit}
+                className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                viewport={{ once: true }}
+              >
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  className="px-6 py-4 bg-gray-50 border border-gray-300 rounded-full text-gray-900 placeholder-gray-500 font-franklin focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent min-w-[300px]"
+                  required
+                />
+                <Button
+                  type="submit"
+                  className="h-max bg-gradient-to-r  from-yellow-400 via-yellow-500 to-yellow-600 text-black font-franklin font-semibold px-8 py-4 rounded-full hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 transition-all duration-300 group"
+                >
+                  Subscribe
+                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                </Button>
+              </motion.form>
+            </div>
+          </div>
+        </section>
+
+        {/* Main Footer Content */}
+        <section className="py-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
+              
+              {/* Company Info - Always Visible */}
+              <motion.div
+                className="lg:col-span-1"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                viewport={{ once: true }}
+              >
+                <Link href="/" className="inline-block mb-6">
+                  <h2 className="font-franklin-condensed text-3xl font-semibold bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
+                    HoodHub
+                  </h2>
+                </Link>
+                
+                <p className="text-gray-600 font-franklin leading-relaxed mb-6">
+                  Where artistry meets precision. Experience premium barbering, custom tattoo work, 
+                  and luxury lifestyle services in the heart of the city.
+                </p>
+
+                {/* Contact Info - Collapsible on Mobile */}
+                <div className="lg:block">
+                  {/* Mobile Collapsible */}
+                  <div className="lg:hidden">
+                    <Collapsible open={contactOpen} onOpenChange={setContactOpen}>
+                      <CollapsibleTrigger className="flex items-center justify-between w-full text-left">
+                        <h3 className="font-franklin font-semibold text-lg text-gray-900">Contact Info</h3>
+                        <ChevronDown className={`w-5 h-5 text-gray-600 transition-transform duration-200 ${contactOpen ? 'rotate-180' : ''}`} />
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="mt-4">
+                        <div className="space-y-4">
+                          <div className="flex items-start gap-3">
+                            <MapPin className="w-5 h-5 text-yellow-500 mt-1 flex-shrink-0" />
+                            <div>
+                              <p className="text-gray-900 font-franklin">123 Style Street</p>
+                              <p className="text-gray-600 font-franklin">Downtown District, NY 10001</p>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-center gap-3">
+                            <Phone className="w-5 h-5 text-yellow-500 flex-shrink-0" />
+                            <a href="tel:+1234567890" className="text-gray-900 font-franklin hover:text-yellow-500 transition-colors">
+                              (123) 456-7890
+                            </a>
+                          </div>
+                          
+                          <div className="flex items-center gap-3">
+                            <Mail className="w-5 h-5 text-yellow-500 flex-shrink-0" />
+                            <a href="mailto:hello@hoodhub.com" className="text-gray-900 font-franklin hover:text-yellow-500 transition-colors">
+                              hello@hoodhub.com
+                            </a>
+                          </div>
+
+                          <div className="flex items-start gap-3">
+                            <Clock className="w-5 h-5 text-yellow-500 mt-1 flex-shrink-0" />
+                            <div>
+                              <p className="text-gray-900 font-franklin">Mon - Sat: 9AM - 8PM</p>
+                              <p className="text-gray-600 font-franklin">Sunday: 10AM - 6PM</p>
+                            </div>
+                          </div>
+                        </div>
+                      </CollapsibleContent>
+                    </Collapsible>
+                  </div>
+
+                  {/* Desktop Always Visible */}
+                  <div className="hidden lg:block space-y-4">
+                    <div className="flex items-start gap-3">
+                      <MapPin className="w-5 h-5 text-yellow-500 mt-1 flex-shrink-0" />
+                      <div>
+                        <p className="text-gray-900 font-franklin text-sm">123 Style Street</p>
+                        <p className="text-gray-600 font-franklin text-sm">Downtown District, NY 10001</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-3">
+                      <Phone className="w-5 h-5 text-yellow-500 flex-shrink-0" />
+                      <a href="tel:+1234567890" className="text-gray-900 font-franklin text-sm hover:text-yellow-500 transition-colors">
+                        (123) 456-7890
+                      </a>
+                    </div>
+                    
+                    <div className="flex items-center gap-3">
+                      <Mail className="w-5 h-5 text-yellow-500 flex-shrink-0" />
+                      <a href="mailto:hello@hoodhub.com" className="text-gray-900 text-sm font-franklin hover:text-yellow-500 transition-colors">
+                        hello@hoodhub.com
+                      </a>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <Clock className="w-5 h-5 text-yellow-500 flex-shrink-0" />
+                      <div>
+                        <p className="text-gray-900 font-franklin text-sm">Mon - Sun: 10AM - 9PM</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Services - Collapsible on Mobile */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.1 }}
+                viewport={{ once: true }}
+              >
+                {/* Mobile Collapsible */}
+                <div className="lg:hidden">
+                  <Collapsible open={servicesOpen} onOpenChange={setServicesOpen}>
+                    <CollapsibleTrigger className="flex items-center justify-between w-full text-left">
+                      <h3 className="font-franklin font-semibold text-xl text-gray-900">Our Services</h3>
+                      <ChevronDown className={`w-5 h-5 text-gray-600 transition-transform duration-200 ${servicesOpen ? 'rotate-180' : ''}`} />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="mt-6">
+                      <ul className="space-y-3">
+                        {services.map((service, index) => (
+                          <li key={index}>
+                            <Link
+                              href={service.href}
+                              className="flex items-center gap-3 text-gray-600 hover:text-yellow-500 transition-colors duration-300 group"
+                            >
+                              <service.icon className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
+                              <span className="font-franklin">{service.name}</span>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </CollapsibleContent>
+                  </Collapsible>
+                </div>
+
+                {/* Desktop Always Visible */}
+                <div className="hidden lg:block">
+                  <h3 className="font-franklin font-semibold text-xl mb-6 text-gray-900">Our Services</h3>
+                  <ul className="space-y-3">
+                    {services.map((service, index) => (
+                      <li key={index}>
+                        <Link
+                          href={service.href}
+                          className="flex items-center gap-3 text-gray-600 hover:text-yellow-500 transition-colors duration-300 group"
+                        >
+                          <service.icon className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
+                          <span className="font-franklin">{service.name}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </motion.div>
+
+              {/* Quick Links - Collapsible on Mobile */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                viewport={{ once: true }}
+              >
+                {/* Mobile Collapsible */}
+                <div className="lg:hidden">
+                  <Collapsible open={quickLinksOpen} onOpenChange={setQuickLinksOpen}>
+                    <CollapsibleTrigger className="flex items-center justify-between w-full text-left">
+                      <h3 className="font-franklin font-semibold text-xl text-gray-900">Quick Links</h3>
+                      <ChevronDown className={`w-5 h-5 text-gray-600 transition-transform duration-200 ${quickLinksOpen ? 'rotate-180' : ''}`} />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="mt-6">
+                      <ul className="space-y-3">
+                        {quickLinks.map((link, index) => (
+                          <li key={index}>
+                            <Link
+                              href={link.href}
+                              className="text-gray-600 hover:text-yellow-500 transition-colors duration-300 font-franklin"
+                            >
+                              {link.name}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+
+                      {/* HoodSkool Link */}
+                      <div className="mt-8 pt-6 border-t border-gray-200">
+                        <h4 className="font-franklin font-semibold text-lg mb-3 text-gray-900">Fashion</h4>
+                        <Link
+                          href="https://hoodskool.com/"
+                          className="inline-flex items-center gap-2 text-yellow-500 hover:text-yellow-600 transition-colors duration-300 group"
+                        >
+                          <span className="font-franklin">Visit HoodSkool</span>
+                          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                        </Link>
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
+                </div>
+
+                {/* Desktop Always Visible */}
+                <div className="hidden lg:block">
+                  <h3 className="font-franklin font-semibold text-xl mb-6 text-gray-900">Quick Links</h3>
+                  <ul className="space-y-3">
+                    {quickLinks.map((link, index) => (
+                      <li key={index}>
+                        <Link
+                          href={link.href}
+                          className="text-gray-600 hover:text-yellow-500 transition-colors duration-300 font-franklin"
+                        >
+                          {link.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* HoodSkool Link */}
+                  <div className="mt-8 pt-6 border-t border-gray-200">
+                    <h4 className="font-franklin font-semibold text-lg mb-3 text-gray-900">Fashion</h4>
+                    <Link
+                      href="https://hoodskool.com/"
+                      className="inline-flex items-center gap-2 text-yellow-500 hover:text-yellow-600 transition-colors duration-300 group"
+                    >
+                      <span className="font-franklin">Visit HoodSkool</span>
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                    </Link>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Social Media - Always Visible */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                viewport={{ once: true }}
+              >
+                <h3 className="font-franklin font-semibold text-xl mb-6 text-gray-900">Follow Us</h3>
+                
+                {/* Social Media */}
+                <div className="flex gap-4">
+                  {socialLinks.map((social, index) => (
+                    <a
+                      key={index}
+                      href={social.href}
+                      aria-label={social.label}
+                      className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gradient-to-r hover:from-yellow-400 hover:to-yellow-600 transition-all duration-300 group"
+                    >
+                      <social.icon className="w-5 h-5 text-gray-600 group-hover:text-black transition-colors duration-300" />
+                    </a>
+                  ))}
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        {/* Bottom Bar */}
+        <section className="border-t border-gray-200 py-6">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col-reverse md:flex-row items-start md:items-center justify-between gap-6">
+              
+              {/* Copyright */}
+              <motion.div
+                className="flex items-center gap-2 text-sm text-gray-600 font-franklin"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ duration: 0.8 }}
+                viewport={{ once: true }}
+              >
+                <span>© 2025 HoodHub. All rights reserved.</span>
+              </motion.div>
+
+              {/* Legal Links */}
+              <motion.div
+                className="flex flex-wrap items-center gap-6"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                viewport={{ once: true }}
+              >
+                {legalLinks.map((link, index) => (
+                  <Link
+                    key={index}
+                    href={link.href}
+                    className="text-gray-600 hover:text-yellow-500 transition-colors duration-300 font-franklin text-sm"
+                  >
+                    {link.name}
+                  </Link>
+                ))}
+              </motion.div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
