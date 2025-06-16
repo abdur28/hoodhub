@@ -149,3 +149,45 @@ export const tattooImages = [
     alt: "Tattoo artist working with precision",
   },
 ];
+
+export const maleServices = [
+  {
+    id: 1,
+    title: "Executive Grooming",
+    description: "Complete grooming package including haircut, beard styling, and luxury treatment",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2340&auto=format&fit=crop",
+  },
+  {
+    id: 2,
+    title: "Spa & Wellness",
+    description: "Rejuvenating spa treatments, massages, and wellness therapies",
+    image: "https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=2340&auto=format&fit=crop",
+  },
+  {
+    id: 3,
+    title: "Style Consultation",
+    description: "Personal styling advice and wardrobe consultation services",
+    image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=2340&auto=format&fit=crop",
+  },
+];
+ 
+export const femaleServices = [
+  {
+    id: 1,
+    title: "Beauty & Makeup",
+    description: "Professional makeup artistry and beauty treatments for all occasions",
+    image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=2340&auto=format&fit=crop",
+  },
+  {
+    id: 2,
+    title: "Hair Styling",
+    description: "Expert hair styling, coloring, and treatment services",
+    image: "https://images.unsplash.com/photo-1562322140-8baeececf3df?q=80&w=2340&auto=format&fit=crop",
+  },
+  {
+    id: 3,
+    title: "Nail Artistry",
+    description: "Luxury manicures, pedicures, and custom nail art designs",
+    image: "https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=2340&auto=format&fit=crop",
+  },
+];
