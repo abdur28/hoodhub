@@ -7,7 +7,7 @@ import { aboutData } from "@/constants";
 
 const About = () => {
   return (
-    <section className="bg-white  py-16 rounded-t-4xl -my-8 relative">
+    <section className="bg-white  py-16 rounded-t-4xl -my-8 relative z-10">
       {/* Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left mb-16">
         <motion.h2

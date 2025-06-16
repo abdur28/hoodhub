@@ -8,7 +8,7 @@ const Barbing = () => {
   const [selectedImage, setSelectedImage] = useState(barbingImages[0]);
 
   return (
-    <section className="bg-neutral-200 rounded-b-4xl py-5">
+    <section className="bg-neutral-200 relative z-10 rounded-b-4xl py-5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 lg:px-8">
         <div className="flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-16">
           {/* Images Section - Left on large, top on small */}
@@ -98,7 +98,7 @@ const Barbing = () => {
 
             {/* Motto */}
             <motion.p
-              className="text-xl md:text-2xl lg:text-3xl text-right font-franklin-italic text-gray-700 leading-relaxed"
+              className="text-lg md:text-2xl text-right font-franklin-italic text-gray-700 leading-relaxed"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
