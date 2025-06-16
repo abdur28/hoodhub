@@ -9,6 +9,7 @@ import { motion } from "motion/react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 type CarouselApi = UseEmblaCarouselType[1]
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>
@@ -308,6 +309,65 @@ function ImageCard({
   )
 }
 
+// Custom Shop Card Component
+function ShopCard({
+  id,
+  src,
+  title,
+  price,
+  category,
+  className,
+  link
+}: {
+  id: string;
+  src: string;
+  title: string;
+  price: string;
+  category?: string;
+  className?: string;
+  link: string
+}) {
+  return (
+    <Link href={link} className="block">
+      <div
+        className={`relative h-[400px] w-[280px] md:h-[500px] md:w-[350px] flex-shrink-0 overflow-hidden rounded-4xl bg-gray-900 group cursor-pointer ${className}`}
+      >
+        {/* Image */}
+        <img
+          src={src}
+          alt={title}
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+        />
+        
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
+        
+        {/* Quick View Button - Hidden by default, shown on hover */}
+        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+          <div className="bg-white/90 backdrop-blur-sm rounded-full p-3 hover:bg-white transition-colors duration-200">
+            <ArrowRight className="w-5 h-5 text-black" />
+          </div>
+        </div>
+        
+        {/* Content */}
+        <div className="absolute bottom-0 left-0 right-0 p-6">
+          {category && (
+            <p className="mb-2 text-xs font-medium text-yellow-400 uppercase tracking-wider">
+              {category}
+            </p>
+          )}
+          <h3 className="text-xl font-franklin font-semibold text-white mb-2">
+            {title}
+          </h3>
+          <p className="text-2xl font-franklin-condensed text-white">
+            {price}
+          </p>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 export {
   type CarouselApi,
   Carousel,
@@ -317,4 +377,5 @@ export {
   CarouselNext,
   EdgeCarousel,
   ImageCard,
+  ShopCard,
 }

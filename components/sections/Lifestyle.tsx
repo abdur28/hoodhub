@@ -14,7 +14,7 @@ const Lifestyle = () => {
   const services = activeGender === "male" ? maleServices : femaleServices;
 
   return (
-    <section className="bg-white relative z-10 -mt-8 rounded-t-4xl py-20">
+    <section className="bg-white relative z-10 -mt-8 rounded-4xl py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header Section */}
