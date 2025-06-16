@@ -5,6 +5,7 @@ import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react"
 import { ArrowLeft, ArrowRight } from "lucide-react"
+import { motion } from "motion/react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -231,6 +232,82 @@ function CarouselNext({
   )
 }
 
+// Simple Edge-to-Edge Carousel
+function EdgeCarousel({
+  children,
+  className,
+}: {
+  children: React.ReactNode
+  className?: string
+}) {
+  const [emblaRef] = useEmblaCarousel({
+    align: "start",
+    dragFree: true,
+    containScroll: "trimSnaps",
+  })
+
+  return (
+    <div className={cn("w-full", className)}>
+      <div
+        ref={emblaRef}
+        className="overflow-x-auto overflow-y-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+      >
+        <div className="flex gap-6">
+          {/* Initial spacing */}
+          <div className="w-4 sm:w-6 md:w-8 lg:w-12 xl:w-16 flex-shrink-0" />
+          {children}
+          {/* End spacing */}
+          <div className="w-4 sm:w-6 md:w-8 lg:w-12 xl:w-16 flex-shrink-0" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Simple Card Component
+function ImageCard({
+  src,
+  title,
+  category,
+  className,
+}: {
+  src: string
+  title: string
+  category?: string
+  className?: string
+}) {
+  return (
+    <div
+      className={cn(
+        "relative h-84 w-64 md:h-[30rem] md:w-[24rem] flex-shrink-0 overflow-hidden rounded-4xl bg-gray-900 group cursor-pointer",
+        className
+      )}
+    >
+      {/* Image */}
+      <img
+        src={src}
+        alt={title}
+        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+      />
+      
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+      
+      {/* Content */}
+      <div className="absolute bottom-0 left-0 right-0 p-6">
+        {category && (
+          <p className="mb-2 text-sm font-medium text-white/80">
+            {category}
+          </p>
+        )}
+        <h3 className="text-xl font-bold text-white md:text-2xl">
+          {title}
+        </h3>
+      </div>
+    </div>
+  )
+}
+
 export {
   type CarouselApi,
   Carousel,
@@ -238,4 +315,6 @@ export {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
+  EdgeCarousel,
+  ImageCard,
 }
