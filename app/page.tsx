@@ -17,8 +17,6 @@ export default function Home() {
       <Tattoo />
       <Lifestyle />
       <HoodSkool />
-      <Footer />
-      {/* other sections */}
     </main>
   );
 }
