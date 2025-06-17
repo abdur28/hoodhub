@@ -24,7 +24,7 @@ export const FloatingNav = ({
       
       // Only show floating nav after scrolling past the hero section (90vh)
       // We use 0.15 as threshold which roughly corresponds to scrolling past 90vh hero
-      if (scrollYProgress.get() < 0.45) {
+      if (scrollYProgress.get() < 0.10) {
         setVisible(false);
       } else {
         if (direction < 0) {

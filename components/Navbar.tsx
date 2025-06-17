@@ -1,10 +1,9 @@
 "use client";
 import React from "react";
-import { ShoppingCart, User, Menu, Scissors, PaintBucket, Star } from "lucide-react";
+import { ShoppingCart, User, Menu } from "lucide-react";
 import {
   Sheet,
   SheetContent,
-  SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
@@ -117,67 +116,68 @@ const Navbar = ({ variant = "transparent", className = "" }: NavbarProps) => {
                   <Menu className="h-6 w-6" />
                 </button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-                <SheetHeader>
-                  <SheetTitle className="font-franklin-condensed text-xl text-left">
-                    HoodHub Services
-                  </SheetTitle>
-                </SheetHeader>
-                <div className="mt-8 space-y-6">
-                  <a
-                    href="/barbing"
-                    className="flex items-center space-x-4 p-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group"
-                  >
-                    <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 p-3 rounded-full group-hover:scale-110 transition-transform">
-                      <Scissors className="h-5 w-5 text-black" />
-                    </div>
-                    <div>
-                      <h3 className="font-franklin font-semibold text-gray-900 dark:text-white">
-                        Barbing
-                      </h3>
-                      <p className="font-franklin text-sm text-gray-600 dark:text-gray-400">
-                        Professional cuts & styling
-                      </p>
-                    </div>
-                  </a>
+              <SheetContent side="right" className="w-full sm:w-[380px] flex flex-col">
+                {/* Hidden title for accessibility */}
+                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+                
+                {/* Navigation */}
+                <div className="flex-1 pt-10">
+                  <nav className="space-y-1">
+                    <a
+                      href="/barbing"
+                      className="block px-6 py-4 font-franklin text-base hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                    >
+                      Barbing
+                    </a>
+                    <a
+                      href="/tattoo"
+                      className="block px-6 py-4 font-franklin text-base hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                    >
+                      Tattoo
+                    </a>
+                    <a
+                      href="/lifestyle"
+                      className="block px-6 py-4 font-franklin text-base hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                    >
+                      Lifestyle
+                    </a>
+                    <a
+                      href="https://hoodskool.com/"
+                      className="block px-6 py-4 font-franklin text-base hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                    >
+                      HoodSkool
+                    </a>
+                  </nav>
                   
-                  <a
-                    href="/tattoo"
-                    className="flex items-center space-x-4 p-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group"
-                  >
-                    <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 p-3 rounded-full group-hover:scale-110 transition-transform">
-                      <PaintBucket className="h-5 w-5 text-black" />
-                    </div>
-                    <div>
-                      <h3 className="font-franklin font-semibold text-gray-900 dark:text-white">
-                        Tattoo
-                      </h3>
-                      <p className="font-franklin text-sm text-gray-600 dark:text-gray-400">
-                        Custom tattoo artistry
-                      </p>
-                    </div>
-                  </a>
+                  <div className="mt-8 px-6">
+                    <div className="h-px bg-gray-200 dark:bg-gray-800"></div>
+                  </div>
                   
-                  <a
-                    href="/lifestyle"
-                    className="flex items-center space-x-4 p-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group"
-                  >
-                    <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 p-3 rounded-full group-hover:scale-110 transition-transform">
-                      <Star className="h-5 w-5 text-black" />
-                    </div>
-                    <div>
-                      <h3 className="font-franklin font-semibold text-gray-900 dark:text-white">
-                        Lifestyle
-                      </h3>
-                      <p className="font-franklin text-sm text-gray-600 dark:text-gray-400">
-                        Premium lifestyle services
-                      </p>
-                    </div>
-                  </a>
+                  <nav className="mt-8 space-y-1">
+                    <a
+                      href="/about"
+                      className="block px-6 py-3 font-franklin text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+                    >
+                      About
+                    </a>
+                    <a
+                      href="/contact"
+                      className="block px-6 py-3 font-franklin text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+                    >
+                      Contact
+                    </a>
+                    <a
+                      href="/careers"
+                      className="block px-6 py-3 font-franklin text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+                    >
+                      Careers
+                    </a>
+                  </nav>
                 </div>
                 
-                <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-                  <button className="w-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-black font-franklin font-semibold py-3 px-6 rounded-full hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 transition-all duration-300">
+                {/* CTA */}
+                <div className="p-6">
+                  <button className="w-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-black font-franklin font-semibold py-4 rounded-full hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 transition-all duration-300">
                     Book Appointment
                   </button>
                 </div>
