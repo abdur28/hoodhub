@@ -1,3 +1,5 @@
+import { Scissors, PaintBucket, Diamond, Heart, Star, Users } from "lucide-react";
+
 export const heroImages = [
   {
     id: 1,
@@ -239,5 +241,53 @@ export const hoodskoolProducts = [
     price: "6,000.00 ₽",
     category: "Accessories",
     link: "https://hoodskool.com/"
+  },
+];
+
+export const storyPhases = [
+  {
+    id: 1,
+    title: "The Vision",
+    subtitle: "2019",
+    content: "It started with a simple belief: that personal grooming and self-expression should be elevated to an art form. In a small corner of the city, our founders envisioned a space where traditional craftsmanship would meet contemporary innovation.",
+    image: "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=2340&auto=format&fit=crop",
+    icon: Star,
+    color: "from-yellow-400/20 to-yellow-600/10"
+  },
+  {
+    id: 2,
+    title: "The Craft",
+    subtitle: "2020",
+    content: "We assembled a team of master artisans - barbers who understood the geometry of a perfect cut, tattoo artists who could translate emotions into ink, and lifestyle specialists who knew that confidence comes from within.",
+    image: "https://images.unsplash.com/photo-1559599101-f09722fb4948?q=80&w=2340&auto=format&fit=crop",
+    icon: Scissors,
+    color: "from-amber-400/20 to-amber-600/10"
+  },
+  {
+    id: 3,
+    title: "The Art",
+    subtitle: "2021",
+    content: "Every line we draw, every cut we make, every experience we create is a canvas for self-expression. We believe that true artistry lies not just in technique, but in understanding the unique story that each client brings to our chair.",
+    image: "https://images.unsplash.com/photo-1604374376934-2df6fad6519b?q=80&w=2940&auto=format&fit=crop",
+    icon: PaintBucket,
+    color: "from-rose-400/20 to-rose-600/10"
+  },
+  {
+    id: 4,
+    title: "The Community",
+    subtitle: "2022",
+    content: "HoodHub became more than a destination - it became a community. A place where creativity flourishes, where stories are shared, and where every individual is celebrated. We've hosted artists, launched careers, and witnessed countless transformations.",
+    image: "https://images.unsplash.com/photo-1522337094846-8a818192de1f?q=80&w=3094&auto=format&fit=crop",
+    icon: Users,
+    color: "from-emerald-400/20 to-emerald-600/10"
+  },
+  {
+    id: 5,
+    title: "The Legacy",
+    subtitle: "Today",
+    content: "Today, HoodHub stands as a testament to the power of passion and precision. We continue to push boundaries, set trends, and most importantly, help our clients discover their most confident selves. This is just the beginning of our story.",
+    image: "https://images.unsplash.com/photo-1621605815971-fbc98d665033?q=80&w=2340&auto=format&fit=crop",
+    icon: Heart,
+    color: "from-purple-400/20 to-purple-600/10"
   },
 ];
