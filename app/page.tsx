@@ -5,7 +5,6 @@ import BarbingCTA from "@/components/sections/BarbingCTA";
 import Tattoo from "@/components/sections/Tattoo";
 import Lifestyle from "@/components/sections/Lifestyle";
 import HoodSkool from "@/components/sections/HoodSkool";
-import Footer from "@/components/sections/Footer";
 
 export default function Home() {
   return (

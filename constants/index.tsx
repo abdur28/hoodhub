@@ -291,3 +291,103 @@ export const storyPhases = [
     color: "from-purple-400/20 to-purple-600/10"
   },
 ];
+
+// Team member data
+export const teamMembers = [
+  {
+    id: 1,
+    name: "Marcus Johnson",
+    role: "Master Barber",
+    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=2574&auto=format&fit=crop",
+    bio: "With over 15 years of experience, Marcus specializes in precision cuts and modern styles. Trained in London and New York.",
+    social: {
+      instagram: "#",
+      twitter: "#",
+      whatsapp: "#",
+    }
+  },
+  {
+    id: 2,
+    name: "Isabella Chen",
+    role: "Lead Tattoo Artist",
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2576&auto=format&fit=crop",
+    bio: "Specializing in geometric and watercolor styles, Isabella brings 10 years of international tattooing experience.",
+    social: {
+      instagram: "#",
+      twitter: "#",
+      whatsapp: "#"
+    }
+  },
+  {
+    id: 3,
+    name: "Jamal Williams",
+    role: "Lifestyle Director",
+    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=2574&auto=format&fit=crop",
+    bio: "Jamal curates our premium experiences, blending wellness with urban sophistication for complete transformations.",
+    social: {
+      instagram: "#",
+      twitter: "#",
+      whatsapp: "#"
+    }
+  },
+  {
+    id: 4,
+    name: "Sophie Laurent",
+    role: "Creative Director",
+    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=2561&auto=format&fit=crop",
+    bio: "Former fashion designer who brings avant-garde vision to HoodHub's brand identity and space design.",
+    social: {
+      instagram: "#",
+      twitter: "#",
+      whatsapp: "#"
+    }
+  },
+  {
+    id: 5,
+    name: "Diego Rodriguez",
+    role: "Senior Barber",
+    image: "https://images.unsplash.com/photo-1590086782792-42dd2350140d?q=80&w=2574&auto=format&fit=crop",
+    bio: "Beard specialist with expertise in traditional straight razor techniques and modern grooming solutions.",
+    social: {
+      instagram: "#",
+      twitter: "#",
+      whatsapp: "#"
+    }
+  },
+  {
+    id: 6,
+    name: "Aisha Khan",
+    role: "Tattoo Artist",
+    image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=2564&auto=format&fit=crop",
+    bio: "Expert in intricate mandala and dotwork designs, blending cultural heritage with contemporary styles.",
+    social: {
+      instagram: "#",
+      twitter: "#",
+      whatsapp: "#"
+    }
+  },
+  {
+    id: 7,
+    name: "Tyrone Jenkins",
+    role: "Barber Educator",
+    image: "https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?q=80&w=2576&auto=format&fit=crop",
+    bio: "Develops our HoodSkool curriculum and mentors the next generation of barbering professionals.",
+    social: {
+      instagram: "#",
+      twitter: "#",
+      whatsapp: "#"
+    }
+  },
+  {
+    id: 8,
+    name: "Elena Petrova",
+    role: "Wellness Specialist",
+    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=2576&auto=format&fit=crop",
+    bio: "Holistic practitioner integrating ancient healing techniques with modern luxury spa experiences.",
+    social: {
+      instagram: "#",
+      twitter: "#",
+      whatsapp: "#"
+    }
+  },
+];
