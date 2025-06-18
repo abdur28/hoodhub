@@ -133,6 +133,18 @@ const Lifestyle = () => {
                       <p className="text-white/90 font-franklin text-sm leading-relaxed">
                         {service.description}
                       </p>
+
+                      {hoveredService === service.id && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mt-4"
+                      >
+                        <button className="text-xs bg-yellow-500/90 text-black px-4 py-2 rounded-full font-franklin font-medium">
+                          Book Now
+                        </button>
+                      </motion.div>
+                    )}
                     </div>
                   </div>
                 </motion.div>
