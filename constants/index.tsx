@@ -391,3 +391,86 @@ export const teamMembers = [
     }
   },
 ];
+
+// Add to your existing constants
+export const barbingServices = [
+  {
+    title: "Signature Haircut",
+    description: "Precision cut with detailed finishing and styling consultation"
+  },
+  {
+    title: "Executive Grooming",
+    description: "Haircut, hot towel treatment, and precision beard sculpting"
+  },
+  {
+    title: "Luxury Shave",
+    description: "Traditional straight razor shave with premium products"
+  },
+  {
+    title: "Beard Sculpting",
+    description: "Detailed beard shaping and conditioning treatment"
+  },
+  {
+    title: "Premium Treatment",
+    description: "Haircut, deep conditioning, scalp massage, and styling"
+  }
+];
+
+// Add to your existing constants
+export const tattooStyles = [
+  {
+    name: "Realism",
+    description: "Hyper-detailed tattoos that mirror reality with stunning accuracy"
+  },
+  {
+    name: "Geometric",
+    description: "Precision patterns, sacred geometry, and abstract shapes"
+  },
+  {
+    name: "Watercolor",
+    description: "Painterly styles that mimic brush strokes and color washes"
+  },
+  {
+    name: "Japanese Traditional",
+    description: "Classic Irezumi with symbolic motifs and bold lines"
+  },
+  {
+    name: "Black & Gray",
+    description: "Masterful shading creating depth and dimension"
+  },
+  {
+    name: "Minimalist",
+    description: "Subtle, clean designs with symbolic meaning"
+  },
+  {
+    name: "Neo-Traditional",
+    description: "Modern take on classic styles with bold colors"
+  },
+  {
+    name: "Tribal",
+    description: "Ancient patterns with cultural significance"
+  }
+];
+
+export const tattooArtists = [
+  {
+    name: "Isabella Chen",
+    specialty: "Geometric & Watercolor",
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2576&auto=format&fit=crop"
+  },
+  {
+    name: "Aisha Khan",
+    specialty: "Mandala & Dotwork",
+    image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=2564&auto=format&fit=crop"
+  },
+  {
+    name: "Diego Martinez",
+    specialty: "Realism & Portrait",
+    image: "https://images.unsplash.com/photo-1552058544-f2b08422138a?q=80&w=2598&auto=format&fit=crop"
+  },
+  {
+    name: "Nikolai Petrov",
+    specialty: "Japanese Traditional",
+    image: "https://images.unsplash.com/photo-1570158268183-d296b2892211?q=80&w=2574&auto=format&fit=crop"
+  }
+];
