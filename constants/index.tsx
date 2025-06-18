@@ -1,4 +1,4 @@
-import { Scissors, PaintBucket, Diamond, Heart, Star, Users } from "lucide-react";
+import { Scissors, PaintBucket, Diamond, Heart, Star, Users, HelpCircle } from "lucide-react";
 
 export const heroImages = [
   {
@@ -472,5 +472,130 @@ export const tattooArtists = [
     name: "Nikolai Petrov",
     specialty: "Japanese Traditional",
     image: "https://images.unsplash.com/photo-1570158268183-d296b2892211?q=80&w=2574&auto=format&fit=crop"
+  }
+];
+
+export const faqSections = [
+  {
+    id: "general",
+    title: "General Questions",
+    icon: HelpCircle,
+    color: "text-yellow-500",
+    questions: [
+      {
+        id: "gen-1",
+        question: "What services does HoodHub offer?",
+        answer: "HoodHub is a premium lifestyle destination offering professional barbering services, custom tattoo artistry, and luxury lifestyle services including spa treatments, beauty services, and personal styling for both men and women."
+      },
+      {
+        id: "gen-2",
+        question: "How do I book an appointment?",
+        answer: "You can book an appointment by calling us at (123) 456-7890, texting us on WhatsApp, visiting our studio in person, or using the booking buttons throughout our website. We recommend booking in advance as our artists have busy schedules."
+      },
+      {
+        id: "gen-3",
+        question: "What are your operating hours?",
+        answer: "We're open Monday through Sunday from 10AM to 9PM. We offer appointment slots throughout the day and can sometimes accommodate special requests for early or late appointments."
+      },
+      {
+        id: "gen-4",
+        question: "Do you accept walk-ins?",
+        answer: "While we prefer appointments to ensure the best service, we do accept walk-ins when our artists are available. However, appointment clients always have priority, so wait times may vary."
+      },
+      {
+        id: "gen-5",
+        question: "What is your cancellation policy?",
+        answer: "We require at least 24 hours notice for cancellations. Same-day cancellations or no-shows may be subject to a fee. We understand emergencies happen, so please call us to discuss your situation."
+      }
+    ]
+  },
+  {
+    id: "barbing",
+    title: "Barbing Services",
+    icon: Scissors,
+    color: "text-blue-500",
+    questions: [
+      {
+        id: "barb-1",
+        question: "What's included in a signature haircut?",
+        answer: "Our signature haircut includes a consultation, precision cut, hot towel treatment, styling, and finishing touches. The service typically takes 45-60 minutes and includes product recommendations for maintaining your style."
+      },
+      {
+        id: "barb-2",
+        question: "Do you offer beard styling services?",
+        answer: "Absolutely! We offer comprehensive beard services including beard sculpting, trimming, hot towel treatments, conditioning, and styling. Our barbers are experts in creating the perfect beard shape for your face."
+      },
+      {
+        id: "barb-3",
+        question: "How often should I get a haircut?",
+        answer: "It depends on your hair type and style, but generally every 3-4 weeks for short styles and 6-8 weeks for longer styles. Our barbers will provide personalized recommendations during your consultation."
+      },
+      {
+        id: "barb-4",
+        question: "Do you use premium products?",
+        answer: "Yes, we exclusively use high-quality, professional-grade products from renowned brands. We're happy to recommend and sell the products we use so you can maintain your style at home."
+      }
+    ]
+  },
+  {
+    id: "tattoo",
+    title: "Tattoo Artistry",
+    icon: PaintBucket,
+    color: "text-red-500",
+    questions: [
+      {
+        id: "tat-1",
+        question: "How does the tattoo consultation process work?",
+        answer: "We start with a detailed consultation to discuss your vision, placement, size, and style preferences. Our artists will create custom designs and provide honest advice about what will work best for your skin and lifestyle. Consultations can be scheduled separately or on the day of your appointment."
+      },
+      {
+        id: "tat-2",
+        question: "What styles do your artists specialize in?",
+        answer: "Our team specializes in various styles including realism, geometric, watercolor, Japanese traditional, black & gray, minimalist, neo-traditional, and tribal designs. Each artist has their unique strengths and we'll match you with the best artist for your vision."
+      },
+      {
+        id: "tat-3",
+        question: "How do I prepare for my tattoo appointment?",
+        answer: "Get a good night's sleep, eat a proper meal beforehand, stay hydrated, avoid alcohol for 24 hours prior, and wear comfortable clothing that provides easy access to the tattoo area. We'll provide detailed aftercare instructions."
+      },
+      {
+        id: "tat-4",
+        question: "How long does the healing process take?",
+        answer: "Initial healing typically takes 2-3 weeks, but complete healing can take 2-3 months. We provide comprehensive aftercare instructions and premium healing products to ensure optimal results."
+      },
+      {
+        id: "tat-5",
+        question: "Do you require a deposit?",
+        answer: "Yes, we require a deposit to secure your tattoo appointment. The deposit amount varies based on the size and complexity of the piece and goes toward your final payment."
+      }
+    ]
+  },
+  {
+    id: "lifestyle",
+    title: "Lifestyle Services",
+    icon: Diamond,
+    color: "text-purple-500",
+    questions: [
+      {
+        id: "life-1",
+        question: "What lifestyle services do you offer for women?",
+        answer: "For women, we offer professional makeup artistry, hair styling and treatments, luxury manicures and pedicures with custom nail art, skincare treatments, and personal styling consultations."
+      },
+      {
+        id: "life-2",
+        question: "What lifestyle services do you offer for men?",
+        answer: "For men, we provide executive grooming packages, spa and wellness treatments including massages, skincare services, style consultations, and wardrobe advice to enhance your personal and professional image."
+      },
+      {
+        id: "life-3",
+        question: "Can I book multiple services in one appointment?",
+        answer: "Absolutely! We encourage combining services for a complete transformation experience. Our team can coordinate multiple services and we offer package deals for combined appointments."
+      },
+      {
+        id: "life-4",
+        question: "Do you offer bridal or special event services?",
+        answer: "Yes, we specialize in bridal beauty, special events, photoshoots, and other occasions. We recommend booking these services well in advance and offer trial sessions to ensure everything is perfect for your big day."
+      }
+    ]
   }
 ];
