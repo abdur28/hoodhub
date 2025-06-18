@@ -7,6 +7,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import Link from "next/link";
 
 interface NavbarProps {
   variant?: "transparent" | "floating";
@@ -78,13 +80,21 @@ const Navbar = ({ variant = "transparent", className = "" }: NavbarProps) => {
               } transition-colors duration-200`}>
                 <ShoppingCart className="h-5 w-5" />
               </button>
-              <button className={`${
-                isTransparent 
-                  ? "text-white/80 hover:text-white" 
-                  : "text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-              } transition-colors duration-200`}>
-                <User className="h-5 w-5" />
-              </button>
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
+              <SignedOut>
+                <button className={`${
+                  isTransparent 
+                    ? "text-white/80 hover:text-white" 
+                    : "text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                } transition-colors duration-200`}
+                >
+                  <Link href="/sign-in">
+                    <User className="h-5 w-5" />
+                  </Link>
+                </button>
+              </SignedOut>
             </div>
           </div>
 
@@ -97,13 +107,20 @@ const Navbar = ({ variant = "transparent", className = "" }: NavbarProps) => {
             } transition-colors duration-200`}>
               <ShoppingCart className="h-5 w-5" />
             </button>
-            <button className={`${
-              isTransparent 
-                ? "text-white/80 hover:text-white" 
-                : "text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-            } transition-colors duration-200`}>
-              <User className="h-5 w-5" />
-            </button>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+            <SignedOut>
+              <button className={`${
+                isTransparent 
+                  ? "text-white/80 hover:text-white" 
+                  : "text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+              } transition-colors duration-200`}>
+                <Link href="/sign-in">
+                  <User className="h-5 w-5" />
+                </Link>
+              </button>
+            </SignedOut>
             
             {/* Mobile Menu */}
             <Sheet>

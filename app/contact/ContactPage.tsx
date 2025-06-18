@@ -4,6 +4,16 @@ import { motion } from "framer-motion";
 import { FloatingNav } from "@/components/ui/floating-navbar";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { 
   MapPin, 
   Phone, 
@@ -155,7 +165,7 @@ const ContactPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Contact Info Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
             {contactInfo.map((info, index) => (
               <motion.div
                 key={index}
@@ -196,89 +206,86 @@ const ContactPage = () => {
               
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-franklin font-medium text-gray-700 mb-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="name" className="text-sm font-franklin font-medium text-gray-700">
                       Full Name *
-                    </label>
-                    <input
+                    </Label>
+                    <Input
                       type="text"
                       id="name"
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300 font-franklin"
                       placeholder="Your name"
+                      className="font-franklin"
                     />
                   </div>
                   
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-franklin font-medium text-gray-700 mb-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-sm font-franklin font-medium text-gray-700">
                       Email Address *
-                    </label>
-                    <input
+                    </Label>
+                    <Input
                       type="email"
                       id="email"
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300 font-franklin"
                       placeholder="your@email.com"
+                      className="font-franklin"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-franklin font-medium text-gray-700 mb-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="phone" className="text-sm font-franklin font-medium text-gray-700">
                       Phone Number
-                    </label>
-                    <input
+                    </Label>
+                    <Input
                       type="tel"
                       id="phone"
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300 font-franklin"
                       placeholder="(123) 456-7890"
+                      className="font-franklin"
                     />
                   </div>
                   
-                  <div>
-                    <label htmlFor="service" className="block text-sm font-franklin font-medium text-gray-700 mb-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="service" className="text-sm font-franklin font-medium text-gray-700">
                       Service Interest
-                    </label>
-                    <select
-                      id="service"
-                      name="service"
-                      value={formData.service}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300 font-franklin"
-                    >
-                      <option value="">Select a service</option>
-                      <option value="barbing">Professional Barbing</option>
-                      <option value="tattoo">Tattoo Artistry</option>
-                      <option value="lifestyle">Lifestyle Services</option>
-                      <option value="consultation">General Consultation</option>
-                      <option value="other">Other</option>
-                    </select>
+                    </Label>
+                    <Select name="service" value={formData.service} onValueChange={(value) => setFormData(prev => ({ ...prev, service: value }))}>
+                      <SelectTrigger className="font-franklin w-full">
+                        <SelectValue placeholder="Select a service" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="barbing">Professional Barbing</SelectItem>
+                        <SelectItem value="tattoo">Tattoo Artistry</SelectItem>
+                        <SelectItem value="lifestyle">Lifestyle Services</SelectItem>
+                        <SelectItem value="consultation">General Consultation</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
 
-                <div>
-                  <label htmlFor="message" className="block text-sm font-franklin font-medium text-gray-700 mb-2">
+                <div className="space-y-2">
+                  <Label htmlFor="message" className="text-sm font-franklin font-medium text-gray-700">
                     Message *
-                  </label>
-                  <textarea
+                  </Label>
+                  <Textarea
                     id="message"
                     name="message"
                     value={formData.message}
                     onChange={handleInputChange}
                     required
                     rows={6}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300 font-franklin resize-none"
                     placeholder="Tell us about your vision or any questions you have..."
+                    className="font-franklin resize-none"
                   />
                 </div>
 
@@ -419,7 +426,6 @@ const ContactPage = () => {
           </motion.div>
         </div>
       </section>
-
     </div>
   );
 };
