@@ -80,7 +80,7 @@ const BarbingPage = () => {
       </section>
 
       {/* Barbing Experience Section */}
-      <section className="relative rounded-t-[4rem] bg-white py-20 lg:py-32 -mt-16 z-20">
+      <section className="relative rounded-t-4xl bg-white py-20 lg:py-32 -mt-16 z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-16">
             {/* Images Section */}

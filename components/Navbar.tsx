@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { ShoppingBag, User, Menu } from "lucide-react";
+import { ShoppingBag, User, Menu, Calendar, ChevronDown } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -9,6 +9,12 @@ import {
 } from "@/components/ui/sheet";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 
 interface NavbarProps {
   variant?: "transparent" | "floating";
@@ -24,7 +30,7 @@ const Navbar = ({ variant = "transparent", className = "" }: NavbarProps) => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <a 
+            <Link 
               href="/" 
               className={`${
                 isTransparent 
@@ -33,13 +39,13 @@ const Navbar = ({ variant = "transparent", className = "" }: NavbarProps) => {
               } font-franklin-condensed text-2xl md:text-3xl font-semibold tracking-tight hover:opacity-80 transition-opacity`}
             >
               HoodHub
-            </a>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <div className="flex items-center space-x-6">
-              <a
+              <Link
                 href="/barbing"
                 className={`${
                   isTransparent 
@@ -48,8 +54,8 @@ const Navbar = ({ variant = "transparent", className = "" }: NavbarProps) => {
                 } font-franklin text-sm font-medium transition-colors duration-200`}
               >
                 Barbing
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/tattoo"
                 className={`${
                   isTransparent 
@@ -58,8 +64,8 @@ const Navbar = ({ variant = "transparent", className = "" }: NavbarProps) => {
                 } font-franklin text-sm font-medium transition-colors duration-200`}
               >
                 Tattoo
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/lifestyle"
                 className={`${
                   isTransparent 
@@ -68,62 +74,128 @@ const Navbar = ({ variant = "transparent", className = "" }: NavbarProps) => {
                 } font-franklin text-sm font-medium transition-colors duration-200`}
               >
                 Lifestyle
-              </a>
+              </Link>
+              
+              {/* About with Dropdown Menu */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <div className="flex items-center cursor-pointer">
+                    <span
+                      className={`${
+                        isTransparent 
+                          ? "text-white/90 hover:text-white" 
+                          : "text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                      } font-franklin text-sm font-medium transition-colors duration-200`}
+                    >
+                      About
+                    </span>
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-48 p-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-md shadow-lg">
+                  <DropdownMenuItem asChild>
+                    <Link 
+                      href="/our-story" 
+                      className="px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors"
+                    >
+                      Our Story
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link 
+                      href="/our-team" 
+                      className="px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors"
+                    >
+                      Our Team
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link 
+                      href="/faq" 
+                      className="px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors"
+                    >
+                      FAQ
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link 
+                      href="/contact" 
+                      className="px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors"
+                    >
+                      Contact
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
             
             {/* Icons */}
             <div className="flex items-center space-x-4">
-              <button className={`${
-                isTransparent 
-                  ? "text-white/80 hover:text-white" 
-                  : "text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-              } transition-colors duration-200`}>
-                <Link href="https://hoodskool.com">
-                  <ShoppingBag className="h-5 w-5" />
-                </Link>
-              </button>
-              <SignedIn>
-                <UserButton />
-              </SignedIn>
-              <SignedOut>
-                <button className={`${
+              <Link 
+                href="https://hoodskool.com"
+                className={`${
                   isTransparent 
                     ? "text-white/80 hover:text-white" 
                     : "text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
                 } transition-colors duration-200`}
+              >
+                <ShoppingBag className="h-5 w-5" />
+              </Link>
+              <SignedIn>
+                <Link 
+                  href="/bookings"
+                  className={`${
+                    isTransparent 
+                      ? "text-white/80 hover:text-white" 
+                      : "text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                  } transition-colors duration-200`}
                 >
-                  <Link href="/sign-in">
-                    <User className="h-5 w-5" />
-                  </Link>
-                </button>
+                  <Calendar className="h-5 w-5" />
+                </Link>
+              </SignedIn>
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
+              <SignedOut>
+                <Link 
+                  href="/sign-in"
+                  className={`${
+                    isTransparent 
+                      ? "text-white/80 hover:text-white" 
+                      : "text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                  } transition-colors duration-200`}
+                >
+                  <User className="h-5 w-5" />
+                </Link>
               </SignedOut>
             </div>
           </div>
 
           {/* Mobile Navigation */}
           <div className="md:hidden flex items-center space-x-4">
-            <button className={`${
-              isTransparent 
-                ? "text-white/80 hover:text-white" 
-                : "text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-            } transition-colors duration-200`}>
-              <Link href="https://hoodskool.com">
+            <Link 
+              href="https://hoodskool.com"
+              className={`${
+                isTransparent 
+                  ? "text-white/80 hover:text-white" 
+                  : "text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+              } transition-colors duration-200`}
+            >
               <ShoppingBag className="h-5 w-5" />
-              </Link>
-            </button>
+            </Link>
             <SignedIn>
               <UserButton />
             </SignedIn>
             <SignedOut>
-              <button className={`${
-                isTransparent 
-                  ? "text-white/80 hover:text-white" 
-                  : "text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-              } transition-colors duration-200`}>
-                <Link href="/sign-in">
-                  <User className="h-5 w-5" />
-                </Link>
-              </button>
+              <Link 
+                href="/sign-in"
+                className={`${
+                  isTransparent 
+                    ? "text-white/80 hover:text-white" 
+                    : "text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                } transition-colors duration-200`}
+              >
+                <User className="h-5 w-5" />
+              </Link>
             </SignedOut>
             
             {/* Mobile Menu */}
@@ -137,37 +209,43 @@ const Navbar = ({ variant = "transparent", className = "" }: NavbarProps) => {
                   <Menu className="h-6 w-6" />
                 </button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-full sm:w-[380px] flex flex-col">
-                {/* Hidden title for accessibility */}
+              <SheetContent side="right" className="w-[80%] flex flex-col">
                 <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
                 
-                {/* Navigation */}
                 <div className="flex-1 pt-10">
                   <nav className="space-y-1">
-                    <a
+                    <SignedIn>
+                      <Link
+                        href="/bookings"
+                        className="block px-6 py-4 font-franklin text-base hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                      >
+                        My Bookings
+                      </Link>
+                    </SignedIn>
+                    <Link
                       href="/barbing"
                       className="block px-6 py-4 font-franklin text-base hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                     >
                       Barbing
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       href="/tattoo"
                       className="block px-6 py-4 font-franklin text-base hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                     >
                       Tattoo
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       href="/lifestyle"
                       className="block px-6 py-4 font-franklin text-base hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                     >
                       Lifestyle
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       href="https://hoodskool.com/"
                       className="block px-6 py-4 font-franklin text-base hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                     >
                       HoodSkool
-                    </a>
+                    </Link>
                   </nav>
                   
                   <div className="mt-8 px-6">
@@ -175,28 +253,36 @@ const Navbar = ({ variant = "transparent", className = "" }: NavbarProps) => {
                   </div>
                   
                   <nav className="mt-8 space-y-1">
-                    <a
-                      href="/about"
-                      className="block px-6 py-3 font-franklin text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
-                    >
+                    <div className="px-6 py-2 font-franklin font-medium text-gray-900 dark:text-white">
                       About
-                    </a>
-                    <a
+                    </div>
+                    <Link
+                      href="/our-story"
+                      className="block px-8 py-2 font-franklin text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+                    >
+                      Our Story
+                    </Link>
+                    <Link
+                      href="/our-team"
+                      className="block px-8 py-2 font-franklin text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+                    >
+                      Our Team
+                    </Link>
+                    <Link
+                      href="/faq"
+                      className="block px-8 py-2 font-franklin text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+                    >
+                      FAQ
+                    </Link>
+                    <Link
                       href="/contact"
-                      className="block px-6 py-3 font-franklin text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+                      className="block px-8 py-2 font-franklin text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
                     >
                       Contact
-                    </a>
-                    <a
-                      href="/careers"
-                      className="block px-6 py-3 font-franklin text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
-                    >
-                      Careers
-                    </a>
+                    </Link>
                   </nav>
                 </div>
                 
-                {/* CTA */}
                 <div className="p-6">
                   <button className="w-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-black font-franklin font-semibold py-4 rounded-full hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 transition-all duration-300">
                     Book Appointment
