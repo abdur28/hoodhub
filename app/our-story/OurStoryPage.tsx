@@ -7,6 +7,7 @@ import Navbar from "@/components/Navbar";
 import { Diamond, Star } from "lucide-react";
 import { storyPhases } from "@/constants";
 import Link from "next/link";
+import Image from "next/image";
 
 const OurStoryPage = () => {
   const targetRef = useRef<HTMLDivElement>(null);
@@ -258,7 +259,9 @@ const OurStoryPage = () => {
                     className="absolute inset-0"
                   >
                     <div className={`absolute inset-0 bg-gradient-to-b ${storyPhases[activePhase]?.color || "from-yellow-400/20 to-yellow-600/10"}`} />
-                    <img
+                    <Image
+                      width={700}
+                      height={700}
                       src={storyPhases[activePhase]?.image}
                       alt={storyPhases[activePhase]?.title || "HoodHub Story"}
                       className="w-full h-full object-cover"
@@ -302,7 +305,9 @@ const OurStoryPage = () => {
                         initial={false}
                       >
                         <div className={`absolute inset-0 bg-gradient-to-b ${phase.color}`} />
-                        <img
+                        <Image
+                          width={700}
+                          height={700}
                           src={phase.image}
                           alt={phase.title}
                           className="w-full h-full object-cover"

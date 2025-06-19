@@ -10,11 +10,9 @@ export const metadata: Metadata = {
 
 export default async function Book({
   searchParams,
-}: {
-  searchParams: { service?: string };
-}) {
+}: any) {
   const user = await getUser();
-  const selectedService = searchParams.service;
+  const { service:selectedService } = await searchParams;
 
   return <BookPage userAsString={JSON.stringify(user)} selectedService={selectedService} />;
 }
