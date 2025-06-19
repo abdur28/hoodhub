@@ -6,6 +6,7 @@ import { barbingImages, barbingServices } from "@/constants";
 import { FloatingNav } from "@/components/ui/floating-navbar";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
+import Image from "next/image";
 
 const BarbingPage = () => {
   const [selectedImage, setSelectedImage] = useState(barbingImages[0]);
@@ -100,7 +101,9 @@ const BarbingPage = () => {
                   transition={{ duration: 0.5 }}
                   className="relative h-[500px] lg:h-[600px] w-full rounded-4xl overflow-hidden bg-black group"
                 >
-                  <img
+                  <Image
+                    width={700}
+                    height={700}
                     src={selectedImage.url}
                     alt={selectedImage.alt}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
@@ -128,7 +131,9 @@ const BarbingPage = () => {
                     transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
                     viewport={{ once: true }}
                   >
-                    <img
+                    <Image
+                      width={700}
+                      height={700}
                       src={image.url}
                       alt={image.alt}
                       className="w-full h-full object-cover"
