@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { ShoppingCart, User, Menu } from "lucide-react";
+import { ShoppingBag, User, Menu } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -78,7 +78,9 @@ const Navbar = ({ variant = "transparent", className = "" }: NavbarProps) => {
                   ? "text-white/80 hover:text-white" 
                   : "text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
               } transition-colors duration-200`}>
-                <ShoppingCart className="h-5 w-5" />
+                <Link href="https://hoodskool.com">
+                  <ShoppingBag className="h-5 w-5" />
+                </Link>
               </button>
               <SignedIn>
                 <UserButton />
@@ -105,7 +107,9 @@ const Navbar = ({ variant = "transparent", className = "" }: NavbarProps) => {
                 ? "text-white/80 hover:text-white" 
                 : "text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
             } transition-colors duration-200`}>
-              <ShoppingCart className="h-5 w-5" />
+              <Link href="https://hoodskool.com">
+              <ShoppingBag className="h-5 w-5" />
+              </Link>
             </button>
             <SignedIn>
               <UserButton />

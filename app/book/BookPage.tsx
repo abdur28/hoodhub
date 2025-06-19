@@ -18,9 +18,9 @@ import {
   User,
   CheckCircle,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Loader2
 } from "lucide-react";
-import { barbingServices } from "@/constants";
 
 interface User {
   _id: string;
@@ -39,12 +39,14 @@ interface BookPageProps {
 const services = [
   { id: "barbing", name: "Professional Barbing", category: "Barbing" },
   { id: "tattoo", name: "Tattoo Artistry", category: "Tattoo" },
-  { id: "nails", name: "Nails Services", category: "Lifestyle" },
-  { id: "breads", name: "Breads & Treats", category: "Other" },
+  { id: "nails", name: "Nail Services", category: "Lifestyle" },
+  { id: "spa", name: "Spa & Wellness", category: "Lifestyle" },
 ];
 
 const timeSlots = [
-  "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"
+  "10:00", "11:00", "12:00", "13:00", "14:00", 
+  "15:00", "16:00", "17:00", "18:00", "19:00", 
+  "20:00", "21:00"
 ];
 
 const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
@@ -53,8 +55,11 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
   const [selectedTime, setSelectedTime] = useState("");
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [calendarDays, setCalendarDays] = useState<Date[]>([]);
+  const [availableSlots, setAvailableSlots] = useState<{time: string, available: boolean}[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFetchingSlots, setIsFetchingSlots] = useState(false);
 
-  const user: User = JSON.parse(userAsString);
+  const user: User | null = userAsString ? JSON.parse(userAsString) : null;
 
   // Generate calendar days
   useEffect(() => {
@@ -76,6 +81,35 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
     setCalendarDays(days);
   }, [currentMonth]);
 
+  // Fetch available slots when date changes
+  useEffect(() => {
+    if (selectedDate) {
+      fetchAvailableSlots();
+    }
+  }, [selectedDate]);
+
+  const fetchAvailableSlots = async () => {
+    setIsFetchingSlots(true);
+    try {
+      const response = await fetch(`/api/bookings?date=${selectedDate}`);
+      const data = await response.json();
+      
+      if (response.ok && data.slots) {
+        setAvailableSlots(data.slots);
+      } else {
+        console.error('Failed to fetch slots:', data.error);
+        // If fetch fails, show all slots as available
+        setAvailableSlots(timeSlots.map(time => ({ time, available: true })));
+      }
+    } catch (error) {
+      console.error('Error fetching slots:', error);
+      // If fetch fails, show all slots as available
+      setAvailableSlots(timeSlots.map(time => ({ time, available: true })));
+    } finally {
+      setIsFetchingSlots(false);
+    }
+  };
+
   const formatDate = (date: Date) => {
     return date.toISOString().split('T')[0];
   };
@@ -87,7 +121,8 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
 
   const isPastDate = (date: Date) => {
     const today = new Date();
-    return date < today && !isToday(date);
+    today.setHours(0, 0, 0, 0);
+    return date < today;
   };
 
   const isCurrentMonth = (date: Date) => {
@@ -97,6 +132,7 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
   const handleDateSelect = (date: Date) => {
     if (isPastDate(date)) return;
     setSelectedDate(formatDate(date));
+    setSelectedTime(""); // Reset time when date changes
   };
 
   const handlePrevMonth = () => {
@@ -107,9 +143,8 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1));
   };
 
-  const handleBooking = () => {
+  const handleBooking = async () => {
     if (!user) {
-      // Redirect to sign in
       window.location.href = '/sign-in';
       return;
     }
@@ -119,15 +154,45 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
       return;
     }
 
-    // Handle booking logic here
-    console.log('Booking:', {
-      service: selectedServiceId,
-      date: selectedDate,
-      time: selectedTime,
-      user: user.clerkId
-    });
-    
-    alert('Booking request submitted! We will contact you to confirm.');
+    setIsLoading(true);
+
+    try {
+      const selectedServiceData = services.find(s => s.id === selectedServiceId);
+      
+      const response = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          service: {
+            id: selectedServiceId,
+            name: selectedServiceData?.name || '',
+            category: selectedServiceData?.category || ''
+          },
+          date: selectedDate,
+          time: selectedTime
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert('Booking confirmed! We will contact you soon.');
+        // Reset form
+        setSelectedServiceId('');
+        setSelectedDate('');
+        setSelectedTime('');
+        setAvailableSlots([]);
+      } else {
+        alert(data.error || 'Failed to create booking');
+      }
+    } catch (error) {
+      console.error('Error creating booking:', error);
+      alert('Something went wrong. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const monthNames = [
@@ -228,10 +293,10 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
                   </SelectTrigger>
                   <SelectContent>
                     {services.map((service) => (
-                      <SelectItem key={service.id} value={service.id} className="font-franklin ">
+                      <SelectItem key={service.id} value={service.id} className="font-franklin">
                         <div className="flex items-center gap-2">
                           <div className="font-medium">{service.name}</div>
-                          <div className="text-sm text-gray-500">{'-'}</div>
+                          <div className="text-sm text-gray-500">•</div>
                           <div className="text-sm text-gray-500">{service.category}</div>
                         </div>
                       </SelectItem>
@@ -315,27 +380,46 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
               <div>
                 <Label className="text-lg font-franklin font-semibold text-gray-900 mb-4 block">
                   Select Time
+                  {isFetchingSlots && (
+                    <span className="ml-2 text-sm text-gray-500 font-normal">
+                      <Loader2 className="w-4 h-4 inline animate-spin mr-1" />
+                      Loading available slots...
+                    </span>
+                  )}
                 </Label>
                 <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
-                  {timeSlots.map((time) => (
-                    <button
-                      key={time}
-                      onClick={() => setSelectedTime(time)}
-                      disabled={!selectedDate}
-                      className={`
-                        h-12 rounded-lg text-sm font-franklin font-medium transition-all duration-200
-                        ${!selectedDate 
-                          ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
-                          : selectedTime === time
-                            ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black shadow-lg' 
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105'
-                        }
-                      `}
-                    >
-                      <Clock className="w-4 h-4 inline mr-1" />
-                      {time}
-                    </button>
-                  ))}
+                  {selectedDate && availableSlots.length > 0 ? (
+                    availableSlots.map((slot) => (
+                      <button
+                        key={slot.time}
+                        onClick={() => slot.available && setSelectedTime(slot.time)}
+                        disabled={!slot.available}
+                        className={`
+                          h-12 rounded-lg text-sm font-franklin font-medium transition-all duration-200
+                          ${!slot.available 
+                            ? 'bg-gray-200 text-gray-400 cursor-not-allowed line-through' 
+                            : selectedTime === slot.time
+                              ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black shadow-lg' 
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105'
+                          }
+                        `}
+                      >
+                        <Clock className="w-4 h-4 inline mr-1" />
+                        {slot.time}
+                      </button>
+                    ))
+                  ) : (
+                    timeSlots.map((time) => (
+                      <button
+                        key={time}
+                        disabled={!selectedDate}
+                        className="h-12 rounded-lg text-sm font-franklin font-medium bg-gray-100 text-gray-400 cursor-not-allowed"
+                      >
+                        <Clock className="w-4 h-4 inline mr-1" />
+                        {time}
+                      </button>
+                    ))
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -421,13 +505,36 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
                 <div className="mt-8">
                   <Button
                     onClick={handleBooking}
-                    disabled={!user || !selectedServiceId || !selectedDate || !selectedTime}
+                    disabled={!user || !selectedServiceId || !selectedDate || !selectedTime || isLoading}
                     className="w-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-black font-franklin font-semibold py-4 text-lg hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <CheckCircle className="w-5 h-5 mr-2" />
-                    Book Appointment
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle className="w-5 h-5 mr-2" />
+                        Book Appointment
+                      </>
+                    )}
                   </Button>
                 </div>
+              </div>
+
+              {/* Additional Information */}
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
+                <h4 className="font-franklin font-semibold text-blue-900 mb-2 flex items-center">
+                  <CalendarIcon className="w-5 h-5 mr-2" />
+                  Booking Information
+                </h4>
+                <ul className="space-y-2 text-sm text-blue-800 font-franklin">
+                  <li>• Appointments are confirmed within 24 hours</li>
+                  <li>• You'll receive a confirmation email</li>
+                  <li>• Free cancellation up to 24 hours before</li>
+                  <li>• Please arrive 10 minutes early</li>
+                </ul>
               </div>
             </motion.div>
           </div>
