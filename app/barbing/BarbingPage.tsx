@@ -5,6 +5,7 @@ import { Scissors, Diamond, Calendar, MapPin } from "lucide-react";
 import { barbingImages, barbingServices } from "@/constants";
 import { FloatingNav } from "@/components/ui/floating-navbar";
 import Navbar from "@/components/Navbar";
+import Link from "next/link";
 
 const BarbingPage = () => {
   const [selectedImage, setSelectedImage] = useState(barbingImages[0]);
@@ -294,7 +295,9 @@ const BarbingPage = () => {
                 whileTap={{ scale: 0.95 }}
                 className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-franklin px-8 py-4 text-lg rounded-full transition-all duration-300 shadow-lg shadow-yellow-500/20 hover:shadow-yellow-500/40"
               >
-                Book Your Appointment
+                <Link href="/book?service=barbing">
+                  Book Your Appointment
+                </Link>
               </motion.button>
             </motion.div>
           </div>

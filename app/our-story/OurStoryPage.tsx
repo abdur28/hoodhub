@@ -6,6 +6,7 @@ import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import Navbar from "@/components/Navbar";
 import { Diamond, Star } from "lucide-react";
 import { storyPhases } from "@/constants";
+import Link from "next/link";
 
 const OurStoryPage = () => {
   const targetRef = useRef<HTMLDivElement>(null);
@@ -136,7 +137,7 @@ const OurStoryPage = () => {
       </section>
 
       {/* Section 1.5: Story Introduction */}
-      <section className="relative rounded-t-[4rem] bg-white py-20 lg:py-32 -mt-16 z-20">
+      <section className="relative rounded-t-4xl bg-white py-20 lg:py-32 -mt-16 z-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Title */}
           <motion.div
@@ -456,7 +457,9 @@ const OurStoryPage = () => {
                 whileTap={{ scale: 0.95 }}
                 className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-franklin px-8 py-4 text-lg rounded-full transition-all duration-300 shadow-lg shadow-yellow-500/20 hover:shadow-yellow-500/40"
               >
-                Book Your Experience
+                <Link href="/book">
+                  Book Your Experience
+                </Link>
               </motion.button>
               
             </motion.div>

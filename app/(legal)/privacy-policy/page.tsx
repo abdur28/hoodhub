@@ -14,7 +14,7 @@ export default function PrivacyPolicyPage() {
           Privacy <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">Policy</span>
         </h1>
         <p className="text-gray-600 font-franklin">
-          Last updated: January 2025
+          Last updated: June 2025
         </p>
       </div>
 
@@ -197,7 +197,7 @@ export default function PrivacyPolicyPage() {
 
         <div className="border-t border-gray-200 pt-8 mt-12">
           <p className="text-sm text-gray-500 text-center">
-            This Privacy Policy is effective as of January 2025 and applies to all personal information collected by HoodHub.
+            This Privacy Policy is effective as of June 2025 and applies to all personal information collected by HoodHub.
           </p>
         </div>
       </div>

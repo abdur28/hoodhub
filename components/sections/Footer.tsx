@@ -55,11 +55,11 @@ const Footer = () => {
   ];
 
   const quickLinks = [
-    { name: "About Us", href: "/about" },
-    { name: "Book Appointment", href: "/booking" },
-    { name: "Gift Cards", href: "/gift-cards" },
-    { name: "Careers", href: "/careers" },
-    { name: "Press", href: "/press" },
+    { name: "About Us", href: "/our-story" },
+    { name: "Book Appointment", href: "/book" },
+    { name: "Our Team", href: "/our-team" },
+    { name: "careers", href: "/contact" },
+    { name: "FAQ", href: "/faq" },
     { name: "Contact", href: "/contact" },
   ];
 
@@ -187,8 +187,7 @@ const Footer = () => {
                           <div className="flex items-start gap-3">
                             <Clock className="w-5 h-5 text-yellow-500 mt-1 flex-shrink-0" />
                             <div>
-                              <p className="text-gray-900 font-franklin">Mon - Sat: 9AM - 8PM</p>
-                              <p className="text-gray-600 font-franklin">Sunday: 10AM - 6PM</p>
+                              <p className="text-gray-900 font-franklin">Mon - Sun: 10AM - 9PM</p>
                             </div>
                           </div>
                         </div>

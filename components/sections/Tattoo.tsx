@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Calendar, PaintBucket } from "lucide-react";
 import { tattooImages } from "@/constants";
+import Link from "next/link";
 
 const Tattoo = () => {
   return (
@@ -295,6 +296,7 @@ const Tattoo = () => {
             transition={{ duration: 0.8, delay: 1.0 }}
             viewport={{ once: true }}
           >
+            <Link href="/book?service=tattoo" className="group">
             <Button
                 size="lg"
                 className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-black font-franklin font-semibold px-8 md:px-10 py-3 md:py-4 text-base md:text-lg hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl group min-w-[200px]"
@@ -302,6 +304,7 @@ const Tattoo = () => {
                 <Calendar className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" />
                 Book Appointment
             </Button>
+            </Link>
           </motion.div>
         </div>
       </div>

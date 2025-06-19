@@ -3,6 +3,7 @@ import React from "react";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Calendar, Scissors } from "lucide-react";
+import Link from "next/link";
 
 const BarbingCTA = () => {
   return (
@@ -46,6 +47,7 @@ const BarbingCTA = () => {
             viewport={{ once: true }}
           >
             {/* Primary CTA */}
+            <Link href="/book?service=barbing" className="group">
             <Button
               size="lg"
               className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-black font-franklin font-semibold px-8 md:px-10 py-3 md:py-4 text-base md:text-lg hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl group min-w-[200px]"
@@ -53,6 +55,7 @@ const BarbingCTA = () => {
               <Calendar className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" />
               Book Appointment
             </Button>
+            </Link>
           </motion.div>
 
         </div>

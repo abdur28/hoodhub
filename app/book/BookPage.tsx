@@ -208,7 +208,7 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
       <FloatingNav />
       
       {/* Hero Section */}
-      <section className="relative h-[70vh] w-full overflow-hidden">
+      <section className="relative h-[50vh] w-full overflow-hidden">
         {/* Animated Gradient Background */}
         <div className="absolute inset-0 overflow-hidden">
           <motion.div 
@@ -270,7 +270,7 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
       </section>
 
       {/* Booking Section */}
-      <section className="relative rounded-t-[4rem] bg-white py-20 lg:py-32 -mt-16 z-20">
+      <section className="relative rounded-t-4xl bg-white py-20 lg:py-32 -mt-16 z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-12">
 
@@ -530,8 +530,6 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
                   Booking Information
                 </h4>
                 <ul className="space-y-2 text-sm text-blue-800 font-franklin">
-                  <li>• Appointments are confirmed within 24 hours</li>
-                  <li>• You'll receive a confirmation email</li>
                   <li>• Free cancellation up to 24 hours before</li>
                   <li>• Please arrive 10 minutes early</li>
                 </ul>

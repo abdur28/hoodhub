@@ -25,7 +25,7 @@ export default function LegalLayout({
       </section>
 
       {/* Content */}
-      <section className="relative rounded-t-[4rem] bg-white -mt-16 z-20">
+      <section className="relative rounded-t-4xl bg-white -mt-16 z-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
           {children}
         </div>

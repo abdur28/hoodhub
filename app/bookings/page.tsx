@@ -1,11 +1,27 @@
 import type { Metadata } from "next";
+import BookingsPage from "./BookingsPage";
+import { getUser } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "HoodHub | Bookings",
-  description: "Book your appointment today to experience precision barbering at HoodHub. Our master barbers specialize in classic cuts, modern styles, and luxury grooming services.",
-  keywords: "bookings, appointment, barber, haircut, beard styling, men's grooming, luxury barbershop, professional barbing, hair styling",
+  title: "My Bookings - HoodHub | Manage Your Appointments",
+  description: "View and manage your upcoming and past appointments at HoodHub. Cancel or reschedule your bookings for barbering, tattoo, and lifestyle services.",
+  keywords: "my bookings, appointments, manage bookings, cancel appointment, HoodHub",
 };
 
-export default function Barbing() {
-  return <div>Bookings</div>
+export default async function Bookings() {
+  const user = await getUser();
+
+  if (!user) {
+    // Redirect to sign-in if not authenticated
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-franklin mb-4">Please sign in to view your bookings</h1>
+          <a href="/sign-in" className="text-yellow-500 hover:text-yellow-600">Sign In</a>
+        </div>
+      </div>
+    );
+  }
+
+  return <BookingsPage userAsString={JSON.stringify(user)} />;
 }

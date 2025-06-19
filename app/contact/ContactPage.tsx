@@ -27,6 +27,7 @@ import {
   Twitter,
   Youtube
 } from "lucide-react";
+import Link from "next/link";
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -99,7 +100,7 @@ const ContactPage = () => {
       <FloatingNav />
       
       {/* Hero Section */}
-      <section className="relative h-[70vh] w-full overflow-hidden">
+      <section className="relative h-[50vh] w-full overflow-hidden">
         {/* Animated Gradient Background */}
         <div className="absolute inset-0 overflow-hidden">
           <motion.div 
@@ -161,7 +162,7 @@ const ContactPage = () => {
       </section>
 
       {/* Main Contact Section */}
-      <section className="relative rounded-t-[4rem] bg-white py-20 lg:py-32 -mt-16 z-20">
+      <section className="relative rounded-t-4xl bg-white py-20 lg:py-32 -mt-16 z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Contact Info Grid */}
@@ -345,10 +346,14 @@ const ContactPage = () => {
                 <h4 className="text-xl font-franklin font-semibold mb-6 text-center">Quick Actions</h4>
                 
                 <div className="space-y-4">
-                  <button className="w-full flex items-center justify-center space-x-3 bg-white hover:bg-gray-50 text-gray-800 py-3 px-6 rounded-xl transition-colors duration-300 shadow-sm">
+
+                  <button className="w-full">
+                    <Link href='/book' className="w-full flex items-center justify-center space-x-3 bg-white hover:bg-gray-50 text-gray-800 py-3 px-6 rounded-xl transition-colors duration-300 shadow-sm">
                     <Calendar className="w-5 h-5 text-yellow-500" />
                     <span className="font-franklin font-medium">Book Appointment</span>
+                    </Link> 
                   </button>
+
                   
                   <button className="w-full flex items-center justify-center space-x-3 bg-white hover:bg-gray-50 text-gray-800 py-3 px-6 rounded-xl transition-colors duration-300 shadow-sm">
                     <MessageCircle className="w-5 h-5 text-green-500" />

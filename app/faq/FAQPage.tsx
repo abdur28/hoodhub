@@ -13,6 +13,7 @@ import {
   MessageCircle
 } from "lucide-react";
 import { faqSections } from "@/constants";
+import Link from "next/link";
 
 const FAQPage = () => {
   const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({});
@@ -30,7 +31,7 @@ const FAQPage = () => {
       <FloatingNav />
       
       {/* Hero Section */}
-      <section className="relative h-[70vh] w-full overflow-hidden">
+      <section className="relative h-[50vh] w-full overflow-hidden">
         {/* Animated Gradient Background */}
         <div className="absolute inset-0 overflow-hidden">
           <motion.div 
@@ -91,7 +92,7 @@ const FAQPage = () => {
       </section>
 
       {/* FAQ Content */}
-      <section className="relative rounded-t-[4rem] bg-white py-20 lg:py-32 -mt-16 z-20">
+      <section className="relative rounded-t-4xl bg-white py-20 lg:py-32 -mt-16 z-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Introduction */}
@@ -205,7 +206,9 @@ const FAQPage = () => {
                 whileTap={{ scale: 0.95 }}
                 className="bg-white border-2 border-gray-300 text-gray-700 font-franklin px-6 py-3 rounded-full hover:border-yellow-400 transition-all duration-300"
               >
-                Book Consultation
+                <Link href="/book">
+                  Book Consultation
+                </Link>
               </motion.button>
             </div>
           </div>

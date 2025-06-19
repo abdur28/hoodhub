@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Calendar, Diamond } from "lucide-react";
 import { femaleServices, maleServices } from "@/constants";
+import Link from "next/link";
 
 
 
@@ -141,7 +142,9 @@ const Lifestyle = () => {
                         className="mt-4"
                       >
                         <button className="text-xs bg-yellow-500/90 text-black px-4 py-2 rounded-full font-franklin font-medium">
+                        <Link href='/book'>
                           Book Now
+                        </Link>
                         </button>
                       </motion.div>
                     )}
@@ -198,6 +201,7 @@ const Lifestyle = () => {
             transition={{ duration: 0.8, delay: 0.6 }}
             viewport={{ once: true }}
           >
+              <Link href='/book?service=lifestyle' className="group">
               <Button
                 size="lg"
                 className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-black font-franklin font-semibold px-8 md:px-10 py-3 md:py-4 text-base md:text-lg hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl group min-w-[200px]"
@@ -205,6 +209,7 @@ const Lifestyle = () => {
                 <Calendar className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" />
                 Book Consultation
               </Button>
+              </Link>
           </motion.div>
         </div>
       </div>

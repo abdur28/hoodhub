@@ -5,6 +5,7 @@ import { FloatingNav } from "@/components/ui/floating-navbar";
 import Navbar from "@/components/Navbar";
 import {  Instagram, Twitter, MessageCircle, X } from "lucide-react";
 import { teamMembers } from "@/constants";
+import Link from "next/link";
 
 // Animation variants
 const container = {
@@ -242,7 +243,9 @@ const OurTeamPage = () => {
                   whileTap={{ scale: 0.95 }}
                   className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-franklin px-8 py-4 text-lg rounded-full transition-all duration-300 shadow-lg shadow-yellow-500/20 hover:shadow-yellow-500/40"
                 >
+                  <Link href="/book">
                   Book Your Session
+                  </Link>
                 </motion.button>
               </motion.div>
             </div>

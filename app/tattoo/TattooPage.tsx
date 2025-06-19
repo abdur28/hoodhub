@@ -5,6 +5,7 @@ import { PenTool } from "lucide-react";
 import { tattooImages, tattooStyles, tattooArtists } from "@/constants";
 import { FloatingNav } from "@/components/ui/floating-navbar";
 import Navbar from "@/components/Navbar";
+import Link from "next/link";
 
 const TattooPage = () => {
   const [activeStyle, setActiveStyle] = useState(0);
@@ -78,7 +79,7 @@ const TattooPage = () => {
       </section>
 
       {/* Tattoo Gallery Section */}
-      <section className="relative rounded-t-[4rem] bg-white py-20 lg:py-32 -mt-16 z-20">
+      <section className="relative rounded-t-4xl bg-white py-20 lg:py-32 -mt-16 z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header Section */}
           <div className="text-left mb-16">
@@ -450,7 +451,9 @@ const TattooPage = () => {
               whileTap={{ scale: 0.95 }}
               className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-franklin px-8 py-4 text-lg rounded-full transition-all duration-300 shadow-lg shadow-yellow-500/20 hover:shadow-yellow-500/40"
             >
+              <Link href="/book?service=tattoo">
               Book Your Consultation
+              </Link>
             </motion.button>
           </motion.div>
         </div>
