@@ -88,9 +88,7 @@ const HoodSkool = () => {
               transition={{ duration: 0.6, delay: 0.1 * (index % 4) }}
               viewport={{ once: true }}
             >
-              <ShopCard
-                id={product.id}
-                src={product.src}
+              <ShopCard                src={product.src}
                 title={product.title}
                 price={product.price}
                 category={product.category}
