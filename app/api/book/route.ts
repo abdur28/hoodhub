@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import client from "@/lib/mongodb";
-import { ObjectId } from "mongodb";
+import { ObjectId, PushOperator } from "mongodb";
 
 // GET: Fetch available time slots for a specific date
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const date = searchParams.get("date");
-    const service = searchParams.get("service");
+    // const service = searchParams.get("service");
 
     if (!date) {
       return NextResponse.json(
@@ -148,7 +148,7 @@ export async function POST(request: NextRequest) {
       { 
         $push: { 
           bookings: bookingRef 
-        } as any 
+        } as PushOperator<Document>
       }
     );
 
@@ -218,7 +218,7 @@ export async function DELETE(request: NextRequest) {
       { 
         $pull: { 
           bookings: { id: new ObjectId(bookingId) } 
-        } as any
+        } as PushOperator<Document>
       }
     );
 

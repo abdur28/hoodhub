@@ -20,7 +20,6 @@ import {
   PaintBucket,
   Diamond,
   ArrowRight,
-  Heart,
   ChevronDown
 } from "lucide-react";
 import Link from "next/link";

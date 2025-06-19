@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import client from "@/lib/mongodb";
-import { ObjectId } from "mongodb";
 
 // GET: Fetch all bookings for the current user
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const { userId } = await auth();
     if (!userId) {

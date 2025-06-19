@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { motion } from "motion/react";
 import { Scissors } from "lucide-react";
 import { barbingImages } from "@/constants";
+import Image from "next/image";
 
 const Barbing = () => {
   const [selectedImage, setSelectedImage] = useState(barbingImages[0]);
@@ -28,7 +29,9 @@ const Barbing = () => {
                 transition={{ duration: 0.5 }}
                 className="relative h-[500px] lg:h-[600px] w-full rounded-4xl overflow-hidden bg-black group"
               >
-                <img
+                <Image
+                                    width={700}
+                                    height={700}
                   src={selectedImage.url}
                   alt={selectedImage.alt}
                   className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
@@ -55,7 +58,9 @@ const Barbing = () => {
                   transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <img
+                  <Image
+                                      width={700}
+                                      height={700}
                     src={image.url}
                     alt={image.alt}
                     className="w-full h-full object-cover"

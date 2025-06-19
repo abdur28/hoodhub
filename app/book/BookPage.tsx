@@ -21,6 +21,7 @@ import {
   ChevronRight,
   Loader2
 } from "lucide-react";
+import Image from "next/image";
 
 interface User {
   _id: string;
@@ -67,7 +68,7 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
     const month = currentMonth.getMonth();
     
     const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
+    // const lastDay = new Date(year, month + 1, 0);
     const startDate = new Date(firstDay);
     startDate.setDate(firstDay.getDate() - firstDay.getDay());
     
@@ -438,7 +439,9 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
                   <div className="flex items-center gap-4">
                     <div className="w-16 h-16 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center">
                       {user.profilePicture ? (
-                        <img 
+                        <Image 
+                          width={100}
+                          height={100}
                           src={user.profilePicture} 
                           alt={`${user.firstName} ${user.lastName}`}
                           className="w-full h-full rounded-full object-cover"

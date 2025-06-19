@@ -191,7 +191,7 @@ const FAQPage = () => {
               Still have questions?
             </h3>
             <p className=" font-franklin mb-6">
-              Can't find the answer you're looking for? Our team is here to help.
+              {`Can't find the answer you're looking for? Our team is here to help.`}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <motion.button

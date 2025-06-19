@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar, Diamond } from "lucide-react";
 import { femaleServices, maleServices } from "@/constants";
 import Link from "next/link";
+import Image from "next/image";
 
 
 
@@ -115,7 +116,9 @@ const Lifestyle = () => {
                   <div className="relative h-[400px] rounded-3xl overflow-hidden bg-gray-100 cursor-pointer">
                     {/* Background Image */}
                     <div className="absolute inset-0">
-                      <img
+                      <Image
+                        width={700}
+                        height={700}
                         src={service.image}
                         alt={service.title}
                         className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"

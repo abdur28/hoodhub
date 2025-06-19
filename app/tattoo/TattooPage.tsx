@@ -6,6 +6,7 @@ import { tattooImages, tattooStyles, tattooArtists } from "@/constants";
 import { FloatingNav } from "@/components/ui/floating-navbar";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
+import Image from "next/image";
 
 const TattooPage = () => {
   const [activeStyle, setActiveStyle] = useState(0);
@@ -127,7 +128,9 @@ const TattooPage = () => {
                   viewport={{ once: true }}
                   whileHover={{ scale: 1.02 }}
                 >
-                  <img
+                  <Image
+                                      width={700}
+                                      height={700}
                     src={tattooImages[0].url}
                     alt={tattooImages[0].alt}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -143,7 +146,9 @@ const TattooPage = () => {
                   viewport={{ once: true }}
                   whileHover={{ scale: 1.02 }}
                 >
-                  <img
+                  <Image
+                                      width={700}
+                                      height={700}
                     src={tattooImages[1].url}
                     alt={tattooImages[1].alt}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -162,7 +167,9 @@ const TattooPage = () => {
                   viewport={{ once: true }}
                   whileHover={{ scale: 1.02 }}
                 >
-                  <img
+                  <Image
+                                      width={700}
+                                      height={700}
                     src={tattooImages[2].url}
                     alt={tattooImages[2].alt}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -177,7 +184,9 @@ const TattooPage = () => {
                   viewport={{ once: true }}
                   whileHover={{ scale: 1.02 }}
                 >
-                  <img
+                  <Image
+                                      width={700}
+                                      height={700}
                     src={tattooImages[3].url}
                     alt={tattooImages[3].alt}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -196,7 +205,9 @@ const TattooPage = () => {
                   viewport={{ once: true }}
                   whileHover={{ scale: 1.02 }}
                 >
-                  <img
+                  <Image
+                                      width={700}
+                                      height={700}
                     src={tattooImages[4].url}
                     alt={tattooImages[4].alt}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -211,7 +222,9 @@ const TattooPage = () => {
                   viewport={{ once: true }}
                   whileHover={{ scale: 1.02 }}
                 >
-                  <img
+                  <Image
+                                      width={700}
+                                      height={700}
                     src={tattooImages[5].url}
                     alt={tattooImages[5].alt}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -233,7 +246,9 @@ const TattooPage = () => {
                   viewport={{ once: true }}
                   whileHover={{ scale: 1.02 }}
                 >
-                  <img
+                  <Image
+                                      width={700}
+                                      height={700}
                     src={tattooImages[0].url}
                     alt={tattooImages[0].alt}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -248,7 +263,9 @@ const TattooPage = () => {
                   viewport={{ once: true }}
                   whileHover={{ scale: 1.02 }}
                 >
-                  <img
+                  <Image
+                                      width={700}
+                                      height={700}
                     src={tattooImages[1].url}
                     alt={tattooImages[1].alt}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -263,7 +280,9 @@ const TattooPage = () => {
                   viewport={{ once: true }}
                   whileHover={{ scale: 1.02 }}
                 >
-                  <img
+                  <Image
+                                      width={700}
+                                      height={700}
                     src={tattooImages[2].url}
                     alt={tattooImages[2].alt}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -282,7 +301,9 @@ const TattooPage = () => {
                   viewport={{ once: true }}
                   whileHover={{ scale: 1.02 }}
                 >
-                  <img
+                  <Image
+                    width={700}
+                    height={700}
                     src={tattooImages[3].url}
                     alt={tattooImages[3].alt}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -297,7 +318,9 @@ const TattooPage = () => {
                   viewport={{ once: true }}
                   whileHover={{ scale: 1.02 }}
                 >
-                  <img
+                  <Image
+                                      width={700}
+                                      height={700}
                     src={tattooImages[4].url}
                     alt={tattooImages[4].alt}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -312,7 +335,9 @@ const TattooPage = () => {
                   viewport={{ once: true }}
                   whileHover={{ scale: 1.02 }}
                 >
-                  <img
+                  <Image
+                                      width={700}
+                                      height={700}
                     src={tattooImages[5].url}
                     alt={tattooImages[5].alt}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -337,7 +362,7 @@ const TattooPage = () => {
             <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent font-semibold">
               timeless masterpieces
             </span>
-            {" "}that you'll treasure forever.
+            {" "}{`that you'll treasure forever.`}
           </motion.p>
 
           {/* Tattoo Styles */}
@@ -402,7 +427,9 @@ const TattooPage = () => {
                   viewport={{ once: true }}
                 >
                   <div className="absolute inset-0">
-                    <img
+                    <Image
+                                        width={700}
+                                        height={700}
                       src={artist.image}
                       alt={artist.name}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"

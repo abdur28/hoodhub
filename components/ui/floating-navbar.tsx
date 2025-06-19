@@ -20,7 +20,7 @@ export const FloatingNav = ({
   useMotionValueEvent(scrollYProgress, "change", (current) => {
     // Check if current is not undefined and is a number
     if (typeof current === "number") {
-      let direction = current! - scrollYProgress.getPrevious()!;
+      const direction = current! - scrollYProgress.getPrevious()!;
       
       // Only show floating nav after scrolling past the hero section (90vh)
       // We use 0.15 as threshold which roughly corresponds to scrolling past 90vh hero

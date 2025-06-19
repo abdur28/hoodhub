@@ -5,11 +5,11 @@ import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react"
 import { ArrowLeft, ArrowRight } from "lucide-react"
-import { motion } from "motion/react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import Image from "next/image"
 
 type CarouselApi = UseEmblaCarouselType[1]
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>
@@ -285,7 +285,9 @@ function ImageCard({
       )}
     >
       {/* Image */}
-      <img
+      <Image
+        width={700}
+        height={700}
         src={src}
         alt={title}
         className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
@@ -311,7 +313,6 @@ function ImageCard({
 
 // Custom Shop Card Component
 function ShopCard({
-  id,
   src,
   title,
   price,
@@ -319,7 +320,6 @@ function ShopCard({
   className,
   link
 }: {
-  id: string;
   src: string;
   title: string;
   price: string;
@@ -333,7 +333,9 @@ function ShopCard({
         className={`relative h-[400px] w-[280px] md:h-[500px] md:w-[350px] flex-shrink-0 overflow-hidden rounded-4xl bg-gray-900 group cursor-pointer ${className}`}
       >
         {/* Image */}
-        <img
+        <Image
+          width={700}
+          height={700}
           src={src}
           alt={title}
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"

@@ -13,7 +13,6 @@ import {
   Loader2,
   AlertCircle,
   CheckCircle,
-  MapPin,
   User,
   Scissors,
   PaintBucket,
@@ -21,6 +20,7 @@ import {
   Heart
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 interface User {
   _id: string;
@@ -78,7 +78,7 @@ const BookingsPage = ({ userAsString }: BookingsPageProps) => {
     const month = currentMonth.getMonth();
     
     const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
+    // const lastDay = new Date(year, month + 1, 0);
     const startDate = new Date(firstDay);
     startDate.setDate(firstDay.getDate() - firstDay.getDay());
     
@@ -374,7 +374,9 @@ const BookingsPage = ({ userAsString }: BookingsPageProps) => {
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center">
                     {user.profilePicture ? (
-                      <img 
+                      <Image 
+                        width={100}
+                        height={100}
                         src={user.profilePicture} 
                         alt={`${user.firstName} ${user.lastName}`}
                         className="w-full h-full rounded-full object-cover"

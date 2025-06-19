@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FloatingNav } from "@/components/ui/floating-navbar";
 import Navbar from "@/components/Navbar";
 import { heroImages } from "@/constants";
+import Image from "next/image";
 
 const Hero = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -49,7 +50,9 @@ const Hero = () => {
               }}
               className="absolute inset-0"
             >
-              <img
+              <Image
+                width={1000}
+                height={1000}
                 src={heroImages[currentImageIndex].url}
                 alt={heroImages[currentImageIndex].alt}
                 className="w-full h-full object-cover"

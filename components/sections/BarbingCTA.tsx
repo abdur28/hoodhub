@@ -2,15 +2,18 @@
 import React from "react";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
-import { Calendar, Scissors } from "lucide-react";
+import { Calendar } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 const BarbingCTA = () => {
   return (
     <section className="relative z-0 -mt-8 h-[50vh] w-full overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
-        <img
+        <Image
+                            width={700}
+                            height={700}
           src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?q=80&w=2340&auto=format&fit=crop"
           alt="Luxury barbershop interior"
           className="w-full h-full object-cover"

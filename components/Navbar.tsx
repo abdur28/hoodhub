@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { ShoppingBag, User, Menu, Calendar, ChevronDown } from "lucide-react";
+import { ShoppingBag, User, Menu, Calendar } from "lucide-react";
 import {
   Sheet,
   SheetContent,

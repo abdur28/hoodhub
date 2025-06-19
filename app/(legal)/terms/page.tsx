@@ -24,8 +24,8 @@ export default function TermsPage() {
         <section>
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">1. Agreement to Terms</h2>
           <p>
-            By accessing and using HoodHub's services, you accept and agree to be bound by the terms and provision of this agreement. 
-            If you do not agree to abide by the above, please do not use this service.
+            {`By accessing and using HoodHub's services, you accept and agree to be bound by the terms and provision of this agreement. 
+            If you do not agree to abide by the above, please do not use this service.`}
           </p>
         </section>
 
@@ -80,8 +80,8 @@ export default function TermsPage() {
 
           <h3 className="text-xl font-semibold text-gray-800 mb-3 mt-6">Aftercare Responsibility</h3>
           <p>
-            Proper aftercare is the client's responsibility. We provide detailed aftercare instructions and premium 
-            aftercare products, but healing outcomes depend on client compliance.
+            {`Proper aftercare is the client's responsibility. We provide detailed aftercare instructions and premium 
+            aftercare products, but healing outcomes depend on client compliance.`}
           </p>
 
           <h3 className="text-xl font-semibold text-gray-800 mb-3 mt-6">Design Rights</h3>

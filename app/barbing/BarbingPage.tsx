@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Scissors, Diamond, Calendar, MapPin } from "lucide-react";
+import { Scissors, Calendar, MapPin } from "lucide-react";
 import { barbingImages, barbingServices } from "@/constants";
 import { FloatingNav } from "@/components/ui/floating-navbar";
 import Navbar from "@/components/Navbar";

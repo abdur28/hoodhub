@@ -1,5 +1,4 @@
 import client from "./mongodb";
-import mongoose from "mongoose";
 import { auth } from "@clerk/nextjs/server";
 
 export const getUser = async () => {

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar, PaintBucket } from "lucide-react";
 import { tattooImages } from "@/constants";
 import Link from "next/link";
+import Image from "next/image";
 
 const Tattoo = () => {
   return (
@@ -59,7 +60,9 @@ const Tattoo = () => {
                 viewport={{ once: true }}
                 whileHover={{ scale: 1.02 }}
               >
-                <img
+                <Image
+                  width={700}
+                  height={700}
                   src={tattooImages[0].url}
                   alt={tattooImages[0].alt}
                   className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -74,7 +77,9 @@ const Tattoo = () => {
                 viewport={{ once: true }}
                 whileHover={{ scale: 1.02 }}
               >
-                <img
+                <Image
+                width={700}
+                height={700}
                   src={tattooImages[1].url}
                   alt={tattooImages[1].alt}
                   className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -93,7 +98,9 @@ const Tattoo = () => {
                 viewport={{ once: true }}
                 whileHover={{ scale: 1.02 }}
               >
-                <img
+                <Image
+                width={700}
+                height={700}
                   src={tattooImages[2].url}
                   alt={tattooImages[2].alt}
                   className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -108,7 +115,9 @@ const Tattoo = () => {
                 viewport={{ once: true }}
                 whileHover={{ scale: 1.02 }}
               >
-                <img
+                <Image
+                  width={700}
+                  height={700}
                   src={tattooImages[3].url}
                   alt={tattooImages[3].alt}
                   className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -127,7 +136,9 @@ const Tattoo = () => {
                 viewport={{ once: true }}
                 whileHover={{ scale: 1.02 }}
               >
-                <img
+                <Image
+                  width={700}
+                  height={700}
                   src={tattooImages[4].url}
                   alt={tattooImages[4].alt}
                   className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -142,7 +153,9 @@ const Tattoo = () => {
                 viewport={{ once: true }}
                 whileHover={{ scale: 1.02 }}
               >
-                <img
+                <Image
+                  width={700}
+                  height={700}
                   src={tattooImages[5].url}
                   alt={tattooImages[5].alt}
                   className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -164,7 +177,9 @@ const Tattoo = () => {
                 viewport={{ once: true }}
                 whileHover={{ scale: 1.02 }}
               >
-                <img
+                <Image
+                  width={700}
+                  height={700}
                   src={tattooImages[0].url}
                   alt={tattooImages[0].alt}
                   className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -179,7 +194,9 @@ const Tattoo = () => {
                 viewport={{ once: true }}
                 whileHover={{ scale: 1.02 }}
               >
-                <img
+                <Image
+                  width={700}
+                  height={700}
                   src={tattooImages[1].url}
                   alt={tattooImages[1].alt}
                   className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -194,7 +211,9 @@ const Tattoo = () => {
                 viewport={{ once: true }}
                 whileHover={{ scale: 1.02 }}
               >
-                <img
+                <Image
+                  width={700}
+                  height={700}
                   src={tattooImages[2].url}
                   alt={tattooImages[2].alt}
                   className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -213,7 +232,9 @@ const Tattoo = () => {
                 viewport={{ once: true }}
                 whileHover={{ scale: 1.02 }}
               >
-                <img
+                <Image
+                  width={700}
+                  height={700}
                   src={tattooImages[3].url}
                   alt={tattooImages[3].alt}
                   className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -228,7 +249,9 @@ const Tattoo = () => {
                 viewport={{ once: true }}
                 whileHover={{ scale: 1.02 }}
               >
-                <img
+                <Image
+                  width={700}
+                  height={700}
                   src={tattooImages[4].url}
                   alt={tattooImages[4].alt}
                   className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -243,7 +266,9 @@ const Tattoo = () => {
                 viewport={{ once: true }}
                 whileHover={{ scale: 1.02 }}
               >
-                <img
+                <Image
+                  width={700}
+                  height={700}
                   src={tattooImages[5].url}
                   alt={tattooImages[5].alt}
                   className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -285,7 +310,7 @@ const Tattoo = () => {
             <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent font-semibold">
               timeless masterpieces
             </span>
-            {" "}that you'll treasure forever.
+            {" "}{`that you'll treasure forever.`}
           </motion.p>
 
           {/* CTA Button */}

@@ -6,6 +6,7 @@ import { FloatingNav } from "@/components/ui/floating-navbar";
 import Navbar from "@/components/Navbar";
 import { femaleServices, maleServices } from "@/constants";
 import Link from "next/link";
+import Image from "next/image";
 
 const LifestylePage = () => {
   const [activeService, setActiveService] = useState<number | null>(null);
@@ -157,9 +158,11 @@ const LifestylePage = () => {
                 >
                   <div className="relative h-[400px] rounded-3xl overflow-hidden bg-gray-100 cursor-pointer">
                     <div className="absolute inset-0">
-                      <img
+                      <Image
                         src={service.image}
                         alt={service.title}
+                        width={700}
+                        height={700}
                         className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
@@ -250,9 +253,11 @@ const LifestylePage = () => {
                 >
                   <div className="relative h-[400px] rounded-3xl overflow-hidden bg-gray-100 cursor-pointer">
                     <div className="absolute inset-0">
-                      <img
+                      <Image
                         src={service.image}
                         alt={service.title}
+                        width={700}
+                        height={700}
                         className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />

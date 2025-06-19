@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import {  Instagram, Twitter, MessageCircle, X } from "lucide-react";
 import { teamMembers } from "@/constants";
 import Link from "next/link";
+import Image from "next/image";
 
 // Animation variants
 const container = {
@@ -157,7 +158,9 @@ const OurTeamPage = () => {
               >
                 {/* Image */}
                 <div className="absolute inset-0">
-                  <img
+                  <Image
+                    width={700}
+                    height={700}
                     src={member.image}
                     alt={member.name}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
