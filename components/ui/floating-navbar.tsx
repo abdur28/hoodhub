@@ -8,12 +8,19 @@ import {
 } from "framer-motion";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/Navbar";
+import type { Dictionary } from "@/app/[lang]/dictionaries";
+
+interface FloatingNavProps {
+  className?: string;
+  lang: string;
+  dictionary: Dictionary;
+}
 
 export const FloatingNav = ({
   className,
-}: {
-  className?: string;
-}) => {
+  lang,
+  dictionary,
+}: FloatingNavProps) => {
   const { scrollYProgress } = useScroll();
   const [visible, setVisible] = useState(false);
   
@@ -56,7 +63,7 @@ export const FloatingNav = ({
         )}
       >
         <div className="border border-transparent dark:border-white/[0.2] rounded-full dark:bg-black bg-white shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]">
-          <Navbar variant="floating" className="rounded-full" />
+          <Navbar variant="floating" className="rounded-full" lang={lang} dictionary={dictionary} />
         </div>
       </motion.div>
     </AnimatePresence>

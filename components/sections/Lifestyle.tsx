@@ -3,17 +3,22 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Calendar, Diamond } from "lucide-react";
-import { femaleServices, maleServices } from "@/constants";
+import { femaleServices, getLocalizedData, maleServices } from "@/constants";
 import Link from "next/link";
 import Image from "next/image";
+import type { Dictionary } from "@/app/[lang]/dictionaries";
 
+interface LifestyleProps {
+  lang: string;
+  dictionary: Dictionary;
+}
 
-
-const Lifestyle = () => {
+const Lifestyle = ({ lang, dictionary }: LifestyleProps) => {
   const [activeGender, setActiveGender] = useState<"male" | "female">("female");
   const [hoveredService, setHoveredService] = useState<number | null>(null);
 
-  const services = activeGender === "male" ? maleServices : femaleServices;
+  const rawServices = activeGender === "male" ? maleServices : femaleServices;
+  const localizedServices = getLocalizedData(rawServices, dictionary, 'titleKey', 'descriptionKey');
 
   return (
     <section className="bg-white relative z-10 -mt-8 rounded-4xl py-20">
@@ -29,26 +34,26 @@ const Lifestyle = () => {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            PREMIUM LIFESTYLE SERVICES
+            {dictionary.home.lifestyle.category}
           </motion.p>
 
           {/* Title */}
           <motion.h2
-            className="text-4xl md:text-4xl lg:text-6xl font-franklin  mb-8"
+            className="text-4xl md:text-4xl lg:text-6xl font-franklin mb-8"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            Elevate Your{" "}
+            {dictionary.home.lifestyle.title}{" "}
             <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
-              Lifestyle
+              {dictionary.home.lifestyle.titleHighlight}
             </span>
           </motion.h2>
 
           {/* Gender Toggle */}
           <motion.div
-            className="inline-flex bg-gray-100 rounded-full p-1 "
+            className="inline-flex bg-gray-100 rounded-full p-1"
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.4 }}
@@ -69,7 +74,7 @@ const Lifestyle = () => {
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 />
               )}
-              <span className="relative z-10">For Her</span>
+              <span className="relative z-10">{dictionary.home.lifestyle.forHer}</span>
             </button>
             <button
               onClick={() => setActiveGender("male")}
@@ -86,7 +91,7 @@ const Lifestyle = () => {
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 />
               )}
-              <span className="relative z-10">For Him</span>
+              <span className="relative z-10">{dictionary.home.lifestyle.forHim}</span>
             </button>
           </motion.div>
         </div>
@@ -101,7 +106,7 @@ const Lifestyle = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.5 }}
           >
-            {services.map((service, index) => {
+            {localizedServices.map((service, index) => {
               return (
                 <motion.div
                   key={service.id}
@@ -139,18 +144,18 @@ const Lifestyle = () => {
                       </p>
 
                       {hoveredService === service.id && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="mt-4"
-                      >
-                        <button className="text-xs bg-yellow-500/90 text-black px-4 py-2 rounded-full font-franklin font-medium">
-                        <Link href='/book'>
-                          Book Now
-                        </Link>
-                        </button>
-                      </motion.div>
-                    )}
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="mt-4"
+                        >
+                          <Link href={`/${lang}/book`}>
+                            <button className="text-xs bg-yellow-500/90 text-black px-4 py-2 rounded-full font-franklin font-medium">
+                              {dictionary.buttons.bookNow}
+                            </button>
+                          </Link>
+                        </motion.div>
+                      )}
                     </div>
                   </div>
                 </motion.div>
@@ -184,18 +189,8 @@ const Lifestyle = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            Experience the epitome of{" "}
-            <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent font-semibold">
-              luxury
-            </span>
-            {" "}and{" "}
-            <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent font-semibold">
-              self-care
-            </span>
-            {" "}with our premium lifestyle services designed to enhance your personal style and well-being
+            {dictionary.home.lifestyle.description}
           </motion.p>
-
-
 
           {/* CTA Button */}
           <motion.div
@@ -204,15 +199,15 @@ const Lifestyle = () => {
             transition={{ duration: 0.8, delay: 0.6 }}
             viewport={{ once: true }}
           >
-              <Link href='/book?service=lifestyle' className="group">
+            <Link href={`/${lang}/book?service=lifestyle`} className="group">
               <Button
                 size="lg"
                 className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-black font-franklin font-semibold px-8 md:px-10 py-3 md:py-4 text-base md:text-lg hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl group min-w-[200px]"
               >
                 <Calendar className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" />
-                Book Consultation
+                {dictionary.buttons.bookConsultation}
               </Button>
-              </Link>
+            </Link>
           </motion.div>
         </div>
       </div>

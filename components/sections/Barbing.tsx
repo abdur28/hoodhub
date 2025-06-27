@@ -4,8 +4,14 @@ import { motion } from "motion/react";
 import { Scissors } from "lucide-react";
 import { barbingImages } from "@/constants";
 import Image from "next/image";
+import type { Dictionary } from "@/app/[lang]/dictionaries";
 
-const Barbing = () => {
+interface BarbingProps {
+  lang: string;
+  dictionary: Dictionary;
+}
+
+const Barbing = ({ lang, dictionary }: BarbingProps) => {
   const [selectedImage, setSelectedImage] = useState(barbingImages[0]);
 
   return (
@@ -30,8 +36,8 @@ const Barbing = () => {
                 className="relative h-[500px] lg:h-[600px] w-full rounded-4xl overflow-hidden bg-black group"
               >
                 <Image
-                                    width={700}
-                                    height={700}
+                  width={700}
+                  height={700}
                   src={selectedImage.url}
                   alt={selectedImage.alt}
                   className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
@@ -46,7 +52,7 @@ const Barbing = () => {
                 <motion.button
                   key={image.id}
                   onClick={() => setSelectedImage(image)}
-                  className={`relative h-[60px] w-[60px] md:h-[80px] md:w-[80px]  rounded-full overflow-hidden transition-all duration-300 ${
+                  className={`relative h-[60px] w-[60px] md:h-[80px] md:w-[80px] rounded-full overflow-hidden transition-all duration-300 ${
                     selectedImage.id === image.id
                       ? "ring-3 ring-yellow-500 ring-offset-2 ring-offset-neutral-200"
                       : "hover:ring-2 hover:ring-yellow-400 hover:ring-offset-2 hover:ring-offset-neutral-200"
@@ -59,8 +65,8 @@ const Barbing = () => {
                   viewport={{ once: true }}
                 >
                   <Image
-                                      width={700}
-                                      height={700}
+                    width={700}
+                    height={700}
                     src={image.url}
                     alt={image.alt}
                     className="w-full h-full object-cover"
@@ -81,13 +87,13 @@ const Barbing = () => {
           >
             {/* Subtitle */}
             <motion.p
-              className="text-xs md:text-sm lg:text-base font-franklin text-gray-700 "
+              className="text-xs md:text-sm lg:text-base font-franklin text-gray-700"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              PROFESSIONAL BARBING
+              {dictionary.home.barbing.category}
             </motion.p>
 
             {/* Title */}
@@ -98,7 +104,7 @@ const Barbing = () => {
               transition={{ duration: 0.8, delay: 0.4 }}
               viewport={{ once: true }}
             >
-              Master the Art of Grooming
+              {dictionary.home.barbing.title}
             </motion.h2>
 
             {/* Motto */}
@@ -109,20 +115,12 @@ const Barbing = () => {
               transition={{ duration: 0.8, delay: 0.6 }}
               viewport={{ once: true }}
             >
-              Where precision meets{" "}
-              <span className="bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-700 bg-clip-text text-transparent font-semibold">
-                passion
-              </span>
-              {", "}
-              crafting the perfect cut that defines your{" "}
-              <span className="bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-700 bg-clip-text text-transparent font-semibold">
-                style
-              </span>
+              {dictionary.home.barbing.subtitle}
             </motion.p>
 
             {/* Decorative Elements */}
             <motion.div
-              className="mt-8 flex justify-center  "
+              className="mt-8 flex justify-center"
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.8 }}

@@ -2,12 +2,20 @@
 import React from "react";
 import { motion } from "motion/react";
 import { EdgeCarousel, ImageCard } from "@/components/ui/carousel";
-import { aboutData } from "@/constants";
+import { aboutData, getLocalizedData } from "@/constants";
+import type { Dictionary } from "@/app/[lang]/dictionaries";
 
+interface AboutProps {
+  lang: string;
+  dictionary: Dictionary;
+}
 
-const About = () => {
+const About = ({ lang, dictionary }: AboutProps) => {
+
+  const localizedAboutData = getLocalizedData(aboutData, dictionary, 'titleKey', 'categoryKey');
+
   return (
-    <section className="bg-white  py-16 rounded-t-4xl -my-8 relative z-10">
+    <section className="bg-white py-16 rounded-t-4xl -my-8 relative z-10">
       {/* Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left mb-16">
         <motion.h2
@@ -17,9 +25,9 @@ const About = () => {
           viewport={{ once: true }}
           className="text-4xl md:text-5xl font-franklin text-gray-900 mb-6"
         >
-          Where Style Meets{" "}
+          {dictionary.home.about.title}{" "}
           <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
-            Artistry
+            {dictionary.home.about.titleHighlight}
           </span>
         </motion.h2>
         
@@ -30,9 +38,7 @@ const About = () => {
           viewport={{ once: true }}
           className="text-lg md:text-2xl mx-auto font-franklin"
         >
-          At HoodHub, we transform personal expression into art. Our skilled professionals 
-          combine traditional craftsmanship with modern innovation to deliver experiences 
-          that exceed expectations.
+          {dictionary.home.about.subtitle}
         </motion.p>
       </div>
 
@@ -44,7 +50,7 @@ const About = () => {
         viewport={{ once: true }}
       >
         <EdgeCarousel>
-          {aboutData.map((item) => (
+          {localizedAboutData.map((item) => (
             <ImageCard
               key={item.id}
               src={item.src}

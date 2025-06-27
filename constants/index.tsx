@@ -1,53 +1,59 @@
+// constants/index.ts
 import { Scissors, PaintBucket, Diamond, Heart, Star, Users, HelpCircle } from "lucide-react";
 
+// Static data (no translation needed)
 export const heroImages = [
   {
     id: 1,
-    url: "/Hoodxhub-display-board.jpg",
+    url: {
+      mobile: '/Hoodxhub-display-board.jpg',
+      desktop: '/Hoodxhub-display-board-2.jpg',
+    },
     alt: "Hoodxhub display board",
   }
 ];
 
+// About data with dictionary keys
 export const aboutData = [
   {
     id: 1,
     src: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=2340&auto=format&fit=crop",
-    title: "Master Craftsmanship",
-    category: "Barbing",
+    titleKey: "about.masterCraftsmanship",
+    categoryKey: "about.barbing",
   },
   {
     id: 2,
     src: "https://images.unsplash.com/photo-1586243287039-23f4c8e2e7ab?q=80&w=2667&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: "Artistic Excellence",
-    category: "Tattoo",
+    titleKey: "about.artisticExcellence",
+    categoryKey: "about.tattoo",
   },
   {
     id: 3,
     src: "https://images.unsplash.com/photo-1612887390768-fb02affea7a6?q=80&w=3024&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: "Premium Experience",
-    category: "Lifestyle",
+    titleKey: "about.premiumExperience",
+    categoryKey: "about.lifestyle",
   },
   {
     id: 4,
     src: "https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?q=80&w=2340&auto=format&fit=crop",
-    title: "Modern Techniques",
-    category: "Innovation",
+    titleKey: "about.modernTechniques",
+    categoryKey: "about.innovation",
   },
   {
     id: 5,
     src: "https://images.unsplash.com/photo-1604449325317-4967c715538a?q=80&w=3088&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: "Attention to Detail",
-    category: "Precision",
+    titleKey: "about.attentionToDetail",
+    categoryKey: "about.precision",
   },
   {
     id: 6,
     src: "https://images.unsplash.com/photo-1522337094846-8a818192de1f?q=80&w=3094&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: "Creative Vision",
-    category: "Design",
+    titleKey: "about.creativeVision",
+    categoryKey: "about.design",
   },
 ];
 
-
+// Static image data
 export const barbingImages = [
   {
     id: 1,
@@ -99,23 +105,24 @@ export const tattooImages = [
   },
 ];
 
+// Services with dictionary keys
 export const maleServices = [
   {
     id: 1,
-    title: "Executive Grooming",
-    description: "Complete grooming package including haircut, beard styling, and luxury treatment",
+    titleKey: "services.male.executiveGrooming.title",
+    descriptionKey: "services.male.executiveGrooming.description",
     image: "https://images.unsplash.com/photo-1733995471058-3d6ff2013de3?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     id: 2,
-    title: "Spa & Wellness",
-    description: "Rejuvenating spa treatments, massages, and wellness therapies",
+    titleKey: "services.male.spaWellness.title",
+    descriptionKey: "services.male.spaWellness.description",
     image: "https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=2340&auto=format&fit=crop",
   },
   {
     id: 3,
-    title: "Style Consultation",
-    description: "Personal styling advice and wardrobe consultation services",
+    titleKey: "services.male.styleConsultation.title",
+    descriptionKey: "services.male.styleConsultation.description",
     image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=2340&auto=format&fit=crop",
   },
 ];
@@ -123,163 +130,165 @@ export const maleServices = [
 export const femaleServices = [
   {
     id: 1,
-    title: "Beauty & Makeup",
-    description: "Professional makeup artistry and beauty treatments for all occasions",
+    titleKey: "services.female.beautyMakeup.title",
+    descriptionKey: "services.female.beautyMakeup.description",
     image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=2340&auto=format&fit=crop",
   },
   {
     id: 2,
-    title: "Hair Styling",
-    description: "Expert hair styling, coloring, and treatment services",
+    titleKey: "services.female.hairStyling.title",
+    descriptionKey: "services.female.hairStyling.description",
     image: "https://images.unsplash.com/photo-1562322140-8baeececf3df?q=80&w=2340&auto=format&fit=crop",
   },
   {
     id: 3,
-    title: "Nail Artistry",
-    description: "Luxury manicures, pedicures, and custom nail art designs",
+    titleKey: "services.female.nailArtistry.title",
+    descriptionKey: "services.female.nailArtistry.description",
     image: "https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=2340&auto=format&fit=crop",
   },
 ];
 
+// HoodSkool products with dictionary keys
 export const hoodskoolProducts = [
   {
     id: "hsk-001",
     src: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=2340&auto=format&fit=crop",
-    title: "Urban Essential Tee",
+    titleKey: "products.urbanTee",
     price: "6,450.00 ₽",
-    category: "Streetwear",
+    categoryKey: "products.categories.streetwear",
     link: "https://hoodskool.com/"
   },
   {
     id: "hsk-002",
     src: "https://images.unsplash.com/photo-1556306535-0f09a537f0a3?q=80&w=2340&auto=format&fit=crop",
-    title: "Vintage Leather Jacket",
+    titleKey: "products.leatherJacket",
     price: "10,250.00 ₽",
-    category: "Outerwear",
+    categoryKey: "products.categories.outerwear",
     link: "https://hoodskool.com/"
   },
   {
     id: "hsk-003",
     src: "https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=2340&auto=format&fit=crop",
-    title: "Gold Chain Necklace",
+    titleKey: "products.goldChain",
     price: "3,750.00 ₽",
-    category: "Accessories",
+    categoryKey: "products.categories.accessories",
     link: "https://hoodskool.com/"
   },
   {
     id: "hsk-004",
     src: "https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=2340&auto=format&fit=crop",
-    title: "Limited Edition Sneakers",
+    titleKey: "products.sneakers",
     price: "12,500.00 ₽",
-    category: "Footwear",
+    categoryKey: "products.categories.footwear",
     link: "https://hoodskool.com/"
   },
   {
     id: "hsk-005",
     src: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=2340&auto=format&fit=crop",
-    title: "Premium Hoodie",
+    titleKey: "products.hoodie",
     price: "9,000.00 ₽",
-    category: "Streetwear",
+    categoryKey: "products.categories.streetwear",
     link: "https://hoodskool.com/"
   },
   {
     id: "hsk-006",
     src: "https://images.unsplash.com/photo-1622445275463-afa2ab738c34?q=80&w=2340&auto=format&fit=crop",
-    title: "Designer Snapback",
+    titleKey: "products.snapback",
     price: "2,500.00 ₽",
-    category: "Headwear",
+    categoryKey: "products.categories.headwear",
     link: "https://hoodskool.com/"
   },
   {
     id: "hsk-007",
     src: "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=2340&auto=format&fit=crop",
-    title: "Signature Tracksuit",
+    titleKey: "products.tracksuit",
     price: "7,500.00 ₽",
-    category: "Athleisure",
+    categoryKey: "products.categories.athleisure",
     link: "https://hoodskool.com/"
   },
   {
     id: "hsk-008",
     src: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?q=80&w=2340&auto=format&fit=crop",
-    title: "Canvas High-Tops",
+    titleKey: "products.canvasShoes",
     price: "5,000.00 ₽",
-    category: "Footwear",
+    categoryKey: "products.categories.footwear",
     link: "https://hoodskool.com/"
   },
   {
     id: "hsk-009",
     src: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?q=80&w=2340&auto=format&fit=crop",
-    title: "Minimalist Watch",
+    titleKey: "products.watch",
     price: "23,000.00 ₽",
-    category: "Accessories",
+    categoryKey: "products.categories.accessories",
     link: "https://hoodskool.com/"
   },
   {
     id: "hsk-010",
     src: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=2340&auto=format&fit=crop",
-    title: "Crossbody Bag",
+    titleKey: "products.crossbodyBag",
     price: "6,000.00 ₽",
-    category: "Accessories",
+    categoryKey: "products.categories.accessories",
     link: "https://hoodskool.com/"
   },
 ];
 
+// Story phases with dictionary keys
 export const storyPhases = [
   {
     id: 1,
-    title: "The Vision",
-    subtitle: "2019",
-    content: "It started with a simple belief: that personal grooming and self-expression should be elevated to an art form. In a small corner of the city, our founders envisioned a space where traditional craftsmanship would meet contemporary innovation.",
+    titleKey: "story.vision.title",
+    subtitleKey: "story.vision.year",
+    contentKey: "story.vision.content",
     image: "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=2340&auto=format&fit=crop",
     icon: Star,
     color: "from-yellow-400/20 to-yellow-600/10"
   },
   {
     id: 2,
-    title: "The Craft",
-    subtitle: "2020",
-    content: "We assembled a team of master artisans - barbers who understood the geometry of a perfect cut, tattoo artists who could translate emotions into ink, and lifestyle specialists who knew that confidence comes from within.",
+    titleKey: "story.craft.title",
+    subtitleKey: "story.craft.year",
+    contentKey: "story.craft.content",
     image: "https://images.unsplash.com/photo-1559599101-f09722fb4948?q=80&w=2340&auto=format&fit=crop",
     icon: Scissors,
     color: "from-amber-400/20 to-amber-600/10"
   },
   {
     id: 3,
-    title: "The Art",
-    subtitle: "2021",
-    content: "Every line we draw, every cut we make, every experience we create is a canvas for self-expression. We believe that true artistry lies not just in technique, but in understanding the unique story that each client brings to our chair.",
+    titleKey: "story.art.title",
+    subtitleKey: "story.art.year",
+    contentKey: "story.art.content",
     image: "https://images.unsplash.com/photo-1604374376934-2df6fad6519b?q=80&w=2940&auto=format&fit=crop",
     icon: PaintBucket,
     color: "from-rose-400/20 to-rose-600/10"
   },
   {
     id: 4,
-    title: "The Community",
-    subtitle: "2022",
-    content: "HoodHub became more than a destination - it became a community. A place where creativity flourishes, where stories are shared, and where every individual is celebrated. We've hosted artists, launched careers, and witnessed countless transformations.",
+    titleKey: "story.community.title",
+    subtitleKey: "story.community.year",
+    contentKey: "story.community.content",
     image: "https://images.unsplash.com/photo-1522337094846-8a818192de1f?q=80&w=3094&auto=format&fit=crop",
     icon: Users,
     color: "from-emerald-400/20 to-emerald-600/10"
   },
   {
     id: 5,
-    title: "The Legacy",
-    subtitle: "Today",
-    content: "Today, HoodHub stands as a testament to the power of passion and precision. We continue to push boundaries, set trends, and most importantly, help our clients discover their most confident selves. This is just the beginning of our story.",
+    titleKey: "story.legacy.title",
+    subtitleKey: "story.legacy.year",
+    contentKey: "story.legacy.content",
     image: "https://images.unsplash.com/photo-1621605815971-fbc98d665033?q=80&w=2340&auto=format&fit=crop",
     icon: Heart,
     color: "from-purple-400/20 to-purple-600/10"
   },
 ];
 
-// Team member data
+// Team members with dictionary keys
 export const teamMembers = [
   {
     id: 1,
-    name: "Marcus Johnson",
-    role: "Master Barber",
+    nameKey: "team.marcus.name",
+    roleKey: "team.marcus.role",
     image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=2574&auto=format&fit=crop",
-    bio: "With over 15 years of experience, Marcus specializes in precision cuts and modern styles. Trained in London and New York.",
+    bioKey: "team.marcus.bio",
     social: {
       instagram: "#",
       twitter: "#",
@@ -288,10 +297,10 @@ export const teamMembers = [
   },
   {
     id: 2,
-    name: "Isabella Chen",
-    role: "Lead Tattoo Artist",
+    nameKey: "team.isabella.name",
+    roleKey: "team.isabella.role",
     image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2576&auto=format&fit=crop",
-    bio: "Specializing in geometric and watercolor styles, Isabella brings 10 years of international tattooing experience.",
+    bioKey: "team.isabella.bio",
     social: {
       instagram: "#",
       twitter: "#",
@@ -300,10 +309,10 @@ export const teamMembers = [
   },
   {
     id: 3,
-    name: "Jamal Williams",
-    role: "Lifestyle Director",
+    nameKey: "team.jamal.name",
+    roleKey: "team.jamal.role",
     image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=2574&auto=format&fit=crop",
-    bio: "Jamal curates our premium experiences, blending wellness with urban sophistication for complete transformations.",
+    bioKey: "team.jamal.bio",
     social: {
       instagram: "#",
       twitter: "#",
@@ -312,10 +321,10 @@ export const teamMembers = [
   },
   {
     id: 4,
-    name: "Sophie Laurent",
-    role: "Creative Director",
+    nameKey: "team.sophie.name",
+    roleKey: "team.sophie.role",
     image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=2561&auto=format&fit=crop",
-    bio: "Former fashion designer who brings avant-garde vision to HoodHub's brand identity and space design.",
+    bioKey: "team.sophie.bio",
     social: {
       instagram: "#",
       twitter: "#",
@@ -324,10 +333,10 @@ export const teamMembers = [
   },
   {
     id: 5,
-    name: "Diego Rodriguez",
-    role: "Senior Barber",
+    nameKey: "team.diego.name",
+    roleKey: "team.diego.role",
     image: "https://images.unsplash.com/photo-1590086782792-42dd2350140d?q=80&w=2574&auto=format&fit=crop",
-    bio: "Beard specialist with expertise in traditional straight razor techniques and modern grooming solutions.",
+    bioKey: "team.diego.bio",
     social: {
       instagram: "#",
       twitter: "#",
@@ -336,10 +345,10 @@ export const teamMembers = [
   },
   {
     id: 6,
-    name: "Aisha Khan",
-    role: "Tattoo Artist",
+    nameKey: "team.aisha.name",
+    roleKey: "team.aisha.role",
     image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=2564&auto=format&fit=crop",
-    bio: "Expert in intricate mandala and dotwork designs, blending cultural heritage with contemporary styles.",
+    bioKey: "team.aisha.bio",
     social: {
       instagram: "#",
       twitter: "#",
@@ -348,10 +357,10 @@ export const teamMembers = [
   },
   {
     id: 7,
-    name: "Tyrone Jenkins",
-    role: "Barber Educator",
+    nameKey: "team.tyrone.name",
+    roleKey: "team.tyrone.role",
     image: "https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?q=80&w=2576&auto=format&fit=crop",
-    bio: "Develops our HoodSkool curriculum and mentors the next generation of barbering professionals.",
+    bioKey: "team.tyrone.bio",
     social: {
       instagram: "#",
       twitter: "#",
@@ -360,10 +369,10 @@ export const teamMembers = [
   },
   {
     id: 8,
-    name: "Elena Petrova",
-    role: "Wellness Specialist",
+    nameKey: "team.elena.name",
+    roleKey: "team.elena.role",
     image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=2576&auto=format&fit=crop",
-    bio: "Holistic practitioner integrating ancient healing techniques with modern luxury spa experiences.",
+    bioKey: "team.elena.bio",
     social: {
       instagram: "#",
       twitter: "#",
@@ -372,210 +381,198 @@ export const teamMembers = [
   },
 ];
 
-// Add to your existing constants
+// Barbing services with dictionary keys
 export const barbingServices = [
   {
-    title: "Signature Haircut",
-    description: "Precision cut with detailed finishing and styling consultation"
+    titleKey: "barbingServices.signatureCut.title",
+    descriptionKey: "barbingServices.signatureCut.description"
   },
   {
-    title: "Executive Grooming",
-    description: "Haircut, hot towel treatment, and precision beard sculpting"
+    titleKey: "barbingServices.executiveGrooming.title",
+    descriptionKey: "barbingServices.executiveGrooming.description"
   },
   {
-    title: "Luxury Shave",
-    description: "Traditional straight razor shave with premium products"
+    titleKey: "barbingServices.luxuryShave.title",
+    descriptionKey: "barbingServices.luxuryShave.description"
   },
   {
-    title: "Beard Sculpting",
-    description: "Detailed beard shaping and conditioning treatment"
+    titleKey: "barbingServices.beardSculpting.title",
+    descriptionKey: "barbingServices.beardSculpting.description"
   },
   {
-    title: "Premium Treatment",
-    description: "Haircut, deep conditioning, scalp massage, and styling"
+    titleKey: "barbingServices.premiumTreatment.title",
+    descriptionKey: "barbingServices.premiumTreatment.description"
   }
 ];
 
-// Add to your existing constants
+// Tattoo styles with dictionary keys
 export const tattooStyles = [
   {
-    name: "Realism",
-    description: "Hyper-detailed tattoos that mirror reality with stunning accuracy"
+    nameKey: "tattooStyles.realism.name",
+    descriptionKey: "tattooStyles.realism.description"
   },
   {
-    name: "Geometric",
-    description: "Precision patterns, sacred geometry, and abstract shapes"
+    nameKey: "tattooStyles.geometric.name",
+    descriptionKey: "tattooStyles.geometric.description"
   },
   {
-    name: "Watercolor",
-    description: "Painterly styles that mimic brush strokes and color washes"
+    nameKey: "tattooStyles.watercolor.name",
+    descriptionKey: "tattooStyles.watercolor.description"
   },
   {
-    name: "Japanese Traditional",
-    description: "Classic Irezumi with symbolic motifs and bold lines"
+    nameKey: "tattooStyles.japanese.name",
+    descriptionKey: "tattooStyles.japanese.description"
   },
   {
-    name: "Black & Gray",
-    description: "Masterful shading creating depth and dimension"
+    nameKey: "tattooStyles.blackGray.name",
+    descriptionKey: "tattooStyles.blackGray.description"
   },
   {
-    name: "Minimalist",
-    description: "Subtle, clean designs with symbolic meaning"
+    nameKey: "tattooStyles.minimalist.name",
+    descriptionKey: "tattooStyles.minimalist.description"
   },
   {
-    name: "Neo-Traditional",
-    description: "Modern take on classic styles with bold colors"
+    nameKey: "tattooStyles.neoTraditional.name",
+    descriptionKey: "tattooStyles.neoTraditional.description"
   },
   {
-    name: "Tribal",
-    description: "Ancient patterns with cultural significance"
+    nameKey: "tattooStyles.tribal.name",
+    descriptionKey: "tattooStyles.tribal.description"
   }
 ];
 
+// Tattoo artists with dictionary keys
 export const tattooArtists = [
   {
-    name: "Isabella Chen",
-    specialty: "Geometric & Watercolor",
+    nameKey: "tattooArtists.isabella.name",
+    specialtyKey: "tattooArtists.isabella.specialty",
     image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2576&auto=format&fit=crop"
   },
   {
-    name: "Aisha Khan",
-    specialty: "Mandala & Dotwork",
+    nameKey: "tattooArtists.aisha.name",
+    specialtyKey: "tattooArtists.aisha.specialty",
     image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=2564&auto=format&fit=crop"
   },
   {
-    name: "Diego Martinez",
-    specialty: "Realism & Portrait",
+    nameKey: "tattooArtists.diego.name",
+    specialtyKey: "tattooArtists.diego.specialty",
     image: "https://images.unsplash.com/photo-1552058544-f2b08422138a?q=80&w=2598&auto=format&fit=crop"
   },
   {
-    name: "Nikolai Petrov",
-    specialty: "Japanese Traditional",
+    nameKey: "tattooArtists.nikolai.name",
+    specialtyKey: "tattooArtists.nikolai.specialty",
     image: "https://images.unsplash.com/photo-1570158268183-d296b2892211?q=80&w=2574&auto=format&fit=crop"
   }
 ];
 
+// FAQ sections with dictionary keys
 export const faqSections = [
   {
     id: "general",
-    title: "General Questions",
+    titleKey: "faq.general.title",
     icon: HelpCircle,
     color: "text-yellow-500",
-    questions: [
-      {
-        id: "gen-1",
-        question: "What services does HoodHub offer?",
-        answer: "HoodHub is a premium lifestyle destination offering professional barbering services, custom tattoo artistry, and luxury lifestyle services including spa treatments, beauty services, and personal styling for both men and women."
-      },
-      {
-        id: "gen-2",
-        question: "How do I book an appointment?",
-        answer: "You can book an appointment by calling us at (123) 456-7890, texting us on WhatsApp, visiting our studio in person, or using the booking buttons throughout our website. We recommend booking in advance as our artists have busy schedules."
-      },
-      {
-        id: "gen-3",
-        question: "What are your operating hours?",
-        answer: "We're open Monday through Sunday from 10AM to 9PM. We offer appointment slots throughout the day and can sometimes accommodate special requests for early or late appointments."
-      },
-      {
-        id: "gen-4",
-        question: "Do you accept walk-ins?",
-        answer: "While we prefer appointments to ensure the best service, we do accept walk-ins when our artists are available. However, appointment clients always have priority, so wait times may vary."
-      },
-      {
-        id: "gen-5",
-        question: "What is your cancellation policy?",
-        answer: "We require at least 24 hours notice for cancellations. Same-day cancellations or no-shows may be subject to a fee. We understand emergencies happen, so please call us to discuss your situation."
-      }
-    ]
+    questionsKey: "faq.general.questions"
   },
   {
     id: "barbing",
-    title: "Barbing Services",
+    titleKey: "faq.barbing.title",
     icon: Scissors,
     color: "text-blue-500",
-    questions: [
-      {
-        id: "barb-1",
-        question: "What's included in a signature haircut?",
-        answer: "Our signature haircut includes a consultation, precision cut, hot towel treatment, styling, and finishing touches. The service typically takes 45-60 minutes and includes product recommendations for maintaining your style."
-      },
-      {
-        id: "barb-2",
-        question: "Do you offer beard styling services?",
-        answer: "Absolutely! We offer comprehensive beard services including beard sculpting, trimming, hot towel treatments, conditioning, and styling. Our barbers are experts in creating the perfect beard shape for your face."
-      },
-      {
-        id: "barb-3",
-        question: "How often should I get a haircut?",
-        answer: "It depends on your hair type and style, but generally every 3-4 weeks for short styles and 6-8 weeks for longer styles. Our barbers will provide personalized recommendations during your consultation."
-      },
-      {
-        id: "barb-4",
-        question: "Do you use premium products?",
-        answer: "Yes, we exclusively use high-quality, professional-grade products from renowned brands. We're happy to recommend and sell the products we use so you can maintain your style at home."
-      }
-    ]
+    questionsKey: "faq.barbing.questions"
   },
   {
     id: "tattoo",
-    title: "Tattoo Artistry",
+    titleKey: "faq.tattoo.title",
     icon: PaintBucket,
     color: "text-red-500",
-    questions: [
-      {
-        id: "tat-1",
-        question: "How does the tattoo consultation process work?",
-        answer: "We start with a detailed consultation to discuss your vision, placement, size, and style preferences. Our artists will create custom designs and provide honest advice about what will work best for your skin and lifestyle. Consultations can be scheduled separately or on the day of your appointment."
-      },
-      {
-        id: "tat-2",
-        question: "What styles do your artists specialize in?",
-        answer: "Our team specializes in various styles including realism, geometric, watercolor, Japanese traditional, black & gray, minimalist, neo-traditional, and tribal designs. Each artist has their unique strengths and we'll match you with the best artist for your vision."
-      },
-      {
-        id: "tat-3",
-        question: "How do I prepare for my tattoo appointment?",
-        answer: "Get a good night's sleep, eat a proper meal beforehand, stay hydrated, avoid alcohol for 24 hours prior, and wear comfortable clothing that provides easy access to the tattoo area. We'll provide detailed aftercare instructions."
-      },
-      {
-        id: "tat-4",
-        question: "How long does the healing process take?",
-        answer: "Initial healing typically takes 2-3 weeks, but complete healing can take 2-3 months. We provide comprehensive aftercare instructions and premium healing products to ensure optimal results."
-      },
-      {
-        id: "tat-5",
-        question: "Do you require a deposit?",
-        answer: "Yes, we require a deposit to secure your tattoo appointment. The deposit amount varies based on the size and complexity of the piece and goes toward your final payment."
-      }
-    ]
+    questionsKey: "faq.tattoo.questions"
   },
   {
     id: "lifestyle",
-    title: "Lifestyle Services",
+    titleKey: "faq.lifestyle.title",
     icon: Diamond,
     color: "text-purple-500",
-    questions: [
-      {
-        id: "life-1",
-        question: "What lifestyle services do you offer for women?",
-        answer: "For women, we offer professional makeup artistry, hair styling and treatments, luxury manicures and pedicures with custom nail art, skincare treatments, and personal styling consultations."
-      },
-      {
-        id: "life-2",
-        question: "What lifestyle services do you offer for men?",
-        answer: "For men, we provide executive grooming packages, spa and wellness treatments including massages, skincare services, style consultations, and wardrobe advice to enhance your personal and professional image."
-      },
-      {
-        id: "life-3",
-        question: "Can I book multiple services in one appointment?",
-        answer: "Absolutely! We encourage combining services for a complete transformation experience. Our team can coordinate multiple services and we offer package deals for combined appointments."
-      },
-      {
-        id: "life-4",
-        question: "Do you offer bridal or special event services?",
-        answer: "Yes, we specialize in bridal beauty, special events, photoshoots, and other occasions. We recommend booking these services well in advance and offer trial sessions to ensure everything is perfect for your big day."
-      }
-    ]
+    questionsKey: "faq.lifestyle.questions"
   }
 ];
+
+// Helper function to get localized data
+export const getLocalizedData = (data: any[], dictionary: any, titleKey?: string, descriptionKey?: string, nameKey?: string) => {
+  return data.map(item => {
+    const localizedItem = { ...item };
+    if (titleKey && item.titleKey) {
+      const keys = item.titleKey.split(".");
+      let value = dictionary;
+      for (const key of keys) {
+        value = value[key];
+      }
+      localizedItem.title = value;
+    }
+    if (descriptionKey && item.descriptionKey) {
+      const keys = item.descriptionKey.split(".");
+      let value = dictionary;
+      for (const key of keys) {
+        value = value[key];
+      }
+      localizedItem.description = value;
+    }
+    if (nameKey && item.nameKey) {
+      const keys = item.nameKey.split(".");
+      let value = dictionary;
+      for (const key of keys) {
+        value = value[key];
+      }
+      localizedItem.name = value;
+    }
+    if (item.categoryKey) {
+      const keys = item.categoryKey.split(".");
+      let value = dictionary;
+      for (const key of keys) {
+        value = value[key];
+      }
+      localizedItem.category = value;
+    }
+    if (item.roleKey) {
+      const keys = item.roleKey.split(".");
+      let value = dictionary;
+      for (const key of keys) {
+        value = value[key];
+      }
+      localizedItem.role = value;
+    }
+    if (item.bioKey) {
+      const keys = item.bioKey.split(".");
+      let value = dictionary;
+      for (const key of keys) {
+        value = value[key];
+      }
+      localizedItem.bio = value;
+    }
+    if (item.specialtyKey) {
+      const keys = item.specialtyKey.split(".");
+      let value = dictionary;
+      for (const key of keys) {
+        value = value[key];
+      }
+      localizedItem.specialty = value;
+    }
+    if (item.contentKey) {
+      const keys = item.contentKey.split(".");
+      let value = dictionary;
+      for (const key of keys) {
+        value = value[key];
+      }
+      localizedItem.content = value;
+    }
+    if (item.subtitleKey) {
+      const keys = item.subtitleKey.split(".");
+      let value = dictionary;
+      for (const key of keys) {
+        value = value[key];
+      }
+      localizedItem.subtitle = value;
+    }
+    return localizedItem;
+  });
+};

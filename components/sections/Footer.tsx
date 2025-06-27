@@ -23,8 +23,14 @@ import {
   ChevronDown
 } from "lucide-react";
 import Link from "next/link";
+import type { Dictionary } from "@/app/[lang]/dictionaries";
 
-const Footer = () => {
+interface FooterProps {
+  lang: string;
+  dictionary: Dictionary;
+}
+
+const Footer = ({ lang, dictionary }: FooterProps) => {
   const [email, setEmail] = useState("");
   const [contactOpen, setContactOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
@@ -45,26 +51,26 @@ const Footer = () => {
   ];
 
   const services = [
-    { name: "Professional Haircuts", href: "/barbing", icon: Scissors },
-    { name: "Beard Styling", href: "/barbing", icon: Scissors },
-    { name: "Custom Tattoos", href: "/tattoo", icon: PaintBucket },
-    { name: "Tattoo Consultations", href: "/tattoo", icon: PaintBucket },
-    { name: "Spa & Wellness", href: "/lifestyle", icon: Diamond },
-    { name: "Style Consultation", href: "/lifestyle", icon: Diamond },
+    { name: dictionary.footer.services.barbing.haircuts, href: `/${lang}/barbing`, icon: Scissors },
+    { name: dictionary.footer.services.barbing.beard, href: `/${lang}/barbing`, icon: Scissors },
+    { name: dictionary.footer.services.tattoo.custom, href: `/${lang}/tattoo`, icon: PaintBucket },
+    { name: dictionary.footer.services.tattoo.consultation, href: `/${lang}/tattoo`, icon: PaintBucket },
+    { name: dictionary.footer.services.lifestyle.spa, href: `/${lang}/lifestyle`, icon: Diamond },
+    { name: dictionary.footer.services.lifestyle.style, href: `/${lang}/lifestyle`, icon: Diamond },
   ];
 
   const quickLinks = [
-    { name: "About Us", href: "/our-story" },
-    { name: "Book Appointment", href: "/book" },
-    { name: "Our Team", href: "/our-team" },
-    { name: "careers", href: "/contact" },
-    { name: "FAQ", href: "/faq" },
-    { name: "Contact", href: "/contact" },
+    { name: dictionary.footer.quickLinks.about, href: `/${lang}/our-story` },
+    { name: dictionary.footer.quickLinks.book, href: `/${lang}/book` },
+    { name: dictionary.footer.quickLinks.team, href: `/${lang}/our-team` },
+    { name: dictionary.footer.quickLinks.careers, href: `/${lang}/contact` },
+    { name: dictionary.footer.quickLinks.faq, href: `/${lang}/faq` },
+    { name: dictionary.footer.quickLinks.contact, href: `/${lang}/contact` },
   ];
 
   const legalLinks = [
-    { name: "Privacy Policy", href: "/privacy-policy" },
-    { name: "Terms of Service", href: "/terms" },
+    { name: dictionary.footer.legal.privacy, href: `/${lang}/privacy-policy` },
+    { name: dictionary.footer.legal.terms, href: `/${lang}/terms` },
   ];
 
   return (
@@ -87,14 +93,14 @@ const Footer = () => {
                 transition={{ duration: 0.8 }}
                 viewport={{ once: true }}
               >
-                <h3 className="text-2xl  font-franklin font-semibold mb-4">
-                  Stay Connected with{" "}
+                <h3 className="text-2xl font-franklin font-semibold mb-4">
+                  {dictionary.footer.newsletter.title}{" "}
                   <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
-                    HoodHub
+                    {dictionary.footer.newsletter.titleHighlight}
                   </span>
                 </h3>
-                <p className="text-gray-600 font-franklin  max-w-md">
-                  Get exclusive updates, style tips, and special offers delivered to your inbox.
+                <p className="text-gray-600 font-franklin max-w-md">
+                  {dictionary.footer.newsletter.subtitle}
                 </p>
               </motion.div>
 
@@ -110,15 +116,15 @@ const Footer = () => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
+                  placeholder={dictionary.footer.newsletter.placeholder}
                   className="px-6 py-4 bg-gray-50 border border-gray-300 rounded-full text-gray-900 placeholder-gray-500 font-franklin focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent min-w-[300px]"
                   required
                 />
                 <Button
                   type="submit"
-                  className="h-max bg-gradient-to-r  from-yellow-400 via-yellow-500 to-yellow-600 text-black font-franklin font-semibold px-8 py-4 rounded-full hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 transition-all duration-300 group"
+                  className="h-max bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-black font-franklin font-semibold px-8 py-4 rounded-full hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 transition-all duration-300 group"
                 >
-                  Subscribe
+                  {dictionary.footer.newsletter.subscribe}
                   <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
                 </Button>
               </motion.form>
@@ -139,15 +145,14 @@ const Footer = () => {
                 transition={{ duration: 0.8 }}
                 viewport={{ once: true }}
               >
-                <Link href="/" className="inline-block mb-6">
+                <Link href={`/${lang}`} className="inline-block mb-6">
                   <h2 className="font-franklin-condensed text-3xl font-semibold bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
                     HoodHub
                   </h2>
                 </Link>
                 
                 <p className="text-gray-600 font-franklin leading-relaxed mb-6">
-                  Where artistry meets precision. Experience premium barbering, custom tattoo work, 
-                  and luxury lifestyle services in the heart of the city.
+                  {dictionary.footer.company.description}
                 </p>
 
                 {/* Contact Info - Collapsible on Mobile */}
@@ -156,7 +161,7 @@ const Footer = () => {
                   <div className="lg:hidden">
                     <Collapsible open={contactOpen} onOpenChange={setContactOpen}>
                       <CollapsibleTrigger className="flex items-center justify-between w-full text-left">
-                        <h3 className="font-franklin font-semibold text-lg text-gray-900">Contact Info</h3>
+                        <h3 className="font-franklin font-semibold text-lg text-gray-900">{dictionary.footer.contact.title}</h3>
                         <ChevronDown className={`w-5 h-5 text-gray-600 transition-transform duration-200 ${contactOpen ? 'rotate-180' : ''}`} />
                       </CollapsibleTrigger>
                       <CollapsibleContent className="mt-4">
@@ -164,29 +169,29 @@ const Footer = () => {
                           <div className="flex items-start gap-3">
                             <MapPin className="w-5 h-5 text-yellow-500 mt-1 flex-shrink-0" />
                             <div>
-                              <p className="text-gray-900 font-franklin">Leninsky Avenue, 146</p>
-                              <p className="text-gray-600 font-franklin">Moscow, 117198</p>
+                              <p className="text-gray-900 font-franklin">{dictionary.footer.contact.address}</p>
+                              <p className="text-gray-600 font-franklin">{dictionary.footer.contact.city}</p>
                             </div>
                           </div>
                           
                           <div className="flex items-center gap-3">
                             <Phone className="w-5 h-5 text-yellow-500 flex-shrink-0" />
-                            <a href="tel:+79776000146" className="text-gray-900 font-franklin hover:text-yellow-500 transition-colors">
-                              {`+7 977 600-01-46`}
+                            <a href={`tel:${dictionary.footer.contact.phone}`} className="text-gray-900 font-franklin hover:text-yellow-500 transition-colors">
+                              {dictionary.footer.contact.phone}
                             </a>
                           </div>
                           
                           <div className="flex items-center gap-3">
                             <Mail className="w-5 h-5 text-yellow-500 flex-shrink-0" />
-                            <a href="mailto:contact@hoodhub.ru" className="text-gray-900 font-franklin hover:text-yellow-500 transition-colors">
-                              contact@hoodhub.ru
+                            <a href={`mailto:${dictionary.footer.contact.email}`} className="text-gray-900 font-franklin hover:text-yellow-500 transition-colors">
+                              {dictionary.footer.contact.email}
                             </a>
                           </div>
 
                           <div className="flex items-start gap-3">
                             <Clock className="w-5 h-5 text-yellow-500 mt-1 flex-shrink-0" />
                             <div>
-                              <p className="text-gray-900 font-franklin">Mon - Sun: 10AM - 9PM</p>
+                              <p className="text-gray-900 font-franklin">{dictionary.footer.contact.hours}</p>
                             </div>
                           </div>
                         </div>
@@ -199,29 +204,29 @@ const Footer = () => {
                     <div className="flex items-start gap-3">
                       <MapPin className="w-5 h-5 text-yellow-500 mt-1 flex-shrink-0" />
                       <div>
-                        <p className="text-gray-900 font-franklin text-sm">Leninsky Avenue, 146</p>
-                        <p className="text-gray-600 font-franklin text-sm">Moscow, 117198</p>
+                        <p className="text-gray-900 font-franklin text-sm">{dictionary.footer.contact.address}</p>
+                        <p className="text-gray-600 font-franklin text-sm">{dictionary.footer.contact.city}</p>
                       </div>
                     </div>
                     
                     <div className="flex items-center gap-3">
                       <Phone className="w-5 h-5 text-yellow-500 flex-shrink-0" />
-                      <a href="tel:+79776000146" className="text-gray-900 font-franklin text-sm hover:text-yellow-500 transition-colors">
-                        {`+7 977 600-01-46`}
+                      <a href={`tel:${dictionary.footer.contact.phone}`} className="text-gray-900 font-franklin text-sm hover:text-yellow-500 transition-colors">
+                        {dictionary.footer.contact.phone}
                       </a>
                     </div>
                     
                     <div className="flex items-center gap-3">
                       <Mail className="w-5 h-5 text-yellow-500 flex-shrink-0" />
-                      <a href="mailto:contact@hoodhub.ru" className="text-gray-900 text-sm font-franklin hover:text-yellow-500 transition-colors">
-                        contact@hoodhub.ru
+                      <a href={`mailto:${dictionary.footer.contact.email}`} className="text-gray-900 text-sm font-franklin hover:text-yellow-500 transition-colors">
+                        {dictionary.footer.contact.email}
                       </a>
                     </div>
 
                     <div className="flex items-start gap-3">
                       <Clock className="w-5 h-5 text-yellow-500 flex-shrink-0" />
                       <div>
-                        <p className="text-gray-900 font-franklin text-sm">Mon - Sun: 10AM - 9PM</p>
+                        <p className="text-gray-900 font-franklin text-sm">{dictionary.footer.contact.hours}</p>
                       </div>
                     </div>
                   </div>
@@ -239,7 +244,7 @@ const Footer = () => {
                 <div className="lg:hidden">
                   <Collapsible open={servicesOpen} onOpenChange={setServicesOpen}>
                     <CollapsibleTrigger className="flex items-center justify-between w-full text-left">
-                      <h3 className="font-franklin font-semibold text-xl text-gray-900">Our Services</h3>
+                      <h3 className="font-franklin font-semibold text-xl text-gray-900">{dictionary.footer.services.title}</h3>
                       <ChevronDown className={`w-5 h-5 text-gray-600 transition-transform duration-200 ${servicesOpen ? 'rotate-180' : ''}`} />
                     </CollapsibleTrigger>
                     <CollapsibleContent className="mt-6">
@@ -262,7 +267,7 @@ const Footer = () => {
 
                 {/* Desktop Always Visible */}
                 <div className="hidden lg:block">
-                  <h3 className="font-franklin font-semibold text-xl mb-6 text-gray-900">Our Services</h3>
+                  <h3 className="font-franklin font-semibold text-xl mb-6 text-gray-900">{dictionary.footer.services.title}</h3>
                   <ul className="space-y-3">
                     {services.map((service, index) => (
                       <li key={index}>
@@ -290,7 +295,7 @@ const Footer = () => {
                 <div className="lg:hidden">
                   <Collapsible open={quickLinksOpen} onOpenChange={setQuickLinksOpen}>
                     <CollapsibleTrigger className="flex items-center justify-between w-full text-left">
-                      <h3 className="font-franklin font-semibold text-xl text-gray-900">Quick Links</h3>
+                      <h3 className="font-franklin font-semibold text-xl text-gray-900">{dictionary.footer.quickLinks.title}</h3>
                       <ChevronDown className={`w-5 h-5 text-gray-600 transition-transform duration-200 ${quickLinksOpen ? 'rotate-180' : ''}`} />
                     </CollapsibleTrigger>
                     <CollapsibleContent className="mt-6">
@@ -309,12 +314,12 @@ const Footer = () => {
 
                       {/* HoodSkool Link */}
                       <div className="mt-8 pt-6 border-t border-gray-200">
-                        <h4 className="font-franklin font-semibold text-lg mb-3 text-gray-900">Fashion</h4>
+                        <h4 className="font-franklin font-semibold text-lg mb-3 text-gray-900">{dictionary.footer.fashion.title}</h4>
                         <Link
                           href="https://hoodskool.com/"
                           className="inline-flex items-center gap-2 text-yellow-500 hover:text-yellow-600 transition-colors duration-300 group"
                         >
-                          <span className="font-franklin">Visit HoodSkool</span>
+                          <span className="font-franklin">{dictionary.footer.fashion.visit}</span>
                           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
                         </Link>
                       </div>
@@ -324,7 +329,7 @@ const Footer = () => {
 
                 {/* Desktop Always Visible */}
                 <div className="hidden lg:block">
-                  <h3 className="font-franklin font-semibold text-xl mb-6 text-gray-900">Quick Links</h3>
+                  <h3 className="font-franklin font-semibold text-xl mb-6 text-gray-900">{dictionary.footer.quickLinks.title}</h3>
                   <ul className="space-y-3">
                     {quickLinks.map((link, index) => (
                       <li key={index}>
@@ -340,12 +345,12 @@ const Footer = () => {
 
                   {/* HoodSkool Link */}
                   <div className="mt-8 pt-6 border-t border-gray-200">
-                    <h4 className="font-franklin font-semibold text-lg mb-3 text-gray-900">Fashion</h4>
+                    <h4 className="font-franklin font-semibold text-lg mb-3 text-gray-900">{dictionary.footer.fashion.title}</h4>
                     <Link
                       href="https://hoodskool.com/"
                       className="inline-flex items-center gap-2 text-yellow-500 hover:text-yellow-600 transition-colors duration-300 group"
                     >
-                      <span className="font-franklin">Visit HoodSkool</span>
+                      <span className="font-franklin">{dictionary.footer.fashion.visit}</span>
                       <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
                     </Link>
                   </div>
@@ -359,7 +364,7 @@ const Footer = () => {
                 transition={{ duration: 0.8, delay: 0.3 }}
                 viewport={{ once: true }}
               >
-                <h3 className="font-franklin font-semibold text-xl mb-6 text-gray-900">Follow Us</h3>
+                <h3 className="font-franklin font-semibold text-xl mb-6 text-gray-900">{dictionary.footer.social.title}</h3>
                 
                 {/* Social Media */}
                 <div className="flex gap-4">
@@ -392,7 +397,7 @@ const Footer = () => {
                 transition={{ duration: 0.8 }}
                 viewport={{ once: true }}
               >
-                <span>© 2025 HoodHub. All rights reserved.</span>
+                <span>{dictionary.footer.legal.copyright}</span>
               </motion.div>
 
               {/* Legal Links */}

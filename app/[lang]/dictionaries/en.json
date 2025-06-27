@@ -1,0 +1,439 @@
+{
+    "nav": {
+      "barbing": "Barbing",
+      "tattoo": "Tattoo",
+      "lifestyle": "Lifestyle",
+      "about": "About",
+      "ourStory": "Our Story",
+      "ourTeam": "Our Team",
+      "faq": "FAQ",
+      "contact": "Contact",
+      "bookAppointment": "Book Appointment",
+      "language": "Language",
+      "myBookings": "My Bookings"
+    },
+    "home": {
+      "hero": {
+        "title": "Where Style Meets Artistry",
+        "subtitle": "At HoodHub, we transform personal expression into art"
+      },
+      "about": {
+        "title": "Where Style Meets",
+        "titleHighlight": "Artistry",
+        "subtitle": "At HoodHub, we transform personal expression into art. Our skilled professionals combine traditional craftsmanship with modern innovation to deliver experiences that exceed expectations."
+      },
+      "barbing": {
+        "category": "PROFESSIONAL BARBING",
+        "title": "Master the Art of Grooming",
+        "subtitle": "Where precision meets passion, crafting the perfect cut that defines your style"
+      },
+      "barbingCta": {
+        "description": "Experience the artistry of professional grooming in our premium barbershop. Our master barbers combine traditional techniques with modern style to create the perfect look that defines your personality."
+      },
+      "tattoo": {
+        "category": "TATTOO ARTISTRY",
+        "title": "Ink Your Story with",
+        "titleHighlight": "Artistry",
+        "description": "Transform your vision into permanent art with our master tattoo artists. We specialize in custom designs that tell your unique story, combining traditional techniques with contemporary artistry to create",
+        "descriptionHighlight": "timeless masterpieces",
+        "descriptionEnd": "that you'll treasure forever."
+      },
+      "lifestyle": {
+        "category": "PREMIUM LIFESTYLE SERVICES",
+        "title": "Elevate Your",
+        "titleHighlight": "Lifestyle",
+        "forHer": "For Her",
+        "forHim": "For Him",
+        "description": "Experience the epitome of luxury and self-care with our premium lifestyle services designed to enhance your personal style and well-being"
+      },
+      "hoodskool": {
+        "category": "Fashion Meets",
+        "categoryHighlight": "Lifestyle",
+        "title": "HoodSkool",
+        "shopAll": "Shop All",
+        "description": "Discover our curated collection of premium streetwear, accessories, and lifestyle essentials. Each piece is carefully selected to embody the essence of contemporary urban culture.",
+        "cta": "Explore Full Collection"
+      }
+    },
+    "about": {
+      "masterCraftsmanship": "Master Craftsmanship",
+      "artisticExcellence": "Artistic Excellence",
+      "premiumExperience": "Premium Experience",
+      "modernTechniques": "Modern Techniques",
+      "attentionToDetail": "Attention to Detail",
+      "creativeVision": "Creative Vision",
+      "barbing": "Barbing",
+      "tattoo": "Tattoo",
+      "lifestyle": "Lifestyle",
+      "innovation": "Innovation",
+      "precision": "Precision",
+      "design": "Design"
+    },
+    "services": {
+      "male": {
+        "executiveGrooming": {
+          "title": "Executive Grooming",
+          "description": "Complete grooming package including haircut, beard styling, and luxury treatment"
+        },
+        "spaWellness": {
+          "title": "Spa & Wellness",
+          "description": "Rejuvenating spa treatments, massages, and wellness therapies"
+        },
+        "styleConsultation": {
+          "title": "Style Consultation",
+          "description": "Personal styling advice and wardrobe consultation services"
+        }
+      },
+      "female": {
+        "beautyMakeup": {
+          "title": "Beauty & Makeup",
+          "description": "Professional makeup artistry and beauty treatments for all occasions"
+        },
+        "hairStyling": {
+          "title": "Hair Styling",
+          "description": "Expert hair styling, coloring, and treatment services"
+        },
+        "nailArtistry": {
+          "title": "Nail Artistry",
+          "description": "Luxury manicures, pedicures, and custom nail art designs"
+        }
+      }
+    },
+    "products": {
+      "urbanTee": "Urban Essential Tee",
+      "leatherJacket": "Vintage Leather Jacket",
+      "goldChain": "Gold Chain Necklace",
+      "sneakers": "Limited Edition Sneakers",
+      "hoodie": "Premium Hoodie",
+      "snapback": "Designer Snapback",
+      "tracksuit": "Signature Tracksuit",
+      "canvasShoes": "Canvas High-Tops",
+      "watch": "Minimalist Watch",
+      "crossbodyBag": "Crossbody Bag",
+      "categories": {
+        "streetwear": "Streetwear",
+        "outerwear": "Outerwear",
+        "accessories": "Accessories",
+        "footwear": "Footwear",
+        "headwear": "Headwear",
+        "athleisure": "Athleisure"
+      }
+    },
+    "story": {
+      "vision": {
+        "title": "The Vision",
+        "year": "2019",
+        "content": "It started with a simple belief: that personal grooming and self-expression should be elevated to an art form. In a small corner of the city, our founders envisioned a space where traditional craftsmanship would meet contemporary innovation."
+      },
+      "craft": {
+        "title": "The Craft",
+        "year": "2020",
+        "content": "We assembled a team of master artisans - barbers who understood the geometry of a perfect cut, tattoo artists who could translate emotions into ink, and lifestyle specialists who knew that confidence comes from within."
+      },
+      "art": {
+        "title": "The Art",
+        "year": "2021",
+        "content": "Every line we draw, every cut we make, every experience we create is a canvas for self-expression. We believe that true artistry lies not just in technique, but in understanding the unique story that each client brings to our chair."
+      },
+      "community": {
+        "title": "The Community",
+        "year": "2022",
+        "content": "HoodHub became more than a destination - it became a community. A place where creativity flourishes, where stories are shared, and where every individual is celebrated. We've hosted artists, launched careers, and witnessed countless transformations."
+      },
+      "legacy": {
+        "title": "The Legacy",
+        "year": "Today",
+        "content": "Today, HoodHub stands as a testament to the power of passion and precision. We continue to push boundaries, set trends, and most importantly, help our clients discover their most confident selves. This is just the beginning of our story."
+      }
+    },
+    "team": {
+      "marcus": {
+        "name": "Marcus Johnson",
+        "role": "Master Barber",
+        "bio": "With over 15 years of experience, Marcus specializes in precision cuts and modern styles. Trained in London and New York."
+      },
+      "isabella": {
+        "name": "Isabella Chen",
+        "role": "Lead Tattoo Artist",
+        "bio": "Specializing in geometric and watercolor styles, Isabella brings 10 years of international tattooing experience."
+      },
+      "jamal": {
+        "name": "Jamal Williams",
+        "role": "Lifestyle Director",
+        "bio": "Jamal curates our premium experiences, blending wellness with urban sophistication for complete transformations."
+      },
+      "sophie": {
+        "name": "Sophie Laurent",
+        "role": "Creative Director",
+        "bio": "Former fashion designer who brings avant-garde vision to HoodHub's brand identity and space design."
+      },
+      "diego": {
+        "name": "Diego Rodriguez",
+        "role": "Senior Barber",
+        "bio": "Beard specialist with expertise in traditional straight razor techniques and modern grooming solutions."
+      },
+      "aisha": {
+        "name": "Aisha Khan",
+        "role": "Tattoo Artist",
+        "bio": "Expert in intricate mandala and dotwork designs, blending cultural heritage with contemporary styles."
+      },
+      "tyrone": {
+        "name": "Tyrone Jenkins",
+        "role": "Barber Educator",
+        "bio": "Develops our HoodSkool curriculum and mentors the next generation of barbering professionals."
+      },
+      "elena": {
+        "name": "Elena Petrova",
+        "role": "Wellness Specialist",
+        "bio": "Holistic practitioner integrating ancient healing techniques with modern luxury spa experiences."
+      }
+    },
+    "barbingServices": {
+      "signatureCut": {
+        "title": "Signature Haircut",
+        "description": "Precision cut with detailed finishing and styling consultation"
+      },
+      "executiveGrooming": {
+        "title": "Executive Grooming",
+        "description": "Haircut, hot towel treatment, and precision beard sculpting"
+      },
+      "luxuryShave": {
+        "title": "Luxury Shave",
+        "description": "Traditional straight razor shave with premium products"
+      },
+      "beardSculpting": {
+        "title": "Beard Sculpting",
+        "description": "Detailed beard shaping and conditioning treatment"
+      },
+      "premiumTreatment": {
+        "title": "Premium Treatment",
+        "description": "Haircut, deep conditioning, scalp massage, and styling"
+      }
+    },
+    "tattooStyles": {
+      "realism": {
+        "name": "Realism",
+        "description": "Hyper-detailed tattoos that mirror reality with stunning accuracy"
+      },
+      "geometric": {
+        "name": "Geometric",
+        "description": "Precision patterns, sacred geometry, and abstract shapes"
+      },
+      "watercolor": {
+        "name": "Watercolor",
+        "description": "Painterly styles that mimic brush strokes and color washes"
+      },
+      "japanese": {
+        "name": "Japanese Traditional",
+        "description": "Classic Irezumi with symbolic motifs and bold lines"
+      },
+      "blackGray": {
+        "name": "Black & Gray",
+        "description": "Masterful shading creating depth and dimension"
+      },
+      "minimalist": {
+        "name": "Minimalist",
+        "description": "Subtle, clean designs with symbolic meaning"
+      },
+      "neoTraditional": {
+        "name": "Neo-Traditional",
+        "description": "Modern take on classic styles with bold colors"
+      },
+      "tribal": {
+        "name": "Tribal",
+        "description": "Ancient patterns with cultural significance"
+      }
+    },
+    "tattooArtists": {
+      "isabella": {
+        "name": "Isabella Chen",
+        "specialty": "Geometric & Watercolor"
+      },
+      "aisha": {
+        "name": "Aisha Khan",
+        "specialty": "Mandala & Dotwork"
+      },
+      "diego": {
+        "name": "Diego Martinez",
+        "specialty": "Realism & Portrait"
+      },
+      "nikolai": {
+        "name": "Nikolai Petrov",
+        "specialty": "Japanese Traditional"
+      }
+    },
+    "faq": {
+      "general": {
+        "title": "General Questions",
+        "questions": [
+          {
+            "id": "gen-1",
+            "question": "What services does HoodHub offer?",
+            "answer": "HoodHub is a premium lifestyle destination offering professional barbering services, custom tattoo artistry, and luxury lifestyle services including spa treatments, beauty services, and personal styling for both men and women."
+          },
+          {
+            "id": "gen-2",
+            "question": "How do I book an appointment?",
+            "answer": "You can book an appointment by calling us at (123) 456-7890, texting us on WhatsApp, visiting our studio in person, or using the booking buttons throughout our website. We recommend booking in advance as our artists have busy schedules."
+          },
+          {
+            "id": "gen-3",
+            "question": "What are your operating hours?",
+            "answer": "We're open Monday through Sunday from 10AM to 9PM. We offer appointment slots throughout the day and can sometimes accommodate special requests for early or late appointments."
+          },
+          {
+            "id": "gen-4",
+            "question": "Do you accept walk-ins?",
+            "answer": "While we prefer appointments to ensure the best service, we do accept walk-ins when our artists are available. However, appointment clients always have priority, so wait times may vary."
+          },
+          {
+            "id": "gen-5",
+            "question": "What is your cancellation policy?",
+            "answer": "We require at least 24 hours notice for cancellations. Same-day cancellations or no-shows may be subject to a fee. We understand emergencies happen, so please call us to discuss your situation."
+          }
+        ]
+      },
+      "barbing": {
+        "title": "Barbing Services",
+        "questions": [
+          {
+            "id": "barb-1",
+            "question": "What's included in a signature haircut?",
+            "answer": "Our signature haircut includes a consultation, precision cut, hot towel treatment, styling, and finishing touches. The service typically takes 45-60 minutes and includes product recommendations for maintaining your style."
+          },
+          {
+            "id": "barb-2",
+            "question": "Do you offer beard styling services?",
+            "answer": "Absolutely! We offer comprehensive beard services including beard sculpting, trimming, hot towel treatments, conditioning, and styling. Our barbers are experts in creating the perfect beard shape for your face."
+          },
+          {
+            "id": "barb-3",
+            "question": "How often should I get a haircut?",
+            "answer": "It depends on your hair type and style, but generally every 3-4 weeks for short styles and 6-8 weeks for longer styles. Our barbers will provide personalized recommendations during your consultation."
+          },
+          {
+            "id": "barb-4",
+            "question": "Do you use premium products?",
+            "answer": "Yes, we exclusively use high-quality, professional-grade products from renowned brands. We're happy to recommend and sell the products we use so you can maintain your style at home."
+          }
+        ]
+      },
+      "tattoo": {
+        "title": "Tattoo Artistry",
+        "questions": [
+          {
+            "id": "tat-1",
+            "question": "How does the tattoo consultation process work?",
+            "answer": "We start with a detailed consultation to discuss your vision, placement, size, and style preferences. Our artists will create custom designs and provide honest advice about what will work best for your skin and lifestyle. Consultations can be scheduled separately or on the day of your appointment."
+          },
+          {
+            "id": "tat-2",
+            "question": "What styles do your artists specialize in?",
+            "answer": "Our team specializes in various styles including realism, geometric, watercolor, Japanese traditional, black & gray, minimalist, neo-traditional, and tribal designs. Each artist has their unique strengths and we'll match you with the best artist for your vision."
+          },
+          {
+            "id": "tat-3",
+            "question": "How do I prepare for my tattoo appointment?",
+            "answer": "Get a good night's sleep, eat a proper meal beforehand, stay hydrated, avoid alcohol for 24 hours prior, and wear comfortable clothing that provides easy access to the tattoo area. We'll provide detailed aftercare instructions."
+          },
+          {
+            "id": "tat-4",
+            "question": "How long does the healing process take?",
+            "answer": "Initial healing typically takes 2-3 weeks, but complete healing can take 2-3 months. We provide comprehensive aftercare instructions and premium healing products to ensure optimal results."
+          },
+          {
+            "id": "tat-5",
+            "question": "Do you require a deposit?",
+            "answer": "Yes, we require a deposit to secure your tattoo appointment. The deposit amount varies based on the size and complexity of the piece and goes toward your final payment."
+          }
+        ]
+      },
+      "lifestyle": {
+        "title": "Lifestyle Services",
+        "questions": [
+          {
+            "id": "life-1",
+            "question": "What lifestyle services do you offer for women?",
+            "answer": "For women, we offer professional makeup artistry, hair styling and treatments, luxury manicures and pedicures with custom nail art, skincare treatments, and personal styling consultations."
+          },
+          {
+            "id": "life-2",
+            "question": "What lifestyle services do you offer for men?",
+            "answer": "For men, we provide executive grooming packages, spa and wellness treatments including massages, skincare services, style consultations, and wardrobe advice to enhance your personal and professional image."
+          },
+          {
+            "id": "life-3",
+            "question": "Can I book multiple services in one appointment?",
+            "answer": "Absolutely! We encourage combining services for a complete transformation experience. Our team can coordinate multiple services and we offer package deals for combined appointments."
+          },
+          {
+            "id": "life-4",
+            "question": "Do you offer bridal or special event services?",
+            "answer": "Yes, we specialize in bridal beauty, special events, photoshoots, and other occasions. We recommend booking these services well in advance and offer trial sessions to ensure everything is perfect for your big day."
+          }
+        ]
+      }
+    },
+    "footer": {
+      "newsletter": {
+        "title": "Stay Connected with",
+        "titleHighlight": "HoodHub",
+        "subtitle": "Get exclusive updates, style tips, and special offers delivered to your inbox.",
+        "placeholder": "Enter your email",
+        "subscribe": "Subscribe"
+      },
+      "company": {
+        "description": "Where artistry meets precision. Experience premium barbering, custom tattoo work, and luxury lifestyle services in the heart of the city."
+      },
+      "contact": {
+        "title": "Contact Info",
+        "address": "Leninsky Avenue, 146",
+        "city": "Moscow, 117198",
+        "phone": "+7 977 600-01-46",
+        "email": "contact@hoodhub.ru",
+        "hours": "Mon - Sun: 10AM - 9PM"
+      },
+      "services": {
+        "title": "Our Services",
+        "barbing": {
+          "haircuts": "Professional Haircuts",
+          "beard": "Beard Styling"
+        },
+        "tattoo": {
+          "custom": "Custom Tattoos",
+          "consultation": "Tattoo Consultations"
+        },
+        "lifestyle": {
+          "spa": "Spa & Wellness",
+          "style": "Style Consultation"
+        }
+      },
+      "quickLinks": {
+        "title": "Quick Links",
+        "about": "About Us",
+        "book": "Book Appointment",
+        "team": "Our Team",
+        "careers": "Careers",
+        "faq": "FAQ",
+        "contact": "Contact"
+      },
+      "social": {
+        "title": "Follow Us"
+      },
+      "fashion": {
+        "title": "Fashion",
+        "visit": "Visit HoodSkool"
+      },
+      "legal": {
+        "copyright": "© 2025 HoodHub. All rights reserved.",
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service"
+      }
+    },
+    "buttons": {
+      "bookAppointment": "Book Appointment",
+      "bookConsultation": "Book Consultation",
+      "bookNow": "Book Now"
+    }
+  }
+  

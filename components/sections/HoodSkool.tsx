@@ -4,10 +4,20 @@ import { motion } from "motion/react";
 import { ShoppingBag, ArrowRight } from "lucide-react";
 import { EdgeCarousel, ShopCard } from "@/components/ui/carousel";
 import Link from "next/link";
-import { hoodskoolProducts } from "@/constants";
+import { getLocalizedData, hoodskoolProducts } from "@/constants";
 import { Button } from "../ui/button";
+import type { Dictionary } from "@/app/[lang]/dictionaries";
 
-const HoodSkool = () => {
+interface HoodSkoolProps {
+  lang: string;
+  dictionary: Dictionary;
+}
+
+const HoodSkool = ({ lang, dictionary }: HoodSkoolProps) => {
+
+  const localizedProducts = getLocalizedData(hoodskoolProducts, dictionary, 'titleKey', 'categoryKey');
+
+
   return (
     <section className="bg-black relative z-0 -mt-8 py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
@@ -23,9 +33,9 @@ const HoodSkool = () => {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              Fashion Meets{" "}
+              {dictionary.home.hoodskool.category}{" "}
               <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
-                Lifestyle
+                {dictionary.home.hoodskool.categoryHighlight}
               </span>
             </motion.p>
 
@@ -37,8 +47,7 @@ const HoodSkool = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              HoodSkool
-              
+              {dictionary.home.hoodskool.title}
             </motion.h2>
           </div>
 
@@ -53,7 +62,7 @@ const HoodSkool = () => {
               href="https://hoodskool.com/" 
               className="inline-flex items-center gap-2 text-white hover:text-yellow-400 transition-colors duration-300 group"
             >
-              <span className="font-franklin text-lg">Shop All</span>
+              <span className="font-franklin text-lg">{dictionary.home.hoodskool.shopAll}</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
             </Link>
           </motion.div>
@@ -67,8 +76,7 @@ const HoodSkool = () => {
           transition={{ duration: 0.8, delay: 0.3 }}
           viewport={{ once: true }}
         >
-          Discover our curated collection of premium streetwear, accessories, and lifestyle essentials. 
-          Each piece is carefully selected to embody the essence of contemporary urban culture.
+          {dictionary.home.hoodskool.description}
         </motion.p>
       </div>
 
@@ -80,7 +88,7 @@ const HoodSkool = () => {
         viewport={{ once: true }}
       >
         <EdgeCarousel>
-          {hoodskoolProducts.map((product, index) => (
+          {localizedProducts.map((product, index) => (
             <motion.div
               key={product.id}
               initial={{ opacity: 0, y: 50 }}
@@ -88,7 +96,8 @@ const HoodSkool = () => {
               transition={{ duration: 0.6, delay: 0.1 * (index % 4) }}
               viewport={{ once: true }}
             >
-              <ShopCard                src={product.src}
+              <ShopCard
+                src={product.src}
                 title={product.title}
                 price={product.price}
                 category={product.category}
@@ -107,17 +116,14 @@ const HoodSkool = () => {
         transition={{ duration: 0.8, delay: 1.0 }}
         viewport={{ once: true }}
       >
-        <Link 
-          href="https://hoodskool.com/"
-        >
-            <Button
-                size="lg"
-                className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-black font-franklin font-semibold px-8 md:px-10 py-3 md:py-4 text-base md:text-lg hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl group min-w-[200px]"
-                >
-                <ShoppingBag className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
-                Explore Full Collection
-            </Button>
-          
+        <Link href="https://hoodskool.com/">
+          <Button
+            size="lg"
+            className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-black font-franklin font-semibold px-8 md:px-10 py-3 md:py-4 text-base md:text-lg hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl group min-w-[200px]"
+          >
+            <ShoppingBag className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
+            {dictionary.home.hoodskool.cta}
+          </Button>
         </Link>
       </motion.div>
     </section>

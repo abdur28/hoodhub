@@ -6,8 +6,14 @@ import { Calendar, PaintBucket } from "lucide-react";
 import { tattooImages } from "@/constants";
 import Link from "next/link";
 import Image from "next/image";
+import type { Dictionary } from "@/app/[lang]/dictionaries";
 
-const Tattoo = () => {
+interface TattooProps {
+  lang: string;
+  dictionary: Dictionary;
+}
+
+const Tattoo = ({ lang, dictionary }: TattooProps) => {
   return (
     <section className="bg-neutral-200 relative z-0 py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
@@ -22,20 +28,20 @@ const Tattoo = () => {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            TATTOO ARTISTRY
+            {dictionary.home.tattoo.category}
           </motion.p>
 
           {/* Title */}
           <motion.h2
-            className="text-4xl md:text-4xl lg:text-6xl font-franklin  mb-8"
+            className="text-4xl md:text-4xl lg:text-6xl font-franklin mb-8"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            Ink Your Story with{" "}
+            {dictionary.home.tattoo.title}{" "}
             <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
-              Artistry
+              {dictionary.home.tattoo.titleHighlight}
             </span>
           </motion.h2>
         </div>
@@ -78,8 +84,8 @@ const Tattoo = () => {
                 whileHover={{ scale: 1.02 }}
               >
                 <Image
-                width={700}
-                height={700}
+                  width={700}
+                  height={700}
                   src={tattooImages[1].url}
                   alt={tattooImages[1].alt}
                   className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -99,8 +105,8 @@ const Tattoo = () => {
                 whileHover={{ scale: 1.02 }}
               >
                 <Image
-                width={700}
-                height={700}
+                  width={700}
+                  height={700}
                   src={tattooImages[2].url}
                   alt={tattooImages[2].alt}
                   className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -304,13 +310,11 @@ const Tattoo = () => {
             transition={{ duration: 0.8, delay: 0.6 }}
             viewport={{ once: true }}
           >
-            Transform your vision into permanent art with our master tattoo artists. 
-            We specialize in custom designs that tell your unique story, combining 
-            traditional techniques with contemporary artistry to create{" "}
+            {dictionary.home.tattoo.description}{" "}
             <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent font-semibold">
-              timeless masterpieces
+              {dictionary.home.tattoo.descriptionHighlight}
             </span>
-            {" "}{`that you'll treasure forever.`}
+            {" "}{dictionary.home.tattoo.descriptionEnd}
           </motion.p>
 
           {/* CTA Button */}
@@ -321,14 +325,14 @@ const Tattoo = () => {
             transition={{ duration: 0.8, delay: 1.0 }}
             viewport={{ once: true }}
           >
-            <Link href="/book?service=tattoo" className="group">
-            <Button
+            <Link href={`/${lang}/book?service=tattoo`} className="group">
+              <Button
                 size="lg"
                 className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-black font-franklin font-semibold px-8 md:px-10 py-3 md:py-4 text-base md:text-lg hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl group min-w-[200px]"
-            >
+              >
                 <Calendar className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" />
-                Book Appointment
-            </Button>
+                {dictionary.buttons.bookAppointment}
+              </Button>
             </Link>
           </motion.div>
         </div>
