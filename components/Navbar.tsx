@@ -15,6 +15,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import Image from "next/image";
 
 interface NavbarProps {
   variant?: "transparent" | "floating";
@@ -25,20 +26,22 @@ const Navbar = ({ variant = "transparent", className = "" }: NavbarProps) => {
   const isTransparent = variant === "transparent";
   
   return (
-    <nav className={`${isTransparent ? "bg-transparent" : "bg-white dark:bg-gray-900 shadow-lg"} ${className}`}>
+    <nav className={`${isTransparent ? "bg-transparent" : "bg-white shadow-lg"} ${className}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link 
               href="/" 
-              className={`${
-                isTransparent 
-                  ? "text-white" 
-                  : "text-gray-900 dark:text-white"
-              } font-franklin-condensed text-2xl md:text-3xl font-semibold tracking-tight hover:opacity-80 transition-opacity`}
+              className="flex items-center w-24 md:w-40 hover:opacity-90 transition-opacity duration-200"
             >
-              HoodHub
+              <Image
+                src="/logo.png"
+                alt="Logo"
+                width={500}
+                height={500}
+                className="w-full h-full object-contain"
+              />
             </Link>
           </div>
 

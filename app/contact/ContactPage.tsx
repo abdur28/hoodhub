@@ -64,19 +64,19 @@ const ContactPage = () => {
     {
       icon: MapPin,
       title: "Visit Us",
-      details: ["123 Style Street", "Downtown District, NY 10001"],
+      details: ["Leninsky Avenue, 146", "Moscow, 117198"],
       color: "text-yellow-500"
     },
     {
       icon: Phone,
       title: "Call Us",
-      details: ["(123) 456-7890", "Text & WhatsApp Available"],
+      details: ["+7 977 600-01-46", "Text & WhatsApp Available"],
       color: "text-green-500"
     },
     {
       icon: Mail,
       title: "Email Us",
-      details: ["hello@hoodhub.com", "info@hoodhub.com"],
+      details: ["contact@hoodhub.ru"],
       color: "text-blue-500"
     },
     {
@@ -88,7 +88,7 @@ const ContactPage = () => {
   ];
 
   const socialLinks = [
-    { icon: Instagram, href: "#", label: "Instagram", color: "hover:text-pink-500" },
+    { icon: Instagram, href: "https://www.instagram.com/hoodhubmsk/", label: "Instagram", color: "hover:text-pink-500" },
     { icon: Facebook, href: "#", label: "Facebook", color: "hover:text-blue-500" },
     { icon: Twitter, href: "#", label: "Twitter", color: "hover:text-sky-500" },
     { icon: Youtube, href: "#", label: "YouTube", color: "hover:text-red-500" },
@@ -355,14 +355,18 @@ const ContactPage = () => {
                   </button>
 
                   
-                  <button className="w-full flex items-center justify-center space-x-3 bg-white hover:bg-gray-50 text-gray-800 py-3 px-6 rounded-xl transition-colors duration-300 shadow-sm">
+                  <button className="w-full">
+                    <Link href='https://wa.me/+79776000146' className="w-full flex items-center justify-center space-x-3 bg-white hover:bg-gray-50 text-gray-800 py-3 px-6 rounded-xl transition-colors duration-300 shadow-sm">
                     <MessageCircle className="w-5 h-5 text-green-500" />
                     <span className="font-franklin font-medium">WhatsApp Us</span>
+                    </Link>
                   </button>
                   
-                  <button className="w-full flex items-center justify-center space-x-3 bg-white hover:bg-gray-50 text-gray-800 py-3 px-6 rounded-xl transition-colors duration-300 shadow-sm">
+                  <button className="w-full ">
+                    <Link href='tel:+79776000146' className="w-full flex items-center justify-center space-x-3 bg-white hover:bg-gray-50 text-gray-800 py-3 px-6 rounded-xl transition-colors duration-300 shadow-sm">
                     <Phone className="w-5 h-5 text-blue-500" />
                     <span className="font-franklin font-medium">Call Now</span>
+                    </Link>
                   </button>
                 </div>
               </div>

@@ -164,22 +164,22 @@ const Footer = () => {
                           <div className="flex items-start gap-3">
                             <MapPin className="w-5 h-5 text-yellow-500 mt-1 flex-shrink-0" />
                             <div>
-                              <p className="text-gray-900 font-franklin">123 Style Street</p>
-                              <p className="text-gray-600 font-franklin">Downtown District, NY 10001</p>
+                              <p className="text-gray-900 font-franklin">Leninsky Avenue, 146</p>
+                              <p className="text-gray-600 font-franklin">Moscow, 117198</p>
                             </div>
                           </div>
                           
                           <div className="flex items-center gap-3">
                             <Phone className="w-5 h-5 text-yellow-500 flex-shrink-0" />
-                            <a href="tel:+1234567890" className="text-gray-900 font-franklin hover:text-yellow-500 transition-colors">
-                              (123) 456-7890
+                            <a href="tel:+79776000146" className="text-gray-900 font-franklin hover:text-yellow-500 transition-colors">
+                              {`+7 977 600-01-46`}
                             </a>
                           </div>
                           
                           <div className="flex items-center gap-3">
                             <Mail className="w-5 h-5 text-yellow-500 flex-shrink-0" />
-                            <a href="mailto:hello@hoodhub.com" className="text-gray-900 font-franklin hover:text-yellow-500 transition-colors">
-                              hello@hoodhub.com
+                            <a href="mailto:contact@hoodhub.ru" className="text-gray-900 font-franklin hover:text-yellow-500 transition-colors">
+                              contact@hoodhub.ru
                             </a>
                           </div>
 
@@ -199,22 +199,22 @@ const Footer = () => {
                     <div className="flex items-start gap-3">
                       <MapPin className="w-5 h-5 text-yellow-500 mt-1 flex-shrink-0" />
                       <div>
-                        <p className="text-gray-900 font-franklin text-sm">123 Style Street</p>
-                        <p className="text-gray-600 font-franklin text-sm">Downtown District, NY 10001</p>
+                        <p className="text-gray-900 font-franklin text-sm">Leninsky Avenue, 146</p>
+                        <p className="text-gray-600 font-franklin text-sm">Moscow, 117198</p>
                       </div>
                     </div>
                     
                     <div className="flex items-center gap-3">
                       <Phone className="w-5 h-5 text-yellow-500 flex-shrink-0" />
-                      <a href="tel:+1234567890" className="text-gray-900 font-franklin text-sm hover:text-yellow-500 transition-colors">
-                        (123) 456-7890
+                      <a href="tel:+79776000146" className="text-gray-900 font-franklin text-sm hover:text-yellow-500 transition-colors">
+                        {`+7 977 600-01-46`}
                       </a>
                     </div>
                     
                     <div className="flex items-center gap-3">
                       <Mail className="w-5 h-5 text-yellow-500 flex-shrink-0" />
-                      <a href="mailto:hello@hoodhub.com" className="text-gray-900 text-sm font-franklin hover:text-yellow-500 transition-colors">
-                        hello@hoodhub.com
+                      <a href="mailto:contact@hoodhub.ru" className="text-gray-900 text-sm font-franklin hover:text-yellow-500 transition-colors">
+                        contact@hoodhub.ru
                       </a>
                     </div>
 

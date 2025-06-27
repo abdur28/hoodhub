@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Footer from "@/components/sections/Footer";
 import { ClerkProvider } from '@clerk/nextjs'
+import WhatsappPopUp from "@/components/WhatsappPopUp";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,6 +41,7 @@ const franklinGothic = localFont({
 export const metadata: Metadata = {
   title: "HoodHub - Premium Fashion & Lifestyle Services",
   description: "Experience luxury barbering, tattoo artistry, and premium lifestyle services at HoodHub",
+  keywords: "premium barbering, tattoo artistry, lifestyle services, HoodHub, ba",
 };
 
 export default function RootLayout({
@@ -50,10 +52,14 @@ export default function RootLayout({
   return (
     <ClerkProvider>
     <html lang="en">
+      <head>
+      <meta name="apple-mobile-web-app-title" content="Hoodhub" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${franklinGothic.variable} font-franklin antialiased`}
       >
         {children}
+        <WhatsappPopUp />
         <Footer />
       </body>
     </html>
