@@ -55,6 +55,225 @@
         "cta": "Explore Full Collection"
       }
     },
+    "barbing": {
+      "hero": {
+        "title": "Premium",
+        "titleHighlight": "Barbering"
+      },
+      "experience": {
+        "category": "LUXURY GROOMING EXPERIENCE", 
+        "title": "Master the Art of Grooming",
+        "description1": "At HoodHub, barbering is elevated to an art form. Our master barbers combine traditional techniques with modern innovation to create styles that reflect your individuality.",
+        "description2": "Each appointment is a personalized experience where craftsmanship meets luxury, resulting in not just a haircut, but a transformation.",
+        "servicesTitle": "Our Signature Services"
+      },
+      "cta": {
+        "title": "Ready for Transformation?",
+        "subtitle": "Book your premium grooming experience with our master barbers",
+        "hours": "Mon-Sun: 10am - 9pm",
+        "address": "Leninsky Avenue, 146, Moscow",
+        "button": "Book Your Appointment"
+      }
+    },
+    "tattoo": {
+      "hero": {
+        "title": "Tattoo",
+        "titleHighlight": "Studio"
+      },
+      "gallery": {
+        "category": "ARTISTIC EXPRESSION",
+        "title": "Ink Your Story with",
+        "titleHighlight": "Artistry", 
+        "description1": "Transform your vision into permanent art with our master tattoo artists. We specialize in custom designs that tell your unique story, combining traditional techniques with contemporary artistry to create",
+        "descriptionHighlight": "timeless masterpieces",
+        "description2": "that you'll treasure forever."
+      },
+      "styles": {
+        "title": "Artistic Styles We Master"
+      },
+      "artists": {
+        "title": "Our Master Artists"
+      },
+      "cta": {
+        "title": "Ready to Create Your Masterpiece?",
+        "subtitle": "Consult with our artists to bring your vision to life",
+        "button": "Book Your Consultation"
+      }
+    },
+    "lifestyle": {
+      "hero": {
+        "title": "Premium",
+        "titleHighlight": "Lifestyle"
+      },
+      "services": {
+        "category": "EXCLUSIVE SERVICES FOR THE DISCERNING CLIENT",
+        "title": "Curated",
+        "titleHighlight": "Experiences",
+        "description": "At HoodHub, we believe true luxury is personal. Our lifestyle services are meticulously crafted to enhance your natural elegance and provide moments of rejuvenation in your busy life."
+      },
+      "forHer": {
+        "title": "For",
+        "highlight": "Her"
+      },
+      "forHim": {
+        "title": "For", 
+        "highlight": "Him"
+      },
+      "bookNow": "Book Now",
+      "benefits": {
+        "title": "The",
+        "titleHighlight": "HoodHub",
+        "titleEnd": "Difference",
+        "personalizedCare": {
+          "title": "Personalized Care",
+          "description": "Every service is tailored to your unique needs and preferences, ensuring a truly bespoke experience."
+        },
+        "premiumProducts": {
+          "title": "Premium Products",
+          "description": "We use only the finest, ethically sourced products that nourish and enhance your natural beauty."
+        },
+        "masterCraftsmanship": {
+          "title": "Master Craftsmanship",
+          "description": "Our specialists are industry veterans with years of experience and refined expertise."
+        }
+      },
+      "cta": {
+        "title": "Ready for Your Transformation?",
+        "subtitle": "Experience luxury self-care tailored to your unique style and preferences",
+        "hours": "Mon-Sun: 10am - 9pm",
+        "address": "123 Style Street, Fashion District, Moscow",
+        "button": "Book Your Consultation"
+      }
+    },
+    "ourStory": {
+      "hero": {
+        "title": "Our",
+        "titleHighlight": "Story"
+      },
+      "genesis": {
+        "title": "The Genesis of HoodHub",
+        "subtitle": "Where passion meets precision, and every cut tells a story"
+      },
+      "philosophy": {
+        "title": "Our Philosophy",
+        "paragraph1": "At HoodHub, we believe personal style is the purest form of self-expression. Our mission is to create spaces where artistry and individuality converge, transforming grooming into an experience that elevates both appearance and confidence.",
+        "paragraph2": "We blend traditional techniques with modern innovation, honoring the craft while pushing creative boundaries. Each service is a collaboration between artist and client, resulting in authentic self-representation."
+      },
+      "textEffect": {
+        "content": "In the intersection of artistry and craftsmanship, HoodHub was born from a vision to redefine personal expression. We are more than a destination - we are curators of confidence, architects of style, and guardians of the ancient arts that make us uniquely human."
+      },
+      "cta": {
+        "title": "Ready to Write Your Story?",
+        "subtitle": "Join the HoodHub community and discover what happens when artistry meets your vision.",
+        "button": "Book Your Experience"
+      }
+    },
+    "ourTeam": {
+      "hero": {
+        "title": "Meet Our",
+        "titleHighlight": "Artists"
+      },
+      "collective": {
+        "title": "The HoodHub Collective",
+        "subtitle": "Masters of their craft, united by a passion for transformation"
+      },
+      "cta": {
+        "title": "Ready to Meet Our Team?",
+        "subtitle": "Book an appointment with one of our specialists today",
+        "button": "Book Your Session"
+      }
+    },  
+    "faqPage": {
+      "hero": {
+        "title": "FAQ"
+      },
+      "intro": {
+        "title": "Frequently Asked",
+        "titleHighlight": "Questions",
+        "description": "Find answers to the most common questions about our services, booking process, and what to expect during your visit to HoodHub."
+      },
+      "cta": {
+        "title": "Still have questions?",
+        "description": "Can't find the answer you're looking for? Our team is here to help.",
+        "contactButton": "Contact Us",
+        "bookButton": "Book Consultation"
+      }
+    },
+    "contactPage": {
+      "hero": {
+        "title": "Get in",
+        "titleHighlight": "Touch"
+      },
+      "info": {
+        "visit": {
+          "title": "Visit Us",
+          "details": ["Leninsky Avenue, 146", "Moscow, 117198"]
+        },
+        "call": {
+          "title": "Call Us",
+          "details": ["+7 977 600-01-46", "Text & WhatsApp Available"]
+        },
+        "email": {
+          "title": "Email Us",
+          "details": ["contact@hoodhub.ru"]
+        },
+        "hours": {
+          "title": "Hours",
+          "details": ["Mon-Sun: 10AM - 9PM", "Appointments Available"]
+        }
+      },
+      "form": {
+        "title": "Send us a",
+        "titleHighlight": "Message",
+        "name": "Full Name",
+        "namePlaceholder": "Your name",
+        "email": "Email Address",
+        "emailPlaceholder": "your@email.com",
+        "phone": "Phone Number",
+        "phonePlaceholder": "(123) 456-7890",
+        "service": "Service Interest",
+        "servicePlaceholder": "Select a service",
+        "services": {
+          "barbing": "Professional Barbing",
+          "tattoo": "Tattoo Artistry",
+          "lifestyle": "Lifestyle Services",
+          "consultation": "General Consultation"
+        },
+        "message": "Message",
+        "messagePlaceholder": "Tell us about your vision or any questions you have...",
+        "submit": "Send Message"
+      },
+      "whyChoose": {
+        "title": "Why Choose",
+        "titleHighlight": "HoodHub?",
+        "experts": {
+          "title": "Expert Artisans",
+          "description": "Our team of master barbers, tattoo artists, and lifestyle specialists bring years of experience and passion to every service."
+        },
+        "premium": {
+          "title": "Premium Experience",
+          "description": "Every appointment is a luxury experience designed to exceed your expectations and enhance your personal style."
+        },
+        "personalized": {
+          "title": "Personalized Service",
+          "description": "We take time to understand your vision and create customized solutions that reflect your unique personality."
+        }
+      },
+      "quickActions": {
+        "title": "Quick Actions",
+        "book": "Book Appointment",
+        "whatsapp": "WhatsApp Us",
+        "call": "Call Now"
+      },
+      "social": {
+        "title": "Follow Our Journey"
+      },
+      "map": {
+        "title": "Find",
+        "titleHighlight": "Us",
+        "description": "Located in the heart of the fashion district, our studio is easily accessible and designed for your comfort."
+      }
+    },
     "about": {
       "masterCraftsmanship": "Master Craftsmanship",
       "artisticExcellence": "Artistic Excellence",

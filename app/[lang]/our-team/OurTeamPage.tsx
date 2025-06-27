@@ -4,9 +4,10 @@ import { motion } from "framer-motion";
 import { FloatingNav } from "@/components/ui/floating-navbar";
 import Navbar from "@/components/Navbar";
 import {  Instagram, Twitter, MessageCircle, X } from "lucide-react";
-import { teamMembers } from "@/constants";
+import { teamMembers, getLocalizedData } from "@/constants";
 import Link from "next/link";
 import Image from "next/image";
+import type { Dictionary } from "../dictionaries";
 
 // Animation variants
 const container = {
@@ -24,9 +25,17 @@ const item = {
   show: { opacity: 1, y: 0 }
 };
 
-const OurTeamPage = () => {
+interface OurTeamPageProps {
+  lang: string;
+  dictionary: Dictionary;
+}
+
+const OurTeamPage = ({ lang, dictionary }: OurTeamPageProps) => {
   const [activeMember, setActiveMember] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+
+  // Localize the team members data
+  const localizedTeamMembers = getLocalizedData(teamMembers, dictionary, undefined, undefined, 'nameKey');
 
   useEffect(() => {
     // Check if window is defined (client-side)
@@ -55,7 +64,7 @@ const OurTeamPage = () => {
   return (
     <div className="min-h-screen bg-black">
       {/* Floating Navigation */}
-      <FloatingNav />
+      <FloatingNav lang={lang} dictionary={dictionary} />
       
       {/* Hero Section */}
       <section className="relative h-[70vh] w-full overflow-hidden">
@@ -96,7 +105,7 @@ const OurTeamPage = () => {
 
         {/* Transparent Navbar */}
         <div className="absolute top-0 left-0 right-0 z-40">
-          <Navbar variant="transparent" />
+          <Navbar variant="transparent" lang={lang} dictionary={dictionary} />
         </div>
 
         {/* Hero Content */}
@@ -109,9 +118,9 @@ const OurTeamPage = () => {
               className="mb-8"
             >
               <h1 className="text-6xl md:text-7xl lg:text-8xl font-franklin text-white">
-                Meet Our {" "}
+                {dictionary.ourTeam.hero.title} {" "}
                 <span className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent">
-                    Artists
+                  {dictionary.ourTeam.hero.titleHighlight}
                 </span>
               </h1>
             </motion.div>
@@ -131,11 +140,11 @@ const OurTeamPage = () => {
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-5xl font-franklin text-gray-900 mb-4">
-              The HoodHub Collective
+              {dictionary.ourTeam.collective.title}
             </h2>
             <div className="w-20 h-1 bg-gradient-to-r from-yellow-400 to-yellow-600 mx-auto mb-6"></div>
             <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto font-franklin-italic">
-              Masters of their craft, united by a passion for transformation
+              {dictionary.ourTeam.collective.subtitle}
             </p>
           </motion.div>
 
@@ -147,7 +156,7 @@ const OurTeamPage = () => {
             viewport={{ once: true, margin: "-100px" }}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
           >
-            {teamMembers.map((member) => (
+            {localizedTeamMembers.map((member) => (
               <motion.div 
                 key={member.id}
                 variants={item}
@@ -212,47 +221,44 @@ const OurTeamPage = () => {
               </motion.div>
             ))}
           </motion.div>
-
-
         </div>
-
-
       </section>
-        {/* Updated CTA Section */}
-        <div className=" py-28 lg:py-32 bg-gradient-to-br from-black to-gray-900 overflow-hidden">
-            <div className="absolute inset-0 overflow-hidden">
-              <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-yellow-500/10 rounded-full blur-3xl" />
-              <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-yellow-500/5 rounded-full blur-3xl" />
-            </div>
-            
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-                viewport={{ once: true }}
+
+      {/* Updated CTA Section */}
+      <div className=" py-28 lg:py-32 bg-gradient-to-br from-black to-gray-900 overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-yellow-500/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-yellow-500/5 rounded-full blur-3xl" />
+        </div>
+        
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl md:text-5xl font-franklin text-white mb-6">
+              {dictionary.ourTeam.cta.title}
+            </h2>
+            <p className="text-xl font-franklin text-white/80 mb-8 max-w-2xl mx-auto">
+              {dictionary.ourTeam.cta.subtitle}
+            </p>
+            <Link href={`/${lang}/book`}>
+              <motion.button
+                whileHover={{ 
+                  scale: 1.05,
+                  background: "linear-gradient(90deg, #f59e0b, #d97706, #f59e0b)"
+                }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-franklin px-8 py-4 text-lg rounded-full transition-all duration-300 shadow-lg shadow-yellow-500/20 hover:shadow-yellow-500/40"
               >
-                <h2 className="text-4xl md:text-5xl font-franklin text-white mb-6">
-                  Ready to Meet Our Team?
-                </h2>
-                <p className="text-xl font-franklin text-white/80 mb-8 max-w-2xl mx-auto">
-                  Book an appointment with one of our specialists today
-                </p>
-                <motion.button
-                  whileHover={{ 
-                    scale: 1.05,
-                    background: "linear-gradient(90deg, #f59e0b, #d97706, #f59e0b)"
-                  }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-franklin px-8 py-4 text-lg rounded-full transition-all duration-300 shadow-lg shadow-yellow-500/20 hover:shadow-yellow-500/40"
-                >
-                  <Link href="/book">
-                  Book Your Session
-                  </Link>
-                </motion.button>
-              </motion.div>
-            </div>
-          </div>
+                {dictionary.ourTeam.cta.button}
+              </motion.button>
+            </Link>
+          </motion.div>
+        </div>
+      </div>
     </div>
   );
 };

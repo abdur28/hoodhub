@@ -4,17 +4,27 @@ import { motion } from "framer-motion";
 import { Diamond, Calendar, MapPin, Scissors, Heart, Sparkles } from "lucide-react";
 import { FloatingNav } from "@/components/ui/floating-navbar";
 import Navbar from "@/components/Navbar";
-import { femaleServices, maleServices } from "@/constants";
+import { femaleServices, maleServices, getLocalizedData } from "@/constants";
 import Link from "next/link";
 import Image from "next/image";
+import type { Dictionary } from "../dictionaries";
 
-const LifestylePage = () => {
+interface LifestylePageProps {
+  lang: string;
+  dictionary: Dictionary;
+}
+
+const LifestylePage = ({ lang, dictionary }: LifestylePageProps) => {
   const [activeService, setActiveService] = useState<number | null>(null);
+  
+  // Localize the services data
+  const localizedFemaleServices = getLocalizedData(femaleServices, dictionary, 'titleKey', 'descriptionKey');
+  const localizedMaleServices = getLocalizedData(maleServices, dictionary, 'titleKey', 'descriptionKey');
   
   return (
     <div className="min-h-screen bg-black">
       {/* Floating Navigation */}
-      <FloatingNav />
+      <FloatingNav lang={lang} dictionary={dictionary} />
       
       {/* Hero Section */}
       <section className="relative h-[70vh] w-full overflow-hidden">
@@ -55,7 +65,7 @@ const LifestylePage = () => {
 
         {/* Transparent Navbar */}
         <div className="absolute top-0 left-0 right-0 z-40">
-          <Navbar variant="transparent" />
+          <Navbar variant="transparent" lang={lang} dictionary={dictionary} />
         </div>
 
         {/* Hero Content */}
@@ -68,9 +78,9 @@ const LifestylePage = () => {
               className="mb-8"
             >
               <h1 className="text-6xl md:text-7xl lg:text-8xl font-franklin text-white">
-                Premium {" "}
+                {dictionary.lifestyle.hero.title} {" "}
                 <span className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent">
-                    Lifestyle
+                  {dictionary.lifestyle.hero.titleHighlight}
                 </span>
               </h1>
             </motion.div>
@@ -89,7 +99,7 @@ const LifestylePage = () => {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              EXCLUSIVE SERVICES FOR THE DISCERNING CLIENT
+              {dictionary.lifestyle.services.category}
             </motion.p>
 
             <motion.h2
@@ -99,7 +109,7 @@ const LifestylePage = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              Curated <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">Experiences</span>
+              {dictionary.lifestyle.services.title} <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">{dictionary.lifestyle.services.titleHighlight}</span>
             </motion.h2>
             
             <motion.div
@@ -110,8 +120,7 @@ const LifestylePage = () => {
               viewport={{ once: true }}
             >
               <p className="text-lg font-franklin text-gray-700">
-                At HoodHub, we believe true luxury is personal. Our lifestyle services are meticulously crafted to enhance 
-                your natural elegance and provide moments of rejuvenation in your busy life.
+                {dictionary.lifestyle.services.description}
               </p>
             </motion.div>
           </div>
@@ -133,7 +142,7 @@ const LifestylePage = () => {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 viewport={{ once: true }}
               >
-                For <span className="text-pink-500">Her</span>
+                {dictionary.lifestyle.forHer.title} <span className="text-pink-500">{dictionary.lifestyle.forHer.highlight}</span>
               </motion.h3>
               <motion.div 
                 className="w-20 lg:w-32 h-0.5 bg-gradient-to-r from-yellow-500 to-yellow-600"
@@ -145,7 +154,7 @@ const LifestylePage = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-              {femaleServices.map((service, index) => (
+              {localizedFemaleServices.map((service, index) => (
                 <motion.div
                   key={service.id}
                   className="group relative"
@@ -182,11 +191,11 @@ const LifestylePage = () => {
                           animate={{ opacity: 1, y: 0 }}
                           className="mt-4"
                         >
-                          <button className="text-xs bg-yellow-500/90 text-black px-4 py-2 rounded-full font-franklin font-medium">
-                            <Link href="/book">
-                             Book Now
-                            </Link>
-                          </button>
+                          <Link href={`/${lang}/book`}>
+                            <button className="text-xs bg-yellow-500/90 text-black px-4 py-2 rounded-full font-franklin font-medium">
+                              {dictionary.lifestyle.bookNow}
+                            </button>
+                          </Link>
                         </motion.div>
                       )}
                     </div>
@@ -228,7 +237,7 @@ const LifestylePage = () => {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 viewport={{ once: true }}
               >
-                For <span className="text-blue-500">Him</span>
+                {dictionary.lifestyle.forHim.title} <span className="text-blue-500">{dictionary.lifestyle.forHim.highlight}</span>
               </motion.h3>
               <motion.div 
                 className="w-20 lg:w-32 h-0.5 bg-gradient-to-r from-yellow-500 to-yellow-600"
@@ -240,7 +249,7 @@ const LifestylePage = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-              {maleServices.map((service, index) => (
+              {localizedMaleServices.map((service, index) => (
                 <motion.div
                   key={service.id}
                   className="group relative"
@@ -277,11 +286,11 @@ const LifestylePage = () => {
                           animate={{ opacity: 1, y: 0 }}
                           className="mt-4"
                         >
-                          <button className="text-xs bg-yellow-500/90 text-black px-4 py-2 rounded-full font-franklin font-medium">
-                          <Link href="/book">
-                             Book Now
-                            </Link>
-                          </button>
+                          <Link href={`/${lang}/book`}>
+                            <button className="text-xs bg-yellow-500/90 text-black px-4 py-2 rounded-full font-franklin font-medium">
+                              {dictionary.lifestyle.bookNow}
+                            </button>
+                          </Link>
                         </motion.div>
                       )}
                     </div>
@@ -300,7 +309,7 @@ const LifestylePage = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              The <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">HoodHub</span> Difference
+              {dictionary.lifestyle.benefits.title} <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">{dictionary.lifestyle.benefits.titleHighlight}</span> {dictionary.lifestyle.benefits.titleEnd}
             </motion.h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -314,9 +323,9 @@ const LifestylePage = () => {
                 <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Heart className="w-8 h-8 text-yellow-600" />
                 </div>
-                <h3 className="text-2xl font-franklin font-semibold mb-4">Personalized Care</h3>
+                <h3 className="text-2xl font-franklin font-semibold mb-4">{dictionary.lifestyle.benefits.personalizedCare.title}</h3>
                 <p className="text-gray-700">
-                  Every service is tailored to your unique needs and preferences, ensuring a truly bespoke experience.
+                  {dictionary.lifestyle.benefits.personalizedCare.description}
                 </p>
               </motion.div>
               
@@ -330,9 +339,9 @@ const LifestylePage = () => {
                 <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Diamond className="w-8 h-8 text-yellow-600" />
                 </div>
-                <h3 className="text-2xl font-franklin font-semibold mb-4">Premium Products</h3>
+                <h3 className="text-2xl font-franklin font-semibold mb-4">{dictionary.lifestyle.benefits.premiumProducts.title}</h3>
                 <p className="text-gray-700">
-                  We use only the finest, ethically sourced products that nourish and enhance your natural beauty.
+                  {dictionary.lifestyle.benefits.premiumProducts.description}
                 </p>
               </motion.div>
               
@@ -346,9 +355,9 @@ const LifestylePage = () => {
                 <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Scissors className="w-8 h-8 text-yellow-600" />
                 </div>
-                <h3 className="text-2xl font-franklin font-semibold mb-4">Master Craftsmanship</h3>
+                <h3 className="text-2xl font-franklin font-semibold mb-4">{dictionary.lifestyle.benefits.masterCraftsmanship.title}</h3>
                 <p className="text-gray-700">
-                  Our specialists are industry veterans with years of experience and refined expertise.
+                  {dictionary.lifestyle.benefits.masterCraftsmanship.description}
                 </p>
               </motion.div>
             </div>
@@ -372,23 +381,22 @@ const LifestylePage = () => {
               viewport={{ once: true }}
               className="text-center"
             >
-              
               <h2 className="text-4xl md:text-5xl font-franklin text-white mb-6">
-                Ready for Your Transformation?
+                {dictionary.lifestyle.cta.title}
               </h2>
               <p className="text-xl font-franklin text-white/80 mb-8 max-w-2xl mx-auto">
-                Experience luxury self-care tailored to your unique style and preferences
+                {dictionary.lifestyle.cta.subtitle}
               </p>
               
               <div className="flex flex-col sm:flex-row justify-center gap-6 mb-8">
                 <div className="flex items-center justify-center text-white/80">
                   <Calendar className="w-5 h-5 mr-2 text-yellow-500" />
-                  <span>Mon-Sun: 10am - 9pm</span>
+                  <span>{dictionary.lifestyle.cta.hours}</span>
                 </div>
                 
                 <div className="flex items-center justify-center text-white/80">
                   <MapPin className="w-5 h-5 mr-2 text-yellow-500" />
-                  <span>123 Style Street, Fashion District, Moscow</span>
+                  <span>{dictionary.lifestyle.cta.address}</span>
                 </div>
               </div>
             </motion.div>
@@ -399,18 +407,18 @@ const LifestylePage = () => {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <motion.button
-                whileHover={{ 
-                  scale: 1.05,
-                  background: "linear-gradient(90deg, #f59e0b, #d97706, #f59e0b)"
-                }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-franklin px-8 py-4 text-lg rounded-full transition-all duration-300 shadow-lg shadow-yellow-500/20 hover:shadow-yellow-500/40"
-              >
-                <Link href="/book?service=lifestyle">
-                Book Your Consultation
-                </Link>
-              </motion.button>
+              <Link href={`/${lang}/book?service=lifestyle`}>
+                <motion.button
+                  whileHover={{ 
+                    scale: 1.05,
+                    background: "linear-gradient(90deg, #f59e0b, #d97706, #f59e0b)"
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-franklin px-8 py-4 text-lg rounded-full transition-all duration-300 shadow-lg shadow-yellow-500/20 hover:shadow-yellow-500/40"
+                >
+                  {dictionary.lifestyle.cta.button}
+                </motion.button>
+              </Link>
             </motion.div>
           </div>
         </div>

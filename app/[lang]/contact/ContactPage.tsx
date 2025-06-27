@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FloatingNav } from "@/components/ui/floating-navbar";
 import Navbar from "@/components/Navbar";
@@ -28,8 +28,28 @@ import {
   Youtube
 } from "lucide-react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+import type { Dictionary } from "../dictionaries";
 
-const ContactPage = () => {
+// Dynamically import the map component to avoid SSR issues
+const Map = dynamic(() => import("@/components/Map"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-96 bg-gray-200 rounded-xl flex items-center justify-center">
+      <div className="text-center">
+        <MapPin className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
+        <p className="text-gray-600">Loading map...</p>
+      </div>
+    </div>
+  ),
+});
+
+interface ContactPageProps {
+  lang: string;
+  dictionary: Dictionary;
+}
+
+const ContactPage = ({ lang, dictionary }: ContactPageProps) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -63,26 +83,26 @@ const ContactPage = () => {
   const contactInfo = [
     {
       icon: MapPin,
-      title: "Visit Us",
-      details: ["Leninsky Avenue, 146", "Moscow, 117198"],
+      titleKey: "contactPage.info.visit.title",
+      detailsKey: "contactPage.info.visit.details",
       color: "text-yellow-500"
     },
     {
       icon: Phone,
-      title: "Call Us",
-      details: ["+7 977 600-01-46", "Text & WhatsApp Available"],
+      titleKey: "contactPage.info.call.title", 
+      detailsKey: "contactPage.info.call.details",
       color: "text-green-500"
     },
     {
       icon: Mail,
-      title: "Email Us",
-      details: ["contact@hoodhub.ru"],
+      titleKey: "contactPage.info.email.title",
+      detailsKey: "contactPage.info.email.details",
       color: "text-blue-500"
     },
     {
       icon: Clock,
-      title: "Hours",
-      details: ["Mon-Sun: 10AM - 9PM", "Appointments Available"],
+      titleKey: "contactPage.info.hours.title",
+      detailsKey: "contactPage.info.hours.details",
       color: "text-purple-500"
     }
   ];
@@ -97,7 +117,7 @@ const ContactPage = () => {
   return (
     <div className="min-h-screen bg-black">
       {/* Floating Navigation */}
-      <FloatingNav />
+      <FloatingNav lang={lang} dictionary={dictionary} />
       
       {/* Hero Section */}
       <section className="relative h-[50vh] w-full overflow-hidden">
@@ -138,7 +158,7 @@ const ContactPage = () => {
 
         {/* Transparent Navbar */}
         <div className="absolute top-0 left-0 right-0 z-40">
-          <Navbar variant="transparent" />
+          <Navbar variant="transparent" lang={lang} dictionary={dictionary} />
         </div>
 
         {/* Hero Content */}
@@ -151,9 +171,9 @@ const ContactPage = () => {
               className="mb-8"
             >
               <h1 className="text-6xl md:text-7xl lg:text-8xl font-franklin text-white">
-                Get in {" "}
+                {dictionary.contactPage.hero.title} {" "}
                 <span className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent">
-                    Touch
+                  {dictionary.contactPage.hero.titleHighlight}
                 </span>
               </h1>
             </motion.div>
@@ -167,25 +187,41 @@ const ContactPage = () => {
           
           {/* Contact Info Grid */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
-            {contactInfo.map((info, index) => (
-              <motion.div
-                key={index}
-                className="text-center p-6 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors duration-300"
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ y: -5 }}
-              >
-                <div className={`w-16 h-16 ${info.color} bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg`}>
-                  <info.icon className="w-8 h-8" />
-                </div>
-                <h3 className="text-xl font-franklin font-semibold mb-3">{info.title}</h3>
-                {info.details.map((detail, i) => (
-                  <p key={i} className="text-gray-600 font-franklin">{detail}</p>
-                ))}
-              </motion.div>
-            ))}
+            {contactInfo.map((info, index) => {
+              // Get title from dictionary
+              const titleKeys = info.titleKey.split(".");
+              let title = dictionary;
+              for (const key of titleKeys) {
+                title = title[key as keyof typeof title] as any;
+              }
+
+              // Get details from dictionary
+              const detailsKeys = info.detailsKey.split(".");
+              let details = dictionary;
+              for (const key of detailsKeys) {
+                details = details[key as keyof typeof details] as any;
+              }
+
+              return (
+                <motion.div
+                  key={index}
+                  className="text-center p-6 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors duration-300"
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  whileHover={{ y: -5 }}
+                >
+                  <div className={`w-16 h-16 ${info.color} bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg`}>
+                    <info.icon className="w-8 h-8" />
+                  </div>
+                  <h3 className="text-xl font-franklin font-semibold mb-3">{title as any}</h3>
+                  {Array.isArray(details) ? details.map((detail, i) => (
+                    <p key={i} className="text-gray-600 font-franklin">{detail}</p>
+                  )) : <p className="text-gray-600 font-franklin">{details as any}</p>}
+                </motion.div>
+              );
+            })}
           </div>
 
           {/* Contact Form and Info */}
@@ -199,9 +235,9 @@ const ContactPage = () => {
               viewport={{ once: true }}
             >
               <h2 className="text-3xl md:text-4xl font-franklin mb-8">
-                Send us a {" "}
+                {dictionary.contactPage.form.title} {" "}
                 <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
-                  Message
+                  {dictionary.contactPage.form.titleHighlight}
                 </span>
               </h2>
               
@@ -209,7 +245,7 @@ const ContactPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="name" className="text-sm font-franklin font-medium text-gray-700">
-                      Full Name *
+                      {dictionary.contactPage.form.name} *
                     </Label>
                     <Input
                       type="text"
@@ -218,14 +254,14 @@ const ContactPage = () => {
                       value={formData.name}
                       onChange={handleInputChange}
                       required
-                      placeholder="Your name"
+                      placeholder={dictionary.contactPage.form.namePlaceholder}
                       className="font-franklin"
                     />
                   </div>
                   
                   <div className="space-y-2">
                     <Label htmlFor="email" className="text-sm font-franklin font-medium text-gray-700">
-                      Email Address *
+                      {dictionary.contactPage.form.email} *
                     </Label>
                     <Input
                       type="email"
@@ -234,7 +270,7 @@ const ContactPage = () => {
                       value={formData.email}
                       onChange={handleInputChange}
                       required
-                      placeholder="your@email.com"
+                      placeholder={dictionary.contactPage.form.emailPlaceholder}
                       className="font-franklin"
                     />
                   </div>
@@ -243,7 +279,7 @@ const ContactPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="phone" className="text-sm font-franklin font-medium text-gray-700">
-                      Phone Number
+                      {dictionary.contactPage.form.phone}
                     </Label>
                     <Input
                       type="tel"
@@ -251,24 +287,24 @@ const ContactPage = () => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      placeholder="(123) 456-7890"
+                      placeholder={dictionary.contactPage.form.phonePlaceholder}
                       className="font-franklin"
                     />
                   </div>
                   
                   <div className="space-y-2">
                     <Label htmlFor="service" className="text-sm font-franklin font-medium text-gray-700">
-                      Service Interest
+                      {dictionary.contactPage.form.service}
                     </Label>
                     <Select name="service" value={formData.service} onValueChange={(value) => setFormData(prev => ({ ...prev, service: value }))}>
                       <SelectTrigger className="font-franklin w-full">
-                        <SelectValue placeholder="Select a service" />
+                        <SelectValue placeholder={dictionary.contactPage.form.servicePlaceholder} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="barbing">Professional Barbing</SelectItem>
-                        <SelectItem value="tattoo">Tattoo Artistry</SelectItem>
-                        <SelectItem value="lifestyle">Lifestyle Services</SelectItem>
-                        <SelectItem value="consultation">General Consultation</SelectItem>
+                        <SelectItem value="barbing">{dictionary.contactPage.form.services.barbing}</SelectItem>
+                        <SelectItem value="tattoo">{dictionary.contactPage.form.services.tattoo}</SelectItem>
+                        <SelectItem value="lifestyle">{dictionary.contactPage.form.services.lifestyle}</SelectItem>
+                        <SelectItem value="consultation">{dictionary.contactPage.form.services.consultation}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -276,7 +312,7 @@ const ContactPage = () => {
 
                 <div className="space-y-2">
                   <Label htmlFor="message" className="text-sm font-franklin font-medium text-gray-700">
-                    Message *
+                    {dictionary.contactPage.form.message} *
                   </Label>
                   <Textarea
                     id="message"
@@ -285,7 +321,7 @@ const ContactPage = () => {
                     onChange={handleInputChange}
                     required
                     rows={6}
-                    placeholder="Tell us about your vision or any questions you have..."
+                    placeholder={dictionary.contactPage.form.messagePlaceholder}
                     className="font-franklin resize-none"
                   />
                 </div>
@@ -296,7 +332,7 @@ const ContactPage = () => {
                   className="w-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-black font-franklin font-semibold py-4 text-lg hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 transition-all duration-300 shadow-lg hover:shadow-xl group"
                 >
                   <Send className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
-                  Send Message
+                  {dictionary.contactPage.form.submit}
                 </Button>
               </form>
             </motion.div>
@@ -311,31 +347,31 @@ const ContactPage = () => {
             >
               <div>
                 <h3 className="text-2xl font-franklin font-semibold mb-6">
-                  Why Choose <span className="text-yellow-500">HoodHub?</span>
+                  {dictionary.contactPage.whyChoose.title} <span className="text-yellow-500">{dictionary.contactPage.whyChoose.titleHighlight}</span>
                 </h3>
                 
                 <div className="space-y-4">
                   <div className="flex items-start space-x-4">
                     <div className="w-2 h-2 bg-yellow-500 rounded-full mt-3 flex-shrink-0"></div>
                     <div>
-                      <h4 className="font-franklin font-semibold mb-1">Expert Artisans</h4>
-                      <p className="text-gray-600 font-franklin">Our team of master barbers, tattoo artists, and lifestyle specialists bring years of experience and passion to every service.</p>
+                      <h4 className="font-franklin font-semibold mb-1">{dictionary.contactPage.whyChoose.experts.title}</h4>
+                      <p className="text-gray-600 font-franklin">{dictionary.contactPage.whyChoose.experts.description}</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start space-x-4">
                     <div className="w-2 h-2 bg-yellow-500 rounded-full mt-3 flex-shrink-0"></div>
                     <div>
-                      <h4 className="font-franklin font-semibold mb-1">Premium Experience</h4>
-                      <p className="text-gray-600 font-franklin">Every appointment is a luxury experience designed to exceed your expectations and enhance your personal style.</p>
+                      <h4 className="font-franklin font-semibold mb-1">{dictionary.contactPage.whyChoose.premium.title}</h4>
+                      <p className="text-gray-600 font-franklin">{dictionary.contactPage.whyChoose.premium.description}</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start space-x-4">
                     <div className="w-2 h-2 bg-yellow-500 rounded-full mt-3 flex-shrink-0"></div>
                     <div>
-                      <h4 className="font-franklin font-semibold mb-1">Personalized Service</h4>
-                      <p className="text-gray-600 font-franklin">We take time to understand your vision and create customized solutions that reflect your unique personality.</p>
+                      <h4 className="font-franklin font-semibold mb-1">{dictionary.contactPage.whyChoose.personalized.title}</h4>
+                      <p className="text-gray-600 font-franklin">{dictionary.contactPage.whyChoose.personalized.description}</p>
                     </div>
                   </div>
                 </div>
@@ -343,37 +379,29 @@ const ContactPage = () => {
 
               {/* Quick Actions */}
               <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-8 rounded-2xl">
-                <h4 className="text-xl font-franklin font-semibold mb-6 text-center">Quick Actions</h4>
+                <h4 className="text-xl font-franklin font-semibold mb-6 text-center">{dictionary.contactPage.quickActions.title}</h4>
                 
                 <div className="space-y-4">
-
-                  <button className="w-full">
-                    <Link href='/book' className="w-full flex items-center justify-center space-x-3 bg-white hover:bg-gray-50 text-gray-800 py-3 px-6 rounded-xl transition-colors duration-300 shadow-sm">
+                  <Link href={`/${lang}/book`} className="w-full flex items-center justify-center space-x-3 bg-white hover:bg-gray-50 text-gray-800 py-3 px-6 rounded-xl transition-colors duration-300 shadow-sm">
                     <Calendar className="w-5 h-5 text-yellow-500" />
-                    <span className="font-franklin font-medium">Book Appointment</span>
-                    </Link> 
-                  </button>
+                    <span className="font-franklin font-medium">{dictionary.contactPage.quickActions.book}</span>
+                  </Link>
 
-                  
-                  <button className="w-full">
-                    <Link href='https://wa.me/+79776000146' className="w-full flex items-center justify-center space-x-3 bg-white hover:bg-gray-50 text-gray-800 py-3 px-6 rounded-xl transition-colors duration-300 shadow-sm">
+                  <Link href='https://wa.me/+79776000146' className="w-full flex items-center justify-center space-x-3 bg-white hover:bg-gray-50 text-gray-800 py-3 px-6 rounded-xl transition-colors duration-300 shadow-sm">
                     <MessageCircle className="w-5 h-5 text-green-500" />
-                    <span className="font-franklin font-medium">WhatsApp Us</span>
-                    </Link>
-                  </button>
+                    <span className="font-franklin font-medium">{dictionary.contactPage.quickActions.whatsapp}</span>
+                  </Link>
                   
-                  <button className="w-full ">
-                    <Link href='tel:+79776000146' className="w-full flex items-center justify-center space-x-3 bg-white hover:bg-gray-50 text-gray-800 py-3 px-6 rounded-xl transition-colors duration-300 shadow-sm">
+                  <Link href='tel:+79776000146' className="w-full flex items-center justify-center space-x-3 bg-white hover:bg-gray-50 text-gray-800 py-3 px-6 rounded-xl transition-colors duration-300 shadow-sm">
                     <Phone className="w-5 h-5 text-blue-500" />
-                    <span className="font-franklin font-medium">Call Now</span>
-                    </Link>
-                  </button>
+                    <span className="font-franklin font-medium">{dictionary.contactPage.quickActions.call}</span>
+                  </Link>
                 </div>
               </div>
 
               {/* Social Media */}
               <div>
-                <h4 className="text-xl font-franklin font-semibold mb-6 text-center">Follow Our Journey</h4>
+                <h4 className="text-xl font-franklin font-semibold mb-6 text-center">{dictionary.contactPage.social.title}</h4>
                 <div className="flex justify-center space-x-4">
                   {socialLinks.map((social, index) => (
                     <motion.a
@@ -405,10 +433,10 @@ const ContactPage = () => {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl md:text-4xl font-franklin mb-4">
-              Find <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">Us</span>
+              {dictionary.contactPage.map.title} <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">{dictionary.contactPage.map.titleHighlight}</span>
             </h2>
             <p className="text-lg font-franklin text-gray-600 max-w-2xl mx-auto">
-              Located in the heart of the fashion district, our studio is easily accessible and designed for your comfort.
+              {dictionary.contactPage.map.description}
             </p>
           </motion.div>
 
@@ -419,19 +447,7 @@ const ContactPage = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            {/* Placeholder for map - you would integrate with Google Maps or similar */}
-            <div className="h-96 bg-gray-200 rounded-xl flex items-center justify-center">
-              <div className="text-center">
-                <MapPin className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
-                <h3 className="text-xl font-franklin font-semibold mb-2">Interactive Map</h3>
-                <p className="text-gray-600 font-franklin">
-                  123 Style Street, Downtown District, NY 10001
-                </p>
-                <button className="mt-4 bg-yellow-500 text-black px-6 py-3 rounded-full font-franklin font-medium hover:bg-yellow-600 transition-colors">
-                  Get Directions
-                </button>
-              </div>
-            </div>
+            <Map />
           </motion.div>
         </div>
       </section>

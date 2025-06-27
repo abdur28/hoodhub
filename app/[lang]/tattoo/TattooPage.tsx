@@ -2,19 +2,29 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { PenTool } from "lucide-react";
-import { tattooImages, tattooStyles, tattooArtists } from "@/constants";
+import { tattooImages, tattooStyles, tattooArtists, getLocalizedData } from "@/constants";
 import { FloatingNav } from "@/components/ui/floating-navbar";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import Image from "next/image";
+import type { Dictionary } from "../dictionaries";
 
-const TattooPage = () => {
+interface TattooPageProps {
+  lang: string;
+  dictionary: Dictionary;
+}
+
+const TattooPage = ({ lang, dictionary }: TattooPageProps) => {
   const [activeStyle, setActiveStyle] = useState(0);
+
+  // Localize the data
+  const localizedStyles = getLocalizedData(tattooStyles, dictionary, undefined, 'descriptionKey', 'nameKey');
+  const localizedArtists = getLocalizedData(tattooArtists, dictionary, undefined, 'specialtyKey', 'nameKey');
 
   return (
     <div className="min-h-screen bg-black">
       {/* Floating Navigation */}
-      <FloatingNav />
+      <FloatingNav lang={lang} dictionary={dictionary} />
       
       {/* Hero Section */}
       <section className="relative h-[70vh] w-full overflow-hidden">
@@ -55,7 +65,7 @@ const TattooPage = () => {
 
         {/* Transparent Navbar */}
         <div className="absolute top-0 left-0 right-0 z-40">
-          <Navbar variant="transparent" />
+          <Navbar variant="transparent" lang={lang} dictionary={dictionary} />
         </div>
 
         {/* Hero Content */}
@@ -68,13 +78,12 @@ const TattooPage = () => {
               className="mb-8"
             >
               <h1 className="text-6xl md:text-7xl lg:text-8xl font-franklin text-white">
-                Tattoo {" "}
+                {dictionary.tattoo.hero.title} {" "}
                 <span className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent">
-                  Studio
+                  {dictionary.tattoo.hero.titleHighlight}
                 </span>
               </h1>
             </motion.div>
-            
           </div>
         </div>
       </section>
@@ -91,7 +100,7 @@ const TattooPage = () => {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              ARTISTIC EXPRESSION
+              {dictionary.tattoo.gallery.category}
             </motion.p>
 
             <motion.h2
@@ -101,9 +110,9 @@ const TattooPage = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              Ink Your Story with{" "}
+              {dictionary.tattoo.gallery.title} {" "}
               <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
-                Artistry
+                {dictionary.tattoo.gallery.titleHighlight}
               </span>
             </motion.h2>
           </div>
@@ -129,14 +138,13 @@ const TattooPage = () => {
                   whileHover={{ scale: 1.02 }}
                 >
                   <Image
-                                      width={700}
-                                      height={700}
+                    width={700}
+                    height={700}
                     src={tattooImages[0].url}
                     alt={tattooImages[0].alt}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            
                 </motion.div>
                 <motion.div
                   className="h-3/5 relative overflow-hidden rounded-2xl bg-black group cursor-pointer"
@@ -147,8 +155,8 @@ const TattooPage = () => {
                   whileHover={{ scale: 1.02 }}
                 >
                   <Image
-                                      width={700}
-                                      height={700}
+                    width={700}
+                    height={700}
                     src={tattooImages[1].url}
                     alt={tattooImages[1].alt}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -168,8 +176,8 @@ const TattooPage = () => {
                   whileHover={{ scale: 1.02 }}
                 >
                   <Image
-                                      width={700}
-                                      height={700}
+                    width={700}
+                    height={700}
                     src={tattooImages[2].url}
                     alt={tattooImages[2].alt}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -185,8 +193,8 @@ const TattooPage = () => {
                   whileHover={{ scale: 1.02 }}
                 >
                   <Image
-                                      width={700}
-                                      height={700}
+                    width={700}
+                    height={700}
                     src={tattooImages[3].url}
                     alt={tattooImages[3].alt}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -206,8 +214,8 @@ const TattooPage = () => {
                   whileHover={{ scale: 1.02 }}
                 >
                   <Image
-                                      width={700}
-                                      height={700}
+                    width={700}
+                    height={700}
                     src={tattooImages[4].url}
                     alt={tattooImages[4].alt}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -223,8 +231,8 @@ const TattooPage = () => {
                   whileHover={{ scale: 1.02 }}
                 >
                   <Image
-                                      width={700}
-                                      height={700}
+                    width={700}
+                    height={700}
                     src={tattooImages[5].url}
                     alt={tattooImages[5].alt}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -247,8 +255,8 @@ const TattooPage = () => {
                   whileHover={{ scale: 1.02 }}
                 >
                   <Image
-                                      width={700}
-                                      height={700}
+                    width={700}
+                    height={700}
                     src={tattooImages[0].url}
                     alt={tattooImages[0].alt}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -264,8 +272,8 @@ const TattooPage = () => {
                   whileHover={{ scale: 1.02 }}
                 >
                   <Image
-                                      width={700}
-                                      height={700}
+                    width={700}
+                    height={700}
                     src={tattooImages[1].url}
                     alt={tattooImages[1].alt}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -281,8 +289,8 @@ const TattooPage = () => {
                   whileHover={{ scale: 1.02 }}
                 >
                   <Image
-                                      width={700}
-                                      height={700}
+                    width={700}
+                    height={700}
                     src={tattooImages[2].url}
                     alt={tattooImages[2].alt}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -319,8 +327,8 @@ const TattooPage = () => {
                   whileHover={{ scale: 1.02 }}
                 >
                   <Image
-                                      width={700}
-                                      height={700}
+                    width={700}
+                    height={700}
                     src={tattooImages[4].url}
                     alt={tattooImages[4].alt}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -336,8 +344,8 @@ const TattooPage = () => {
                   whileHover={{ scale: 1.02 }}
                 >
                   <Image
-                                      width={700}
-                                      height={700}
+                    width={700}
+                    height={700}
                     src={tattooImages[5].url}
                     alt={tattooImages[5].alt}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -356,13 +364,11 @@ const TattooPage = () => {
             transition={{ duration: 0.8, delay: 0.6 }}
             viewport={{ once: true }}
           >
-            Transform your vision into permanent art with our master tattoo artists. 
-            We specialize in custom designs that tell your unique story, combining 
-            traditional techniques with contemporary artistry to create{" "}
+            {dictionary.tattoo.gallery.description1} {" "}
             <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent font-semibold">
-              timeless masterpieces
+              {dictionary.tattoo.gallery.descriptionHighlight}
             </span>
-            {" "}{`that you'll treasure forever.`}
+            {" "}{dictionary.tattoo.gallery.description2}
           </motion.p>
 
           {/* Tattoo Styles */}
@@ -373,10 +379,12 @@ const TattooPage = () => {
             transition={{ duration: 0.8, delay: 0.8 }}
             viewport={{ once: true }}
           >
-            <h3 className="text-2xl font-franklin text-gray-900 mb-6">Artistic Styles We Master</h3>
+            <h3 className="text-2xl font-franklin text-gray-900 mb-6">
+              {dictionary.tattoo.styles.title}
+            </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {tattooStyles.map((style, index) => (
+              {localizedStyles.map((style, index) => (
                 <motion.div
                   key={index}
                   className={`p-5 rounded-xl transition-all ${
@@ -413,10 +421,12 @@ const TattooPage = () => {
             transition={{ duration: 0.8, delay: 1.0 }}
             viewport={{ once: true }}
           >
-            <h3 className="text-2xl font-franklin text-gray-900 mb-6">Our Master Artists</h3>
+            <h3 className="text-2xl font-franklin text-gray-900 mb-6">
+              {dictionary.tattoo.artists.title}
+            </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {tattooArtists.map((artist, index) => (
+              {localizedArtists.map((artist, index) => (
                 <motion.div
                   key={index}
                   className="group relative overflow-hidden rounded-2xl shadow-lg md:h-[300px] h-[400px]"
@@ -428,8 +438,8 @@ const TattooPage = () => {
                 >
                   <div className="absolute inset-0">
                     <Image
-                                        width={700}
-                                        height={700}
+                      width={700}
+                      height={700}
                       src={artist.image}
                       alt={artist.name}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
@@ -441,12 +451,10 @@ const TattooPage = () => {
                     <h4 className="text-xl font-bold font-franklin">{artist.name}</h4>
                     <p className="text-yellow-400 font-franklin">{artist.specialty}</p>
                   </div>
-                  
                 </motion.div>
               ))}
             </div>
           </motion.div>
-
         </div>
       </section>
 
@@ -465,23 +473,23 @@ const TattooPage = () => {
             viewport={{ once: true }}
           >
             <h2 className="text-4xl md:text-5xl font-franklin text-white mb-6">
-              Ready to Create Your Masterpiece?
+              {dictionary.tattoo.cta.title}
             </h2>
             <p className="text-xl font-franklin text-white/80 mb-8 max-w-2xl mx-auto">
-              Consult with our artists to bring your vision to life
+              {dictionary.tattoo.cta.subtitle}
             </p>
-            <motion.button
-              whileHover={{ 
-                scale: 1.05,
-                background: "linear-gradient(90deg, #f59e0b, #d97706, #f59e0b)"
-              }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-franklin px-8 py-4 text-lg rounded-full transition-all duration-300 shadow-lg shadow-yellow-500/20 hover:shadow-yellow-500/40"
-            >
-              <Link href="/book?service=tattoo">
-              Book Your Consultation
-              </Link>
-            </motion.button>
+            <Link href={`/${lang}/book?service=tattoo`}>
+              <motion.button
+                whileHover={{ 
+                  scale: 1.05,
+                  background: "linear-gradient(90deg, #f59e0b, #d97706, #f59e0b)"
+                }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-franklin px-8 py-4 text-lg rounded-full transition-all duration-300 shadow-lg shadow-yellow-500/20 hover:shadow-yellow-500/40"
+              >
+                {dictionary.tattoo.cta.button}
+              </motion.button>
+            </Link>
           </motion.div>
         </div>
       </section>

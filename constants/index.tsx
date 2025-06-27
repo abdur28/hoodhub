@@ -518,6 +518,7 @@ export const getLocalizedData = (data: any[], dictionary: any, titleKey?: string
       localizedItem.description = value;
     }
     if (nameKey && item.nameKey) {
+      console.log(item.nameKey);
       const keys = item.nameKey.split(".");
       let value = dictionary;
       for (const key of keys) {

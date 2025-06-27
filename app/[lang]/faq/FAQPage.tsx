@@ -14,8 +14,14 @@ import {
 } from "lucide-react";
 import { faqSections } from "@/constants";
 import Link from "next/link";
+import type { Dictionary } from "../dictionaries";
 
-const FAQPage = () => {
+interface FAQPageProps {
+  lang: string;
+  dictionary: Dictionary;
+}
+
+const FAQPage = ({ lang, dictionary }: FAQPageProps) => {
   const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({});
 
   const toggleItem = (id: string) => {
@@ -25,10 +31,37 @@ const FAQPage = () => {
     }));
   };
 
+  // Helper function to get localized FAQ sections
+  const getLocalizedFAQSections = () => {
+    return faqSections.map((section) => {
+      // Get section title
+      const titleKeys = section.titleKey.split(".");
+      let sectionTitle = dictionary;
+      for (const key of titleKeys) {
+        sectionTitle = sectionTitle[key as keyof typeof sectionTitle] as any;
+      }
+
+      // Get questions for this section
+      const questionsKeys = section.questionsKey.split(".");
+      let questionsData = dictionary;
+      for (const key of questionsKeys) {
+        questionsData = questionsData[key as keyof typeof questionsData] as any;
+      }
+
+      return {
+        ...section,
+        title: sectionTitle as any,
+        questions: questionsData as any || []
+      };
+    });
+  };
+
+  const localizedFAQSections = getLocalizedFAQSections();
+
   return (
     <div className="min-h-screen bg-black">
       {/* Floating Navigation */}
-      <FloatingNav />
+      <FloatingNav lang={lang} dictionary={dictionary} />
       
       {/* Hero Section */}
       <section className="relative h-[50vh] w-full overflow-hidden">
@@ -69,7 +102,7 @@ const FAQPage = () => {
 
         {/* Transparent Navbar */}
         <div className="absolute top-0 left-0 right-0 z-40">
-          <Navbar variant="transparent" />
+          <Navbar variant="transparent" lang={lang} dictionary={dictionary} />
         </div>
 
         {/* Hero Content */}
@@ -83,7 +116,7 @@ const FAQPage = () => {
             >
               <h1 className="text-6xl md:text-7xl lg:text-8xl font-franklin text-white">
                 <span className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent">
-                    FAQ
+                  {dictionary.faqPage.hero.title}
                 </span>
               </h1>
             </motion.div>
@@ -104,19 +137,19 @@ const FAQPage = () => {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl md:text-4xl font-franklin mb-6">
-              Frequently Asked{" "}
+              {dictionary.faqPage.intro.title}{" "}
               <span className="bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">
-                Questions
+                {dictionary.faqPage.intro.titleHighlight}
               </span>
             </h2>
             <p className="text-lg font-franklin text-gray-600 max-w-2xl mx-auto">
-              Find answers to the most common questions about our services, booking process, and what to expect during your visit to HoodHub.
+              {dictionary.faqPage.intro.description}
             </p>
           </motion.div>
 
           {/* FAQ Sections */}
           <div className="space-y-12">
-            {faqSections.map((section, sectionIndex) => (
+            {localizedFAQSections.map((section, sectionIndex) => (
               <motion.div
                 key={section.id}
                 initial={{ opacity: 0, y: 50 }}
@@ -134,7 +167,7 @@ const FAQPage = () => {
 
                 {/* Questions */}
                 <div className="space-y-4">
-                  {section.questions.map((faq, index) => (
+                  {section.questions.map((faq: any, index: number) => (
                     <Collapsible
                       key={faq.id}
                       open={openItems[faq.id]}
@@ -178,40 +211,37 @@ const FAQPage = () => {
               </motion.div>
             ))}
           </div>
-
-
         </div>
       </section>
-                {/* Contact CTA */}
-        <div
-            className="py-28 text-center p-8 text-white"
+
+      {/* Contact CTA */}
+      <div className="py-28 text-center p-8 text-white">
+        <MessageCircle className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
+        <h3 className="text-2xl font-franklin font-semibold mb-4">
+          {dictionary.faqPage.cta.title}
+        </h3>
+        <p className="font-franklin mb-6">
+          {dictionary.faqPage.cta.description}
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-franklin px-6 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl"
           >
-            <MessageCircle className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
-            <h3 className="text-2xl font-franklin font-semibold mb-4">
-              Still have questions?
-            </h3>
-            <p className=" font-franklin mb-6">
-              {`Can't find the answer you're looking for? Our team is here to help.`}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-franklin px-6 py-3 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl"
-              >
-                Contact Us
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-white border-2 border-gray-300 text-gray-700 font-franklin px-6 py-3 rounded-full hover:border-yellow-400 transition-all duration-300"
-              >
-                <Link href="/book">
-                  Book Consultation
-                </Link>
-              </motion.button>
-            </div>
-          </div>
+            {dictionary.faqPage.cta.contactButton}
+          </motion.button>
+          <Link href={`/${lang}/book`}>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-white border-2 border-gray-300 text-gray-700 font-franklin px-6 py-3 rounded-full hover:border-yellow-400 transition-all duration-300"
+            >
+              {dictionary.faqPage.cta.bookButton}
+            </motion.button>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import LifestylePage from "./LifestylePage";
+import { getDictionary } from '../dictionaries';
 
 export const metadata: Metadata = {
   title: "Lifestyle Services - HoodHub | Wellness & Self-Care",
@@ -7,6 +8,13 @@ export const metadata: Metadata = {
   keywords: "spa services, beauty treatments, wellness, personal styling, luxury lifestyle, self-care, premium grooming",
 };
 
-export default function Lifestyle() {
-  return <LifestylePage />;
+export default async function Lifestyle({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang } = await params;
+  const dictionary = await getDictionary(lang as 'en' | 'ru');
+  
+  return <LifestylePage lang={lang} dictionary={dictionary} />;
 }

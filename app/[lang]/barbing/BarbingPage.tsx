@@ -2,20 +2,29 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Scissors, Calendar, MapPin } from "lucide-react";
-import { barbingImages, barbingServices } from "@/constants";
+import { barbingImages, barbingServices, getLocalizedData } from "@/constants";
 import { FloatingNav } from "@/components/ui/floating-navbar";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import Image from "next/image";
+import type { Dictionary } from "@/app/[lang]/dictionaries";
 
-const BarbingPage = () => {
+interface BarbingPageProps {
+  lang: string;
+  dictionary: Dictionary;
+}
+
+const BarbingPage = ({ lang, dictionary }: BarbingPageProps) => {
   const [selectedImage, setSelectedImage] = useState(barbingImages[0]);
   const [activeService, setActiveService] = useState(0);
+
+  // Get localized barbing services
+  const localizedBarbingServices = getLocalizedData(barbingServices, dictionary, 'titleKey', 'descriptionKey');
 
   return (
     <div className="min-h-screen bg-black">
       {/* Floating Navigation */}
-      <FloatingNav />
+      <FloatingNav lang={lang} dictionary={dictionary} />
       
       {/* Hero Section */}
       <section className="relative h-[70vh] w-full overflow-hidden">
@@ -56,7 +65,7 @@ const BarbingPage = () => {
 
         {/* Transparent Navbar */}
         <div className="absolute top-0 left-0 right-0 z-40">
-          <Navbar variant="transparent" />
+          <Navbar variant="transparent" lang={lang} dictionary={dictionary} />
         </div>
 
         {/* Hero Content */}
@@ -69,13 +78,12 @@ const BarbingPage = () => {
               className="mb-8"
             >
               <h1 className="text-6xl md:text-7xl lg:text-8xl font-franklin text-white">
-                Premium {" "}
+                {dictionary.barbing.hero.title} {" "}
                 <span className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent">
-                    Barbering
+                  {dictionary.barbing.hero.titleHighlight}
                 </span>
               </h1>
             </motion.div>
-            
           </div>
         </div>
       </section>
@@ -109,7 +117,6 @@ const BarbingPage = () => {
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                  
                 </motion.div>
               </div>
 
@@ -154,13 +161,13 @@ const BarbingPage = () => {
             >
               {/* Subtitle */}
               <motion.p
-                className="text-xs md:text-sm lg:text-base font-franklin text-gray-700 "
+                className="text-xs md:text-sm lg:text-base font-franklin text-gray-700"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
                 viewport={{ once: true }}
               >
-                LUXURY GROOMING EXPERIENCE
+                {dictionary.barbing.experience.category}
               </motion.p>
 
               {/* Title */}
@@ -171,7 +178,7 @@ const BarbingPage = () => {
                 transition={{ duration: 0.8, delay: 0.4 }}
                 viewport={{ once: true }}
               >
-                Master the Art of Grooming
+                {dictionary.barbing.experience.title}
               </motion.h2>
 
               {/* Description */}
@@ -183,13 +190,10 @@ const BarbingPage = () => {
                 viewport={{ once: true }}
               >
                 <p className="text-lg font-franklin text-gray-700 mb-4">
-                  At HoodHub, barbering is elevated to an art form. Our master barbers combine 
-                  traditional techniques with modern innovation to create styles that reflect 
-                  your individuality.
+                  {dictionary.barbing.experience.description1}
                 </p>
                 <p className="text-lg font-franklin text-gray-700">
-                  Each appointment is a personalized experience where craftsmanship meets 
-                  luxury, resulting in not just a haircut, but a transformation.
+                  {dictionary.barbing.experience.description2}
                 </p>
               </motion.div>
 
@@ -201,10 +205,12 @@ const BarbingPage = () => {
                 transition={{ duration: 0.8, delay: 0.8 }}
                 viewport={{ once: true }}
               >
-                <h3 className="text-2xl font-franklin text-gray-900 mb-6">Our Signature Services</h3>
+                <h3 className="text-2xl font-franklin text-gray-900 mb-6">
+                  {dictionary.barbing.experience.servicesTitle}
+                </h3>
                 
                 <div className="space-y-4">
-                  {barbingServices.map((service, index) => (
+                  {localizedBarbingServices.map((service, index) => (
                     <motion.div
                       key={index}
                       className={`p-4 rounded-xl cursor-pointer transition-all ${
@@ -269,20 +275,20 @@ const BarbingPage = () => {
               className="text-left"
             >
               <h2 className="text-4xl md:text-5xl font-franklin text-white mb-6">
-                Ready for Transformation?
+                {dictionary.barbing.cta.title}
               </h2>
               <p className="text-xl font-franklin text-white/80 mb-8 max-w-2xl">
-                Book your premium grooming experience with our master barbers
+                {dictionary.barbing.cta.subtitle}
               </p>
               
               <div className="flex items-center text-white/80 mb-4">
                 <Calendar className="w-5 h-5 mr-2 text-yellow-500" />
-                <span>Mon-Sun: 10am - 9pm</span>
+                <span>{dictionary.barbing.cta.hours}</span>
               </div>
               
               <div className="flex items-center text-white/80">
                 <MapPin className="w-5 h-5 mr-2 text-yellow-500" />
-                <span>123 Style Street, Fashion District, Moscow</span>
+                <span>{dictionary.barbing.cta.address}</span>
               </div>
             </motion.div>
             
@@ -292,18 +298,18 @@ const BarbingPage = () => {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <motion.button
-                whileHover={{ 
-                  scale: 1.05,
-                  background: "linear-gradient(90deg, #f59e0b, #d97706, #f59e0b)"
-                }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-franklin px-8 py-4 text-lg rounded-full transition-all duration-300 shadow-lg shadow-yellow-500/20 hover:shadow-yellow-500/40"
-              >
-                <Link href="/book?service=barbing">
-                  Book Your Appointment
-                </Link>
-              </motion.button>
+              <Link href={`/${lang}/book?service=barbing`}>
+                <motion.button
+                  whileHover={{ 
+                    scale: 1.05,
+                    background: "linear-gradient(90deg, #f59e0b, #d97706, #f59e0b)"
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-franklin px-8 py-4 text-lg rounded-full transition-all duration-300 shadow-lg shadow-yellow-500/20 hover:shadow-yellow-500/40"
+                >
+                  {dictionary.barbing.cta.button}
+                </motion.button>
+              </Link>
             </motion.div>
           </div>
         </div>

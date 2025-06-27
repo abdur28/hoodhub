@@ -5,11 +5,17 @@ import { FloatingNav } from "@/components/ui/floating-navbar";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import Navbar from "@/components/Navbar";
 import { Diamond, Star } from "lucide-react";
-import { storyPhases } from "@/constants";
+import { storyPhases, getLocalizedData } from "@/constants";
 import Link from "next/link";
 import Image from "next/image";
+import type { Dictionary } from "../dictionaries";
 
-const OurStoryPage = () => {
+interface OurStoryPageProps {
+  lang: string;
+  dictionary: Dictionary;
+}
+
+const OurStoryPage = ({ lang, dictionary }: OurStoryPageProps) => {
   const targetRef = useRef<HTMLDivElement>(null);
   const [activePhase, setActivePhase] = useState(0);
   const [windowSize, setWindowSize] = useState({ 
@@ -20,6 +26,21 @@ const OurStoryPage = () => {
   const { scrollYProgress } = useScroll({
     target: targetRef,
     offset: ["start start", "end start"],
+  });
+
+  // Localize the story phases
+  const localizedStoryPhases = getLocalizedData(storyPhases, dictionary, 'titleKey', 'contentKey');
+  // We need to also handle the subtitle separately since it uses subtitleKey
+  const localizedStoryPhasesWithSubtitle = localizedStoryPhases.map(phase => {
+    if (phase.subtitleKey) {
+      const keys = phase.subtitleKey.split(".");
+      let value = dictionary;
+      for (const key of keys) {
+        value = value[key as keyof typeof value] as any;
+      }
+      return { ...phase, subtitle: value };
+    }
+    return phase;
   });
 
   // Handle window resize
@@ -42,7 +63,7 @@ const OurStoryPage = () => {
   const imageIndex = useTransform(
     scrollYProgress, 
     [0, 1], 
-    [0, storyPhases.length - 1]
+    [0, localizedStoryPhasesWithSubtitle.length - 1]
   );
 
   // Update active phase based on scroll
@@ -59,9 +80,9 @@ const OurStoryPage = () => {
     return useTransform(
       scrollYProgress,
       [
-        (index - 0.5) / storyPhases.length,
-        index / storyPhases.length,
-        (index + 0.5) / storyPhases.length,
+        (index - 0.5) / localizedStoryPhasesWithSubtitle.length,
+        index / localizedStoryPhasesWithSubtitle.length,
+        (index + 0.5) / localizedStoryPhasesWithSubtitle.length,
       ],
       [0, 1, 0]
     );
@@ -72,7 +93,7 @@ const OurStoryPage = () => {
   return (
     <div className="min-h-screen bg-black">
       {/* Floating Navigation */}
-      <FloatingNav />
+      <FloatingNav lang={lang} dictionary={dictionary} />
       
       {/* Section 1: Hero */}
       <section className="relative h-[70vh] w-full overflow-hidden">
@@ -113,7 +134,7 @@ const OurStoryPage = () => {
 
         {/* Transparent Navbar */}
         <div className="absolute top-0 left-0 right-0 z-40">
-          <Navbar variant="transparent" />
+          <Navbar variant="transparent" lang={lang} dictionary={dictionary} />
         </div>
 
         {/* Hero Content */}
@@ -127,9 +148,9 @@ const OurStoryPage = () => {
               className="mb-8"
             >
               <h1 className="text-6xl md:text-7xl lg:text-8xl font-franklin text-white">
-                Our {" "}
+                {dictionary.ourStory.hero.title} {" "}
                 <span className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent">
-                    Story
+                  {dictionary.ourStory.hero.titleHighlight}
                 </span>
               </h1>
             </motion.div>
@@ -149,11 +170,11 @@ const OurStoryPage = () => {
             className="text-center mb-12"
           >
             <h2 className="text-3xl md:text-5xl font-franklin text-gray-900 mb-4">
-              The Genesis of HoodHub
+              {dictionary.ourStory.genesis.title}
             </h2>
             <div className="w-20 h-1 bg-gradient-to-r from-yellow-400 to-yellow-600 mx-auto mb-6"></div>
             <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto font-franklin-italic">
-              Where passion meets precision, and every cut tells a story
+              {dictionary.ourStory.genesis.subtitle}
             </p>
           </motion.div>
 
@@ -166,16 +187,12 @@ const OurStoryPage = () => {
               viewport={{ once: true }}
               className="bg-gray-100 rounded-2xl p-8 shadow-lg font-franklin"
             >
-              <h3 className="text-2xl mb-4">Our Philosophy</h3>
-              <p className="text-gray-700 mb-4 ">
-                At HoodHub, we believe personal style is the purest form of self-expression. 
-                Our mission is to create spaces where artistry and individuality converge, 
-                transforming grooming into an experience that elevates both appearance and confidence.
+              <h3 className="text-2xl mb-4">{dictionary.ourStory.philosophy.title}</h3>
+              <p className="text-gray-700 mb-4">
+                {dictionary.ourStory.philosophy.paragraph1}
               </p>
               <p className="text-gray-700">
-                We blend traditional techniques with modern innovation, honoring the craft 
-                while pushing creative boundaries. Each service is a collaboration between 
-                artist and client, resulting in authentic self-representation.
+                {dictionary.ourStory.philosophy.paragraph2}
               </p>
             </motion.div>
 
@@ -186,7 +203,7 @@ const OurStoryPage = () => {
               viewport={{ once: true }}
             >
               <TextGenerateEffect
-                words="In the intersection of artistry and craftsmanship, HoodHub was born from a vision to redefine personal expression. We are more than a destination - we are curators of confidence, architects of style, and guardians of the ancient arts that make us uniquely human."
+                words={dictionary.ourStory.textEffect.content}
                 className="text-gray-900 text-lg md:text-xl lg:text-2xl leading-relaxed font-light"
                 filter={true}
                 duration={0.03}
@@ -228,10 +245,10 @@ const OurStoryPage = () => {
             <div className="sticky top-5 z-5 px-4 mb-4 flex justify-center">
               <div className="bg-white/90 backdrop-blur-sm rounded-full px-6 py-2 shadow-lg flex items-center space-x-4">
                 <span className="text-sm font-medium text-gray-700">
-                  {storyPhases[activePhase]?.subtitle || "2019"}
+                  {localizedStoryPhasesWithSubtitle[activePhase]?.subtitle || "2019"}
                 </span>
                 <div className="flex items-center space-x-1">
-                  {storyPhases.map((_, i) => (
+                  {localizedStoryPhasesWithSubtitle.map((_, i) => (
                     <div 
                       key={i} 
                       className={`w-2 h-2 rounded-full transition-colors ${
@@ -258,12 +275,12 @@ const OurStoryPage = () => {
                     transition={{ duration: 0.5 }}
                     className="absolute inset-0"
                   >
-                    <div className={`absolute inset-0 bg-gradient-to-b ${storyPhases[activePhase]?.color || "from-yellow-400/20 to-yellow-600/10"}`} />
+                    <div className={`absolute inset-0 bg-gradient-to-b ${localizedStoryPhasesWithSubtitle[activePhase]?.color || "from-yellow-400/20 to-yellow-600/10"}`} />
                     <Image
                       width={700}
                       height={700}
-                      src={storyPhases[activePhase]?.image}
-                      alt={storyPhases[activePhase]?.title || "HoodHub Story"}
+                      src={localizedStoryPhasesWithSubtitle[activePhase]?.image}
+                      alt={localizedStoryPhasesWithSubtitle[activePhase]?.title || "HoodHub Story"}
                       className="w-full h-full object-cover"
                     />
                     
@@ -271,17 +288,17 @@ const OurStoryPage = () => {
                     <div className="absolute bottom-8 left-8 text-white">
                       <div className="flex items-center gap-3 mb-4">
                         <div className="w-8 h-8 text-yellow-400">
-                          {storyPhases[activePhase].icon && typeof storyPhases[activePhase].icon === "function" ?
-                            React.createElement(storyPhases[activePhase].icon) : 
+                          {localizedStoryPhasesWithSubtitle[activePhase].icon && typeof localizedStoryPhasesWithSubtitle[activePhase].icon === "function" ?
+                            React.createElement(localizedStoryPhasesWithSubtitle[activePhase].icon) : 
                             <Star className="w-8 h-8" />
                           }
                         </div>
                         <span className="text-yellow-400 text-2xl font-bold">
-                          {storyPhases[activePhase]?.subtitle || "2019"}
+                          {localizedStoryPhasesWithSubtitle[activePhase]?.subtitle || "2019"}
                         </span>
                       </div>
                       <h3 className="text-4xl font-bold">
-                        {storyPhases[activePhase]?.title || "The Vision"}
+                        {localizedStoryPhasesWithSubtitle[activePhase]?.title || "The Vision"}
                       </h3>
                     </div>
                   </motion.div>
@@ -289,7 +306,7 @@ const OurStoryPage = () => {
               ) : (
                 // Desktop version
                 <AnimatePresence>
-                  {storyPhases.map((phase, index) => {
+                  {localizedStoryPhasesWithSubtitle.map((phase, index) => {
                     const progress = getPhaseProgress(index);
                     const scale = useTransform(progress, [0, 1], [1.05, 1]);
                     
@@ -354,22 +371,22 @@ const OurStoryPage = () => {
                     >
                       <div className="flex items-center justify-center gap-3 mb-6">
                         <div className="w-8 h-8 text-yellow-500">
-                          {storyPhases[activePhase].icon && typeof storyPhases[activePhase].icon === "function" ?
-                            React.createElement(storyPhases[activePhase].icon) : 
+                          {localizedStoryPhasesWithSubtitle[activePhase].icon && typeof localizedStoryPhasesWithSubtitle[activePhase].icon === "function" ?
+                            React.createElement(localizedStoryPhasesWithSubtitle[activePhase].icon) : 
                             <Star className="w-8 h-8" />
                           }
                         </div>
                         <span className="text-yellow-500 text-xl font-bold">
-                          {storyPhases[activePhase]?.subtitle || "2019"}
+                          {localizedStoryPhasesWithSubtitle[activePhase]?.subtitle || "2019"}
                         </span>
                       </div>
                       
                       <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 text-center">
-                        {storyPhases[activePhase]?.title || "The Vision"}
+                        {localizedStoryPhasesWithSubtitle[activePhase]?.title || "The Vision"}
                       </h2>
                       
                       <p className="text-lg leading-relaxed font-franklin text-gray-700 mb-8 text-center">
-                        {storyPhases[activePhase]?.content || ""}
+                        {localizedStoryPhasesWithSubtitle[activePhase]?.content || ""}
                       </p>
                       
                       <div className="flex justify-center">
@@ -380,7 +397,7 @@ const OurStoryPage = () => {
                 </div>
               ) : (
                 // Desktop version
-                storyPhases.map((phase, index) => {
+                localizedStoryPhasesWithSubtitle.map((phase, index) => {
                   const progress = getPhaseProgress(index);
                   const y = useTransform(progress, [0, 1], [30, 0]);
                   
@@ -431,7 +448,7 @@ const OurStoryPage = () => {
           </div>
 
           {/* Spacer for scroll height */}
-          <div style={{ height: `${storyPhases.length * 100}vh` }} />
+          <div style={{ height: `${localizedStoryPhasesWithSubtitle.length * 100}vh` }} />
         </div>
 
         {/* Final CTA Section */}
@@ -449,24 +466,23 @@ const OurStoryPage = () => {
               viewport={{ once: true }}
             >
               <h2 className="text-4xl md:text-5xl font-franklin text-white mb-6">
-                Ready to Write Your Story?
+                {dictionary.ourStory.cta.title}
               </h2>
               <p className="text-xl font-franklin text-white/80 mb-8 max-w-2xl mx-auto">
-                Join the HoodHub community and discover what happens when artistry meets your vision.
+                {dictionary.ourStory.cta.subtitle}
               </p>
-              <motion.button
-                whileHover={{ 
-                  scale: 1.05,
-                  background: "linear-gradient(90deg, #f59e0b, #d97706, #f59e0b)"
-                }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-franklin px-8 py-4 text-lg rounded-full transition-all duration-300 shadow-lg shadow-yellow-500/20 hover:shadow-yellow-500/40"
-              >
-                <Link href="/book">
-                  Book Your Experience
-                </Link>
-              </motion.button>
-              
+              <Link href={`/${lang}/book`}>
+                <motion.button
+                  whileHover={{ 
+                    scale: 1.05,
+                    background: "linear-gradient(90deg, #f59e0b, #d97706, #f59e0b)"
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-franklin px-8 py-4 text-lg rounded-full transition-all duration-300 shadow-lg shadow-yellow-500/20 hover:shadow-yellow-500/40"
+                >
+                  {dictionary.ourStory.cta.button}
+                </motion.button>
+              </Link>
             </motion.div>
           </div>
         </div>

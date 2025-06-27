@@ -20,7 +20,7 @@ function getLocale(request: NextRequest): string {
   const acceptLanguage = request.headers.get('accept-language') || '';
   
   // Simple language detection
-  if (acceptLanguage.includes('ru')) return 'ru';
+  if (acceptLanguage.includes('en')) return 'en';
   return defaultLocale;
 }
 
