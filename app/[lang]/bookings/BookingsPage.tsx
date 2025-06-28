@@ -1,9 +1,18 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 import { FloatingNav } from "@/components/ui/floating-navbar";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { 
   Calendar as CalendarIcon,
   Clock,
@@ -17,7 +26,9 @@ import {
   Scissors,
   PaintBucket,
   Diamond,
-  Heart
+  Heart,
+  X,
+  AlertTriangle
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -67,6 +78,8 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [calendarDays, setCalendarDays] = useState<Date[]>([]);
   const [activeTab, setActiveTab] = useState<"upcoming" | "past">("upcoming");
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [bookingToDelete, setBookingToDelete] = useState<{id: string, serviceName: string, dateTime: string} | null>(null);
 
   const user: User = JSON.parse(userAsString);
 
@@ -104,41 +117,79 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
         setBookings(data.bookings);
       } else {
         console.error('Failed to fetch bookings:', data.error);
+        toast.error("Failed to load bookings", {
+          description: "Please refresh the page to try again.",
+          icon: <X className="w-4 h-4" />
+        });
       }
     } catch (error) {
       console.error('Error fetching bookings:', error);
+      toast.error("Connection error", {
+        description: "Please check your internet connection and try again.",
+        icon: <X className="w-4 h-4" />
+      });
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleDeleteBooking = async (bookingId: string) => {
-    if (!confirm(dictionary.bookings.alerts.confirmCancel)) {
-      return;
-    }
+  const handleDeleteBooking = async (bookingId: string, serviceName: string, dateTime: string) => {
+    setBookingToDelete({ id: bookingId, serviceName, dateTime });
+    setConfirmDialogOpen(true);
+  };
 
-    setDeletingId(bookingId);
+  const confirmDeleteBooking = async () => {
+    if (!bookingToDelete) return;
+    
+    setDeletingId(bookingToDelete.id);
+    setConfirmDialogOpen(false);
+    
+    const toastId = toast.loading("Cancelling booking...", {
+      description: "Please wait while we process your cancellation"
+    });
+
     try {
-      const response = await fetch(`/api/bookings?id=${bookingId}`, {
+      const response = await fetch(`/api/book?id=${bookingToDelete.id}`, {
         method: 'DELETE',
       });
 
       if (response.ok) {
+        toast.dismiss(toastId);
+        toast.success("Booking cancelled", {
+          description: `Your ${bookingToDelete.serviceName} appointment has been cancelled successfully.`,
+          icon: <CheckCircle className="w-4 h-4" />,
+          duration: 5000
+        });
         await fetchBookings();
       } else {
         const data = await response.json();
-        alert(data.error || dictionary.bookings.alerts.failedCancel);
+        toast.dismiss(toastId);
+        toast.error("Failed to cancel booking", {
+          description: data.error || "Please try again or contact support.",
+          icon: <X className="w-4 h-4" />,
+          duration: 5000
+        });
       }
     } catch (error) {
       console.error('Error deleting booking:', error);
-      alert(dictionary.bookings.alerts.error);
+      toast.dismiss(toastId);
+      toast.error("Something went wrong", {
+        description: "Please check your connection and try again.",
+        icon: <X className="w-4 h-4" />,
+        duration: 5000
+      });
     } finally {
       setDeletingId(null);
+      setBookingToDelete(null);
     }
   };
 
   const formatDate = (date: Date) => {
-    return date.toISOString().split('T')[0];
+    // Use local timezone instead of UTC to avoid date shifting
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   };
 
   const isBookedDate = (date: Date) => {
@@ -474,7 +525,7 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
                           {/* Delete Button - Only for upcoming bookings */}
                           {!booking.isPast && (
                             <Button
-                              onClick={() => handleDeleteBooking(booking.id)}
+                              onClick={() => handleDeleteBooking(booking.id, booking.service.name, booking.dateTime)}
                               disabled={isDeleting}
                               variant="ghost"
                               size="sm"
@@ -551,6 +602,66 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
           </div>
         </div>
       </section>
+
+      {/* Confirmation Dialog */}
+      <Dialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 font-franklin">
+              <AlertTriangle className="w-5 h-5 text-red-500" />
+              {dictionary.bookings.confirmDialog.title}
+            </DialogTitle>
+            <DialogDescription className="font-franklin">
+              {bookingToDelete && (
+                <>
+                  {dictionary.bookings.confirmDialog.description
+                    .replace("{serviceName}", bookingToDelete.serviceName)
+                    .replace("{date}", new Date(bookingToDelete.dateTime).toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-US', {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long', 
+                      day: 'numeric'
+                    }))
+                    .replace("{time}", new Date(bookingToDelete.dateTime).toLocaleTimeString(lang === 'ru' ? 'ru-RU' : 'en-US', {
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    }))}
+                  <br />
+                  <br />
+                  {dictionary.bookings.confirmDialog.warning}
+                </>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setConfirmDialogOpen(false)}
+              className="font-franklin"
+            >
+              {dictionary.bookings.confirmDialog.keepButton}
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={confirmDeleteBooking}
+              className="font-franklin"
+              disabled={deletingId === bookingToDelete?.id}
+            >
+              {deletingId === bookingToDelete?.id ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  {dictionary.bookings.confirmDialog.cancelling}
+                </>
+              ) : (
+                <>
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  {dictionary.bookings.confirmDialog.confirmButton}
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 import { FloatingNav } from "@/components/ui/floating-navbar";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
@@ -19,7 +20,9 @@ import {
   CheckCircle,
   ChevronLeft,
   ChevronRight,
-  Loader2
+  Loader2,
+  AlertTriangle,
+  X
 } from "lucide-react";
 import Image from "next/image";
 import type { Dictionary } from "../dictionaries";
@@ -95,7 +98,7 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService }: BookPageP
   const fetchAvailableSlots = async () => {
     setIsFetchingSlots(true);
     try {
-      const response = await fetch(`/api/bookings?date=${selectedDate}`);
+      const response = await fetch(`/api/book?date=${selectedDate}`);
       const data = await response.json();
       
       if (response.ok && data.slots) {
@@ -103,17 +106,27 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService }: BookPageP
       } else {
         console.error('Failed to fetch slots:', data.error);
         setAvailableSlots(timeSlots.map(time => ({ time, available: true })));
+        toast.error("Failed to load available slots", {
+          description: "Showing all slots as available. Please refresh if needed."
+        });
       }
     } catch (error) {
       console.error('Error fetching slots:', error);
       setAvailableSlots(timeSlots.map(time => ({ time, available: true })));
+      toast.error("Failed to load available slots", {
+        description: "Please check your connection and try again."
+      });
     } finally {
       setIsFetchingSlots(false);
     }
   };
 
   const formatDate = (date: Date) => {
-    return date.toISOString().split('T')[0];
+    // Use local timezone instead of UTC to avoid date shifting
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   };
 
   const isToday = (date: Date) => {
@@ -152,16 +165,22 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService }: BookPageP
     }
 
     if (!selectedServiceId || !selectedDate || !selectedTime) {
-      alert(dictionary.book.alerts.selectAll);
+      toast.warning("Please complete your selection", {
+        description: dictionary.book.alerts.selectAll,
+        icon: <AlertTriangle className="w-4 h-4" />,
+      });
       return;
     }
 
     setIsLoading(true);
+    const toastId = toast.loading("Creating your booking...", {
+      description: "Please wait while we process your request"
+    });
 
     try {
       const selectedServiceData = services.find(s => s.id === selectedServiceId);
       
-      const response = await fetch('/api/bookings', {
+      const response = await fetch('/api/book', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -180,17 +199,34 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService }: BookPageP
       const data = await response.json();
 
       if (response.ok) {
-        alert(dictionary.book.alerts.confirmed);
+        toast.dismiss(toastId);
+        toast.success("Booking confirmed!", {
+          description: dictionary.book.alerts.confirmed,
+          icon: <CheckCircle className="w-4 h-4" />,
+          duration: 5000,
+        });
+        
+        // Reset form
         setSelectedServiceId('');
         setSelectedDate('');
         setSelectedTime('');
         setAvailableSlots([]);
       } else {
-        alert(data.error || dictionary.book.alerts.failed);
+        toast.dismiss(toastId);
+        toast.error("Booking failed", {
+          description: data.error || dictionary.book.alerts.failed,
+          icon: <X className="w-4 h-4" />,
+          duration: 5000,
+        });
       }
     } catch (error) {
       console.error('Error creating booking:', error);
-      alert(dictionary.book.alerts.error);
+      toast.dismiss(toastId);
+      toast.error("Something went wrong", {
+        description: dictionary.book.alerts.error,
+        icon: <X className="w-4 h-4" />,
+        duration: 5000,
+      });
     } finally {
       setIsLoading(false);
     }

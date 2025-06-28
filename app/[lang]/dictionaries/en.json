@@ -992,6 +992,14 @@
         "confirmCancel": "Are you sure you want to cancel this booking?",
         "failedCancel": "Failed to cancel booking",
         "error": "Something went wrong. Please try again."
+      },
+      "confirmDialog": {
+        "title": "Cancel Booking?",
+        "description": "Are you sure you want to cancel your {serviceName} appointment on {date} at {time}?",
+        "warning": "This action cannot be undone.",
+        "keepButton": "Keep Booking",
+        "confirmButton": "Yes, Cancel Booking", 
+        "cancelling": "Cancelling..."
       }
     },
     "whatsapp": {

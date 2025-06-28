@@ -6,6 +6,7 @@ import Footer from "@/components/sections/Footer";
 import { ClerkProvider } from '@clerk/nextjs'
 import WhatsappPopUp from "@/components/WhatsappPopUp";
 import { getDictionary } from './dictionaries';
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -69,6 +70,7 @@ export default async function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} ${franklinGothic.variable} font-franklin antialiased`}
         >
           {children}
+          <Toaster richColors />
           <WhatsappPopUp lang={lang} dictionary={dictionary} />
           <Footer lang={lang} dictionary={dictionary} />
         </body>
