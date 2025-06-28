@@ -25,7 +25,10 @@ import {
   Instagram,
   Facebook,
   Twitter,
-  Youtube
+  Youtube,
+  CheckCircle,
+  AlertCircle,
+  Loader2
 } from "lucide-react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -49,6 +52,11 @@ interface ContactPageProps {
   dictionary: Dictionary;
 }
 
+interface FormStatus {
+  type: 'success' | 'error' | null;
+  message: string;
+}
+
 const ContactPage = ({ lang, dictionary }: ContactPageProps) => {
   const [formData, setFormData] = useState({
     name: "",
@@ -58,26 +66,74 @@ const ContactPage = ({ lang, dictionary }: ContactPageProps) => {
     message: ""
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formStatus, setFormStatus] = useState<FormStatus>({ type: null, message: "" });
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
+    
+    // Clear any previous status messages when user starts typing
+    if (formStatus.type) {
+      setFormStatus({ type: null, message: "" });
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSelectChange = (value: string) => {
+    setFormData(prev => ({ ...prev, service: value }));
+    if (formStatus.type) {
+      setFormStatus({ type: null, message: "" });
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log("Form submitted:", formData);
-    // Reset form
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      service: "",
-      message: ""
-    });
+    setIsSubmitting(true);
+    setFormStatus({ type: null, message: "" });
+
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setFormStatus({
+          type: 'success',
+          message: result.message || 'Your message has been sent successfully! We\'ll get back to you soon.'
+        });
+        
+        // Reset form on success
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          service: "",
+          message: ""
+        });
+      } else {
+        setFormStatus({
+          type: 'error',
+          message: result.error || 'Failed to send message. Please try again.'
+        });
+      }
+    } catch (error) {
+      console.error('Form submission error:', error);
+      setFormStatus({
+        type: 'error',
+        message: 'Network error. Please check your connection and try again.'
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactInfo = [
@@ -241,6 +297,26 @@ const ContactPage = ({ lang, dictionary }: ContactPageProps) => {
                 </span>
               </h2>
               
+              {/* Status Message */}
+              {formStatus.type && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`mb-6 p-4 rounded-lg flex items-center space-x-3 ${
+                    formStatus.type === 'success' 
+                      ? 'bg-green-50 border border-green-200 text-green-800' 
+                      : 'bg-red-50 border border-red-200 text-red-800'
+                  }`}
+                >
+                  {formStatus.type === 'success' ? (
+                    <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+                  ) : (
+                    <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+                  )}
+                  <p className="font-franklin">{formStatus.message}</p>
+                </motion.div>
+              )}
+              
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
@@ -254,6 +330,7 @@ const ContactPage = ({ lang, dictionary }: ContactPageProps) => {
                       value={formData.name}
                       onChange={handleInputChange}
                       required
+                      disabled={isSubmitting}
                       placeholder={dictionary.contactPage.form.namePlaceholder}
                       className="font-franklin"
                     />
@@ -270,6 +347,7 @@ const ContactPage = ({ lang, dictionary }: ContactPageProps) => {
                       value={formData.email}
                       onChange={handleInputChange}
                       required
+                      disabled={isSubmitting}
                       placeholder={dictionary.contactPage.form.emailPlaceholder}
                       className="font-franklin"
                     />
@@ -287,6 +365,7 @@ const ContactPage = ({ lang, dictionary }: ContactPageProps) => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
+                      disabled={isSubmitting}
                       placeholder={dictionary.contactPage.form.phonePlaceholder}
                       className="font-franklin"
                     />
@@ -296,7 +375,12 @@ const ContactPage = ({ lang, dictionary }: ContactPageProps) => {
                     <Label htmlFor="service" className="text-sm font-franklin font-medium text-gray-700">
                       {dictionary.contactPage.form.service}
                     </Label>
-                    <Select name="service" value={formData.service} onValueChange={(value) => setFormData(prev => ({ ...prev, service: value }))}>
+                    <Select 
+                      name="service" 
+                      value={formData.service} 
+                      onValueChange={handleSelectChange}
+                      disabled={isSubmitting}
+                    >
                       <SelectTrigger className="font-franklin w-full">
                         <SelectValue placeholder={dictionary.contactPage.form.servicePlaceholder} />
                       </SelectTrigger>
@@ -320,6 +404,7 @@ const ContactPage = ({ lang, dictionary }: ContactPageProps) => {
                     value={formData.message}
                     onChange={handleInputChange}
                     required
+                    disabled={isSubmitting}
                     rows={6}
                     placeholder={dictionary.contactPage.form.messagePlaceholder}
                     className="font-franklin resize-none"
@@ -329,10 +414,20 @@ const ContactPage = ({ lang, dictionary }: ContactPageProps) => {
                 <Button
                   type="submit"
                   size="lg"
-                  className="w-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-black font-franklin font-semibold py-4 text-lg hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 transition-all duration-300 shadow-lg hover:shadow-xl group"
+                  disabled={isSubmitting}
+                  className="w-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-black font-franklin font-semibold py-4 text-lg hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 transition-all duration-300 shadow-lg hover:shadow-xl group disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <Send className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
-                  {dictionary.contactPage.form.submit}
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
+                      {dictionary.contactPage.form.submit}
+                    </>
+                  )}
                 </Button>
               </form>
             </motion.div>
