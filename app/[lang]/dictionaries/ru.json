@@ -1006,5 +1006,131 @@
       "greeting": "Привет",
       "helpMessage": "Чем мы можем вам помочь?",
       "openChat": "Открыть чат"
+    },
+    "admin": {
+      "title": "Панель Администратора",
+      "subtitle": "Управляйте своими бизнес-операциями",
+      "loading": "Загрузка...",
+      "updating": "Обновление...",
+      "tabs": {
+        "users": "Пользователи",
+        "bookings": "Записи",
+        "emails": "Отправить Письма"
+      },
+      "actions": {
+        "view": "Просмотреть",
+        "edit": "Редактировать",
+        "delete": "Удалить",
+        "cancel": "Отменить",
+        "close": "Закрыть",
+        "export": "Экспорт",
+        "filter": "Фильтр",
+        "save": "Сохранить",
+        "send": "Отправить",
+        "changeRole": "Изменить Роль"
+      },
+      "filters": {
+        "all": "Все",
+        "upcoming": "Предстоящие",
+        "past": "Прошлые",
+        "active": "Активные",
+        "inactive": "Неактивные"
+      },
+      "status": {
+        "upcoming": "Предстоящие",
+        "completed": "Прошлые",
+        "cancelled": "Отмененные",
+        "active": "Активный",
+        "inactive": "Неактивный"
+      },
+      "stats": {
+        "totalUsers": "Всего Пользователей",
+        "activeBookings": "Активные Записи",
+        "newThisMonth": "Новые в Этом Месяце",
+        "totalBookings": "Всего Записей",
+        "upcomingBookings": "Предстоящие",
+        "pastBookings": "Прошлые"
+      },
+      "users": {
+        "title": "Управление Пользователями",
+        "subtitle": "Управляйте и просматривайте всех зарегистрированных пользователей",
+        "searchPlaceholder": "Поиск пользователей...",
+        "userDetails": "Детали Пользователя",
+        "userDetailsDescription": "Просмотреть подробную информацию об этом пользователе",
+        "memberSince": "Участник с",
+        "role": "Роль",
+        "totalBookings": "Всего Записей",
+        "table": {
+          "user": "Пользователь",
+          "email": "Email",
+          "role": "Роль",
+          "joinDate": "Дата Регистрации",
+          "bookings": "Записи",
+          "actions": "Действия"
+        }
+      },
+      "bookings": {
+        "title": "Управление Записями",
+        "subtitle": "Управляйте и просматривайте все записи",
+        "searchPlaceholder": "Поиск записей...",
+        "bookingDetails": "Детали Записи",
+        "bookingDetailsDescription": "Просмотреть подробную информацию об этой записи",
+        "customer": "Клиент",
+        "appointment": "Запись",
+        "service": "Услуга",
+        "status": "Статус",
+        "bookedOn": "Забронировано",
+        "cancelConfirm": {
+          "title": "Отменить Запись",
+          "description": "Вы уверены, что хотите отменить эту запись? Это действие нельзя отменить.",
+          "confirm": "Отменить Запись",
+          "cancelling": "Отмена..."
+        },
+        "table": {
+          "customer": "Клиент",
+          "service": "Услуга",
+          "datetime": "Дата и Время",
+          "status": "Статус"
+        }
+      },
+      "emails": {
+        "title": "Управление Email",
+        "subtitle": "Отправляйте персонализированные письма вашим пользователям",
+        "compose": {
+          "title": "Написать Письмо",
+          "recipients": "Получатели",
+          "sendToAll": "Отправить всем пользователям",
+          "selectedUsers": "Выбранные пользователи",
+          "subject": "Тема",
+          "subjectPlaceholder": "Введите тему письма...",
+          "message": "Сообщение",
+          "messagePlaceholder": "Введите ваше сообщение...",
+          "send": "Отправить Письмо",
+          "sending": "Отправка..."
+        },
+        "users": {
+          "title": "Выбрать Пользователей",
+          "selectAll": "Выбрать Всех",
+          "deselectAll": "Снять Выбор"
+        },
+        "stats": {
+          "title": "Статистика Email",
+          "totalUsers": "Всего Пользователей",
+          "selectedUsers": "Выбрано"
+        },
+        "results": {
+          "title": "Результаты Email Кампании",
+          "description": "Сводка результатов доставки писем",
+          "successful": "Успешно",
+          "successRate": "процент успеха",
+          "sent": "Отправлено",
+          "failed": "Не удалось"
+        },
+        "errors": {
+          "subjectRequired": "Тема обязательна",
+          "messageRequired": "Сообщение обязательно",
+          "recipientsRequired": "Пожалуйста, выберите получателей или выберите отправку всем пользователям"
+        }
+      }
     }
   }

@@ -1006,6 +1006,132 @@
       "greeting": "Hello There",
       "helpMessage": "How can We help you?",
       "openChat": "Open Chat"
+    },
+    "admin": {
+      "title": "Admin Dashboard",
+      "subtitle": "Manage your business operations",
+      "loading": "Loading...",
+      "updating": "Updating...",
+      "tabs": {
+        "users": "Users",
+        "bookings": "Bookings", 
+        "emails": "Send Emails"
+      },
+      "actions": {
+        "view": "View",
+        "edit": "Edit",
+        "delete": "Delete",
+        "cancel": "Cancel",
+        "close": "Close",
+        "export": "Export",
+        "filter": "Filter",
+        "save": "Save",
+        "send": "Send",
+        "changeRole": "Change Role"
+      },
+      "filters": {
+        "all": "All",
+        "upcoming": "Upcoming",
+        "past": "Past",
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "status": {
+        "upcoming": "Upcoming",
+        "completed": "Past",
+        "cancelled": "Cancelled",
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "stats": {
+        "totalUsers": "Total Users",
+        "activeBookings": "Active Bookings",
+        "newThisMonth": "New This Month",
+        "totalBookings": "Total Bookings", 
+        "upcomingBookings": "Upcoming",
+        "pastBookings": "Past"
+      },
+      "users": {
+        "title": "User Management",
+        "subtitle": "Manage and view all registered users",
+        "searchPlaceholder": "Search users...",
+        "userDetails": "User Details",
+        "userDetailsDescription": "View detailed information about this user",
+        "memberSince": "Member since",
+        "role": "Role",
+        "totalBookings": "Total Bookings",
+        "table": {
+          "user": "User",
+          "email": "Email",
+          "role": "Role",
+          "joinDate": "Join Date",
+          "bookings": "Bookings",
+          "actions": "Actions"
+        }
+      },
+      "bookings": {
+        "title": "Booking Management",
+        "subtitle": "Manage and view all appointments",
+        "searchPlaceholder": "Search bookings...",
+        "bookingDetails": "Booking Details",
+        "bookingDetailsDescription": "View detailed information about this booking",
+        "customer": "Customer",
+        "appointment": "Appointment",
+        "service": "Service",
+        "status": "Status",
+        "bookedOn": "Booked On",
+        "cancelConfirm": {
+          "title": "Cancel Booking",
+          "description": "Are you sure you want to cancel this booking? This action cannot be undone.",
+          "confirm": "Cancel Booking",
+          "cancelling": "Cancelling..."
+        },
+        "table": {
+          "customer": "Customer",
+          "service": "Service",
+          "datetime": "Date & Time",
+          "status": "Status"
+        }
+      },
+      "emails": {
+        "title": "Email Management",
+        "subtitle": "Send custom emails to your users",
+        "compose": {
+          "title": "Compose Email",
+          "recipients": "Recipients",
+          "sendToAll": "Send to all users",
+          "selectedUsers": "Selected users",
+          "subject": "Subject",
+          "subjectPlaceholder": "Enter email subject...",
+          "message": "Message",
+          "messagePlaceholder": "Enter your message...",
+          "send": "Send Email",
+          "sending": "Sending..."
+        },
+        "users": {
+          "title": "Select Users",
+          "selectAll": "Select All",
+          "deselectAll": "Deselect All"
+        },
+        "stats": {
+          "title": "Email Statistics",
+          "totalUsers": "Total Users",
+          "selectedUsers": "Selected"
+        },
+        "results": {
+          "title": "Email Campaign Results",
+          "description": "Summary of email delivery results",
+          "successful": "Successful",
+          "successRate": "success rate",
+          "sent": "Sent",
+          "failed": "Failed"
+        },
+        "errors": {
+          "subjectRequired": "Subject is required",
+          "messageRequired": "Message is required",
+          "recipientsRequired": "Please select recipients or choose to send to all users"
+        }
+      }
     }
   }
   

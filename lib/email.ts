@@ -66,7 +66,7 @@ export async function sendEmail(options: EmailOptions): Promise<boolean> {
       currentYear: new Date().getFullYear(),
       companyName: 'HoodHub',
       websiteUrl: process.env.NEXT_PUBLIC_BASE_URL || 'https://hoodhub.ru',
-      logoUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://hoodhub.ru'}/api/logo.png`,
+      logoUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://hoodhub.ru'}/api/logo`,
       ...options.templateData
     };
 
