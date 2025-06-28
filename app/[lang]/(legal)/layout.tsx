@@ -1,17 +1,22 @@
-"use client";
 import React from "react";
 import { FloatingNav } from "@/components/ui/floating-navbar";
 import Navbar from "@/components/Navbar";
+import { getDictionary } from '../dictionaries';
 
-export default function LegalLayout({
+export default async function LegalLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<{ lang: string }>;
 }) {
+  const { lang } = await params;
+  const dictionary = await getDictionary(lang as 'en' | 'ru');
+
   return (
     <div className="min-h-screen bg-black">
       {/* Floating Navigation */}
-      <FloatingNav />
+      <FloatingNav lang={lang} dictionary={dictionary} />
       
       {/* Simple Hero */}
       <section className="relative h-[25vh] w-full overflow-hidden">
@@ -20,7 +25,7 @@ export default function LegalLayout({
         
         {/* Transparent Navbar */}
         <div className="absolute top-0 left-0 right-0 z-40">
-          <Navbar variant="transparent" />
+          <Navbar variant="transparent" lang={lang} dictionary={dictionary} />
         </div>
       </section>
 

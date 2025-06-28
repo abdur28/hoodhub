@@ -22,6 +22,7 @@ import {
   Loader2
 } from "lucide-react";
 import Image from "next/image";
+import type { Dictionary } from "../dictionaries";
 
 interface User {
   _id: string;
@@ -33,24 +34,13 @@ interface User {
 }
 
 interface BookPageProps {
+  lang: string;
+  dictionary: Dictionary;
   userAsString: string;
   selectedService?: string;
 }
 
-const services = [
-  { id: "barbing", name: "Professional Barbing", category: "Barbing" },
-  { id: "tattoo", name: "Tattoo Artistry", category: "Tattoo" },
-  { id: "nails", name: "Nail Services", category: "Lifestyle" },
-  { id: "spa", name: "Spa & Wellness", category: "Lifestyle" },
-];
-
-const timeSlots = [
-  "10:00", "11:00", "12:00", "13:00", "14:00", 
-  "15:00", "16:00", "17:00", "18:00", "19:00", 
-  "20:00", "21:00"
-];
-
-const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
+const BookPage = ({ lang, dictionary, userAsString, selectedService }: BookPageProps) => {
   const [selectedServiceId, setSelectedServiceId] = useState(selectedService || "");
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
@@ -62,13 +52,26 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
 
   const user: User | null = userAsString ? JSON.parse(userAsString) : null;
 
+  // Services with translated names
+  const services = [
+    { id: "barbing", name: dictionary.book.services.barbing, category: dictionary.book.services.barbingCategory },
+    { id: "tattoo", name: dictionary.book.services.tattoo, category: dictionary.book.services.tattooCategory },
+    { id: "nails", name: dictionary.book.services.nails, category: dictionary.book.services.lifestyleCategory },
+    { id: "spa", name: dictionary.book.services.spa, category: dictionary.book.services.lifestyleCategory },
+  ];
+
+  const timeSlots = [
+    "10:00", "11:00", "12:00", "13:00", "14:00", 
+    "15:00", "16:00", "17:00", "18:00", "19:00", 
+    "20:00", "21:00"
+  ];
+
   // Generate calendar days
   useEffect(() => {
     const year = currentMonth.getFullYear();
     const month = currentMonth.getMonth();
     
     const firstDay = new Date(year, month, 1);
-    // const lastDay = new Date(year, month + 1, 0);
     const startDate = new Date(firstDay);
     startDate.setDate(firstDay.getDate() - firstDay.getDay());
     
@@ -99,12 +102,10 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
         setAvailableSlots(data.slots);
       } else {
         console.error('Failed to fetch slots:', data.error);
-        // If fetch fails, show all slots as available
         setAvailableSlots(timeSlots.map(time => ({ time, available: true })));
       }
     } catch (error) {
       console.error('Error fetching slots:', error);
-      // If fetch fails, show all slots as available
       setAvailableSlots(timeSlots.map(time => ({ time, available: true })));
     } finally {
       setIsFetchingSlots(false);
@@ -133,7 +134,7 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
   const handleDateSelect = (date: Date) => {
     if (isPastDate(date)) return;
     setSelectedDate(formatDate(date));
-    setSelectedTime(""); // Reset time when date changes
+    setSelectedTime("");
   };
 
   const handlePrevMonth = () => {
@@ -146,12 +147,12 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
 
   const handleBooking = async () => {
     if (!user) {
-      window.location.href = '/sign-in';
+      window.location.href = `/${lang}/sign-in`;
       return;
     }
 
     if (!selectedServiceId || !selectedDate || !selectedTime) {
-      alert('Please select all required fields');
+      alert(dictionary.book.alerts.selectAll);
       return;
     }
 
@@ -179,34 +180,26 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
       const data = await response.json();
 
       if (response.ok) {
-        alert('Booking confirmed! We will contact you soon.');
-        // Reset form
+        alert(dictionary.book.alerts.confirmed);
         setSelectedServiceId('');
         setSelectedDate('');
         setSelectedTime('');
         setAvailableSlots([]);
       } else {
-        alert(data.error || 'Failed to create booking');
+        alert(data.error || dictionary.book.alerts.failed);
       }
     } catch (error) {
       console.error('Error creating booking:', error);
-      alert('Something went wrong. Please try again.');
+      alert(dictionary.book.alerts.error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const monthNames = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ];
-
-  const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
   return (
     <div className="min-h-screen bg-black">
       {/* Floating Navigation */}
-      <FloatingNav />
+      <FloatingNav lang={lang} dictionary={dictionary} />
       
       {/* Hero Section */}
       <section className="relative h-[50vh] w-full overflow-hidden">
@@ -247,7 +240,7 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
 
         {/* Transparent Navbar */}
         <div className="absolute top-0 left-0 right-0 z-40">
-          <Navbar variant="transparent" />
+          <Navbar variant="transparent" lang={lang} dictionary={dictionary} />
         </div>
 
         {/* Hero Content */}
@@ -260,9 +253,9 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
               className="mb-8"
             >
               <h1 className="text-6xl md:text-7xl lg:text-8xl font-franklin text-white">
-                Book Your {" "}
+                {dictionary.book.hero.title} {" "}
                 <span className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent">
-                  Experience
+                  {dictionary.book.hero.titleHighlight}
                 </span>
               </h1>
             </motion.div>
@@ -286,11 +279,11 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
               {/* Service Selection */}
               <div>
                 <Label className="text-lg font-franklin font-semibold text-gray-900 mb-4 block">
-                  Select Service
+                  {dictionary.book.form.selectService}
                 </Label>
                 <Select value={selectedServiceId} onValueChange={setSelectedServiceId}>
                   <SelectTrigger className="w-full h-14 text-lg font-franklin">
-                    <SelectValue placeholder="Choose your service" />
+                    <SelectValue placeholder={dictionary.book.form.chooseService} />
                   </SelectTrigger>
                   <SelectContent>
                     {services.map((service) => (
@@ -309,7 +302,7 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
               {/* Calendar */}
               <div>
                 <Label className="text-lg font-franklin font-semibold text-gray-900 mb-4 block">
-                  Select Date
+                  {dictionary.book.form.selectDate}
                 </Label>
                 <div className="bg-gray-50 rounded-2xl p-6">
                   {/* Calendar Header */}
@@ -321,7 +314,7 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
                       <ChevronLeft className="w-5 h-5" />
                     </button>
                     <h3 className="text-xl font-franklin font-semibold">
-                      {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
+                      {dictionary.book.calendar.months[currentMonth.getMonth()]} {currentMonth.getFullYear()}
                     </h3>
                     <button
                       onClick={handleNextMonth}
@@ -333,7 +326,7 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
 
                   {/* Day Headers */}
                   <div className="grid grid-cols-7 gap-1 mb-2">
-                    {dayNames.map((day) => (
+                    {dictionary.book.calendar.days.map((day) => (
                       <div key={day} className="text-center text-sm font-franklin font-medium text-gray-600 py-2">
                         {day}
                       </div>
@@ -380,11 +373,11 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
               {/* Time Selection */}
               <div>
                 <Label className="text-lg font-franklin font-semibold text-gray-900 mb-4 block">
-                  Select Time
+                  {dictionary.book.form.selectTime}
                   {isFetchingSlots && (
                     <span className="ml-2 text-sm text-gray-500 font-normal">
                       <Loader2 className="w-4 h-4 inline animate-spin mr-1" />
-                      Loading available slots...
+                      {dictionary.book.form.loadingSlots}
                     </span>
                   )}
                 </Label>
@@ -461,16 +454,16 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
                   <div className="text-center">
                     <User className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                     <h3 className="text-xl font-franklin font-semibold text-gray-900 mb-2">
-                      Sign in to Book
+                      {dictionary.book.auth.signInTitle}
                     </h3>
                     <p className="text-gray-600 font-franklin mb-4">
-                      Please sign in to your account to book an appointment
+                      {dictionary.book.auth.signInDescription}
                     </p>
                     <Button
-                      onClick={() => window.location.href = '/sign-in'}
+                      onClick={() => window.location.href = `/${lang}/sign-in`}
                       className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-franklin"
                     >
-                      Sign In
+                      {dictionary.book.auth.signInButton}
                     </Button>
                   </div>
                 )}
@@ -479,28 +472,28 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
               {/* Booking Summary */}
               <div className="bg-gray-50 rounded-2xl p-8">
                 <h3 className="text-xl font-franklin font-semibold text-gray-900 mb-6">
-                  Booking Summary
+                  {dictionary.book.summary.title}
                 </h3>
                 
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="font-franklin text-gray-600">Service:</span>
+                    <span className="font-franklin text-gray-600">{dictionary.book.summary.service}:</span>
                     <span className="font-franklin font-medium">
-                      {selectedServiceId ? services.find(s => s.id === selectedServiceId)?.name : "Not selected"}
+                      {selectedServiceId ? services.find(s => s.id === selectedServiceId)?.name : dictionary.book.summary.notSelected}
                     </span>
                   </div>
                   
                   <div className="flex items-center justify-between">
-                    <span className="font-franklin text-gray-600">Date:</span>
+                    <span className="font-franklin text-gray-600">{dictionary.book.summary.date}:</span>
                     <span className="font-franklin font-medium">
-                      {selectedDate ? new Date(selectedDate).toLocaleDateString() : "Not selected"}
+                      {selectedDate ? new Date(selectedDate).toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-US') : dictionary.book.summary.notSelected}
                     </span>
                   </div>
                   
                   <div className="flex items-center justify-between">
-                    <span className="font-franklin text-gray-600">Time:</span>
+                    <span className="font-franklin text-gray-600">{dictionary.book.summary.time}:</span>
                     <span className="font-franklin font-medium">
-                      {selectedTime || "Not selected"}
+                      {selectedTime || dictionary.book.summary.notSelected}
                     </span>
                   </div>
                 </div>
@@ -514,12 +507,12 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
                     {isLoading ? (
                       <>
                         <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                        Processing...
+                        {dictionary.book.summary.processing}
                       </>
                     ) : (
                       <>
                         <CheckCircle className="w-5 h-5 mr-2" />
-                        Book Appointment
+                        {dictionary.book.summary.bookButton}
                       </>
                     )}
                   </Button>
@@ -530,11 +523,11 @@ const BookPage = ({ userAsString, selectedService }: BookPageProps) => {
               <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
                 <h4 className="font-franklin font-semibold text-blue-900 mb-2 flex items-center">
                   <CalendarIcon className="w-5 h-5 mr-2" />
-                  Booking Information
+                  {dictionary.book.info.title}
                 </h4>
                 <ul className="space-y-2 text-sm text-blue-800 font-franklin">
-                  <li>• Free cancellation up to 24 hours before</li>
-                  <li>• Please arrive 10 minutes early</li>
+                  <li>• {dictionary.book.info.cancellation}</li>
+                  <li>• {dictionary.book.info.arrival}</li>
                 </ul>
               </div>
             </motion.div>

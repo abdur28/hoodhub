@@ -653,6 +653,351 @@
       "bookAppointment": "Book Appointment",
       "bookConsultation": "Book Consultation",
       "bookNow": "Book Now"
+    },
+    "legal": {
+      "terms": {
+        "title": {
+          "main": "Terms of",
+          "highlight": "Service"
+        },
+        "lastUpdated": "Last updated: June 2025",
+        "sections": {
+          "agreement": {
+            "title": "1. Agreement to Terms",
+            "content": "By accessing and using HoodHub's services, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service."
+          },
+          "services": {
+            "title": "2. Services Provided",
+            "intro": "HoodHub provides premium personal grooming and lifestyle services including:",
+            "list": [
+              "Professional barbering and hair styling services",
+              "Custom tattoo artistry and body art",
+              "Beauty treatments and spa services",
+              "Lifestyle consultation and personal styling",
+              "Related retail products and accessories"
+            ]
+          },
+          "appointments": {
+            "title": "3. Appointment Policies",
+            "booking": {
+              "title": "Booking and Confirmation",
+              "content": "All appointments must be booked in advance through our official channels. We recommend booking at least 48 hours in advance for optimal availability. Appointment confirmation will be sent via email or SMS."
+            },
+            "cancellation": {
+              "title": "Cancellation Policy",
+              "content": "Cancellations must be made at least 24 hours before your scheduled appointment. Same-day cancellations or no-shows may result in a cancellation fee equal to 50% of the service cost."
+            },
+            "late": {
+              "title": "Late Arrivals",
+              "content": "Please arrive on time for your appointment. Late arrivals may result in shortened service time or rescheduling, depending on availability."
+            }
+          },
+          "tattoo": {
+            "title": "4. Tattoo Services - Special Terms",
+            "age": {
+              "title": "Age Requirements",
+              "content": "Tattoo services are only provided to clients 18 years of age or older with valid government-issued identification. No exceptions will be made to this policy."
+            },
+            "health": {
+              "title": "Health and Safety",
+              "content": "Clients must disclose any medical conditions, allergies, or medications that may affect the tattooing process. We reserve the right to refuse service if we believe it may pose health risks."
+            },
+            "aftercare": {
+              "title": "Aftercare Responsibility",
+              "content": "Proper aftercare is the client's responsibility. We provide detailed aftercare instructions and premium aftercare products, but healing outcomes depend on client compliance."
+            },
+            "design": {
+              "title": "Design Rights",
+              "content": "Custom designs created by our artists remain the intellectual property of HoodHub. Clients receive the right to use the design for their tattoo but not for commercial reproduction."
+            }
+          },
+          "payment": {
+            "title": "5. Payment Terms",
+            "content": "Payment is due at the time of service unless other arrangements have been made in advance. We accept cash, credit cards, and digital payments. Deposits may be required for extended sessions or custom work."
+          },
+          "conduct": {
+            "title": "6. Client Conduct",
+            "intro": "Clients are expected to:",
+            "expectations": [
+              "Treat all staff and other clients with respect",
+              "Follow all posted rules and safety guidelines",
+              "Arrive clean and prepared for services",
+              "Not be under the influence of drugs or alcohol",
+              "Maintain appropriate behavior and language"
+            ],
+            "disclaimer": "We reserve the right to refuse service or ask clients to leave if these standards are not met."
+          },
+          "liability": {
+            "title": "7. Liability and Disclaimers",
+            "content": "While we maintain the highest standards of cleanliness and professionalism, clients acknowledge that all services carry inherent risks. HoodHub is not liable for allergic reactions, infections, or unsatisfactory results due to client non-compliance with aftercare instructions."
+          },
+          "photography": {
+            "title": "8. Photography and Marketing",
+            "content": "By receiving services at HoodHub, clients consent to photography of their completed work for portfolio and marketing purposes, unless explicitly requested otherwise in writing."
+          },
+          "modifications": {
+            "title": "9. Modifications to Terms",
+            "content": "HoodHub reserves the right to modify these terms at any time. Updated terms will be posted on our website and take effect immediately upon posting."
+          },
+          "contact": {
+            "title": "10. Contact Information",
+            "intro": "For questions about these terms of service, please contact us:",
+            "email": {
+              "label": "Email:",
+              "value": "legal@hoodhub.ru"
+            },
+            "phone": {
+              "label": "Phone:",
+              "value": "+7 977 600-01-46"
+            },
+            "address": {
+              "label": "Address:",
+              "value": "Leninsky Avenue, 146, Moscow, 117198"
+            }
+          }
+        },
+        "footer": "These terms of service are effective as of June 2025 and govern all services provided by HoodHub."
+      },
+      "privacy": {
+        "title": {
+          "main": "Privacy",
+          "highlight": "Policy"
+        },
+        "lastUpdated": "Last updated: June 2025",
+        "sections": {
+          "introduction": {
+            "title": "1. Introduction",
+            "content": "At HoodHub, we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website, use our services, or interact with us."
+          },
+          "information": {
+            "title": "2. Information We Collect",
+            "personal": {
+              "title": "Personal Information",
+              "intro": "We may collect the following personal information:",
+              "list": [
+                "Name, email address, and phone number",
+                "Appointment history and service preferences",
+                "Health information relevant to services",
+                "Payment and billing information",
+                "Emergency contact information"
+              ]
+            },
+            "automatic": {
+              "title": "Automatically Collected Information",
+              "intro": "When you visit our website, we may automatically collect:",
+              "list": [
+                "IP address and device information",
+                "Browser type and operating system",
+                "Pages visited and time spent on our site",
+                "Referring website information",
+                "Cookies and similar tracking technologies"
+              ]
+            },
+            "photos": {
+              "title": "Photos and Visual Content",
+              "content": "With your consent, we may photograph completed work for portfolio and marketing purposes. You have the right to opt out of photography at any time."
+            }
+          },
+          "usage": {
+            "title": "3. How We Use Your Information",
+            "intro": "We use your information to:",
+            "list": [
+              "Provide and improve our services",
+              "Schedule and manage appointments",
+              "Process payments and maintain billing records",
+              "Communicate about services, appointments, and promotional offers",
+              "Ensure health and safety compliance",
+              "Maintain business records and legal compliance",
+              "Improve our website and user experience",
+              "Develop new services and marketing strategies"
+            ]
+          },
+          "sharing": {
+            "title": "4. Information Sharing and Disclosure",
+            "noSell": {
+              "title": "We Do Not Sell Your Information",
+              "content": "HoodHub does not sell, trade, or rent your personal information to third parties for marketing purposes."
+            },
+            "limited": {
+              "title": "Limited Sharing",
+              "intro": "We may share your information only in the following circumstances:",
+              "list": [
+                "With your explicit consent",
+                "To comply with legal obligations or respond to legal requests",
+                "With service providers who assist in business operations (payment processors, appointment systems)",
+                "In case of business transfer or merger",
+                "To protect the rights, property, or safety of HoodHub, our clients, or others"
+              ]
+            }
+          },
+          "security": {
+            "title": "5. Data Security",
+            "intro": "We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. These measures include:",
+            "list": [
+              "Encryption of sensitive data during transmission",
+              "Secure storage systems with access controls",
+              "Regular security audits and updates",
+              "Staff training on privacy and security practices",
+              "Limited access to personal information on a need-to-know basis"
+            ]
+          },
+          "retention": {
+            "title": "6. Data Retention",
+            "intro": "We retain your personal information only as long as necessary to fulfill the purposes outlined in this privacy policy, comply with legal obligations, resolve disputes, and enforce our agreements. Typical retention periods include:",
+            "list": [
+              "Client records: 7 years from last service date",
+              "Health information: As required by health regulations",
+              "Payment records: 7 years for tax and accounting purposes",
+              "Marketing communications: Until you unsubscribe"
+            ]
+          },
+          "rights": {
+            "title": "7. Your Rights and Choices",
+            "intro": "You have the right to:",
+            "list": [
+              "Access and review your personal information",
+              "Request corrections to inaccurate information",
+              "Request deletion of your personal information (subject to legal requirements)",
+              "Opt out of marketing communications",
+              "Withdraw consent for photography and marketing use",
+              "Request a copy of your personal information",
+              "File a complaint with relevant privacy authorities"
+            ],
+            "contact": "To exercise any of these rights, please contact us using the information provided below."
+          },
+          "cookies": {
+            "title": "8. Cookies and Tracking Technologies",
+            "content": "Our website uses cookies and similar technologies to enhance your browsing experience, analyze site traffic, and personalize content. You can control cookie settings through your browser preferences, but disabling cookies may affect website functionality."
+          },
+          "thirdParty": {
+            "title": "9. Third-Party Links",
+            "content": "Our website may contain links to third-party websites. We are not responsible for the privacy practices or content of these external sites. We encourage you to review the privacy policies of any third-party websites you visit."
+          },
+          "children": {
+            "title": "10. Children's Privacy",
+            "content": "Our services are not directed to individuals under 18 years of age. We do not knowingly collect personal information from children under 18. If we become aware that we have collected such information, we will take steps to delete it promptly."
+          },
+          "international": {
+            "title": "11. International Data Transfers",
+            "content": "Your personal information may be transferred to and processed in countries other than your own. We ensure that such transfers comply with applicable data protection laws and implement appropriate safeguards."
+          },
+          "updates": {
+            "title": "12. Updates to This Policy",
+            "content": "We may update this Privacy Policy from time to time to reflect changes in our practices or applicable law. We will notify you of any material changes by posting the updated policy on our website and updating the \"Last updated\" date."
+          },
+          "contact": {
+            "title": "13. Contact Us",
+            "intro": "If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact us:",
+            "privacy": {
+              "label": "Privacy Officer:",
+              "value": "privacy@hoodhub.ru"
+            },
+            "general": {
+              "label": "General Contact:",
+              "value": "contact@hoodhub.ru"
+            },
+            "phone": {
+              "label": "Phone:",
+              "value": "+7 977 600-01-46"
+            },
+            "address": {
+              "label": "Address:",
+              "value": "Leninsky Avenue, 146, Moscow, 117198"
+            }
+          }
+        },
+        "footer": "This Privacy Policy is effective as of June 2025 and applies to all personal information collected by HoodHub."
+      }
+    },
+    "book": {
+      "hero": {
+        "title": "Book Your",
+        "titleHighlight": "Experience"
+      },
+      "form": {
+        "selectService": "Select Service",
+        "chooseService": "Choose your service",
+        "selectDate": "Select Date",
+        "selectTime": "Select Time",
+        "loadingSlots": "Loading available slots..."
+      },
+      "calendar": {
+        "months": [
+          "January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December"
+        ],
+        "days": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+      },
+      "services": {
+        "barbing": "Professional Barbing",
+        "tattoo": "Tattoo Artistry", 
+        "nails": "Nail Services",
+        "spa": "Spa & Wellness",
+        "barbingCategory": "Barbing",
+        "tattooCategory": "Tattoo",
+        "lifestyleCategory": "Lifestyle"
+      },
+      "auth": {
+        "signInTitle": "Sign in to Book",
+        "signInDescription": "Please sign in to your account to book an appointment",
+        "signInButton": "Sign In"
+      },
+      "summary": {
+        "title": "Booking Summary",
+        "service": "Service",
+        "date": "Date", 
+        "time": "Time",
+        "notSelected": "Not selected",
+        "processing": "Processing...",
+        "bookButton": "Book Appointment"
+      },
+      "info": {
+        "title": "Booking Information",
+        "cancellation": "Free cancellation up to 24 hours before",
+        "arrival": "Please arrive 10 minutes early"
+      },
+      "alerts": {
+        "selectAll": "Please select all required fields",
+        "confirmed": "Booking confirmed! We will contact you soon.",
+        "failed": "Failed to create booking",
+        "error": "Something went wrong. Please try again."
+      }
+    },
+    "bookings": {
+      "hero": {
+        "title": "My",
+        "titleHighlight": "Bookings"
+      },
+      "calendar": {
+        "title": "Your Booking Calendar",
+        "booked": "Booked",
+        "today": "Today"
+      },
+      "tabs": {
+        "upcoming": "Upcoming",
+        "past": "Past"
+      },
+      "status": {
+        "completed": "Completed", 
+        "confirmed": "Confirmed"
+      },
+      "empty": {
+        "noUpcoming": "No upcoming bookings",
+        "noPast": "No past bookings",
+        "noUpcomingDescription": "You don't have any upcoming appointments",
+        "noPastDescription": "You haven't completed any appointments yet",
+        "bookNewButton": "Book New Appointment"
+      },
+      "alerts": {
+        "confirmCancel": "Are you sure you want to cancel this booking?",
+        "failedCancel": "Failed to cancel booking",
+        "error": "Something went wrong. Please try again."
+      }
+    },
+    "whatsapp": {
+      "greeting": "Hello There",
+      "helpMessage": "How can We help you?",
+      "openChat": "Open Chat"
     }
   }
   

@@ -69,7 +69,7 @@ export default async function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} ${franklinGothic.variable} font-franklin antialiased`}
         >
           {children}
-          <WhatsappPopUp />
+          <WhatsappPopUp lang={lang} dictionary={dictionary} />
           <Footer lang={lang} dictionary={dictionary} />
         </body>
       </html>

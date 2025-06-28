@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import BookPage from "./BookPage";
 import { getUser } from "@/lib/data";
+import { getDictionary } from '../dictionaries';
 
 export const metadata: Metadata = {
   title: "Book Appointment - HoodHub | Schedule Your Service",
@@ -9,10 +10,23 @@ export const metadata: Metadata = {
 };
 
 export default async function Book({
+  params,
   searchParams,
-}: any) {
+}: {
+  params: Promise<{ lang: string }>;
+  searchParams: any;
+}) {
+  const { lang } = await params;
+  const dictionary = await getDictionary(lang as 'en' | 'ru');
   const user = await getUser();
-  const { service:selectedService } = await searchParams;
+  const { service: selectedService } = await searchParams;
 
-  return <BookPage userAsString={JSON.stringify(user)} selectedService={selectedService} />;
+  return (
+    <BookPage 
+      lang={lang} 
+      dictionary={dictionary}
+      userAsString={user ? JSON.stringify(user) : ""}
+      selectedService={selectedService}
+    />
+  );
 }

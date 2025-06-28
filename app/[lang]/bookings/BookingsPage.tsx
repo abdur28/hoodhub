@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import type { Dictionary } from "../dictionaries";
 
 interface User {
   _id: string;
@@ -54,10 +55,12 @@ interface BookingsResponse {
 }
 
 interface BookingsPageProps {
+  lang: string;
+  dictionary: Dictionary;
   userAsString: string;
 }
 
-const BookingsPage = ({ userAsString }: BookingsPageProps) => {
+const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => {
   const [bookings, setBookings] = useState<BookingsResponse["bookings"] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -78,7 +81,6 @@ const BookingsPage = ({ userAsString }: BookingsPageProps) => {
     const month = currentMonth.getMonth();
     
     const firstDay = new Date(year, month, 1);
-    // const lastDay = new Date(year, month + 1, 0);
     const startDate = new Date(firstDay);
     startDate.setDate(firstDay.getDate() - firstDay.getDay());
     
@@ -111,7 +113,7 @@ const BookingsPage = ({ userAsString }: BookingsPageProps) => {
   };
 
   const handleDeleteBooking = async (bookingId: string) => {
-    if (!confirm('Are you sure you want to cancel this booking?')) {
+    if (!confirm(dictionary.bookings.alerts.confirmCancel)) {
       return;
     }
 
@@ -122,15 +124,14 @@ const BookingsPage = ({ userAsString }: BookingsPageProps) => {
       });
 
       if (response.ok) {
-        // Refresh bookings
         await fetchBookings();
       } else {
         const data = await response.json();
-        alert(data.error || 'Failed to cancel booking');
+        alert(data.error || dictionary.bookings.alerts.failedCancel);
       }
     } catch (error) {
       console.error('Error deleting booking:', error);
-      alert('Something went wrong. Please try again.');
+      alert(dictionary.bookings.alerts.error);
     } finally {
       setDeletingId(null);
     }
@@ -188,19 +189,12 @@ const BookingsPage = ({ userAsString }: BookingsPageProps) => {
     }
   };
 
-  const monthNames = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ];
-
-  const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
   const displayedBookings = activeTab === "upcoming" ? bookings?.upcoming : bookings?.past;
 
   return (
     <div className="min-h-screen bg-black">
       {/* Floating Navigation */}
-      <FloatingNav />
+      <FloatingNav lang={lang} dictionary={dictionary} />
       
       {/* Hero Section */}
       <section className="relative h-[50vh] w-full overflow-hidden">
@@ -241,7 +235,7 @@ const BookingsPage = ({ userAsString }: BookingsPageProps) => {
 
         {/* Transparent Navbar */}
         <div className="absolute top-0 left-0 right-0 z-40">
-          <Navbar variant="transparent" />
+          <Navbar variant="transparent" lang={lang} dictionary={dictionary} />
         </div>
 
         {/* Hero Content */}
@@ -254,9 +248,9 @@ const BookingsPage = ({ userAsString }: BookingsPageProps) => {
               className="mb-8"
             >
               <h1 className="text-6xl md:text-7xl lg:text-8xl font-franklin text-white">
-                My {" "}
+                {dictionary.bookings.hero.title} {" "}
                 <span className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent">
-                  Bookings
+                  {dictionary.bookings.hero.titleHighlight}
                 </span>
               </h1>
             </motion.div>
@@ -265,7 +259,7 @@ const BookingsPage = ({ userAsString }: BookingsPageProps) => {
       </section>
 
       {/* Main Content */}
-      <section className="relative rounded-t-4xl bg-white py-16  lg:py-20 -mt-16">
+      <section className="relative rounded-t-4xl bg-white py-16 lg:py-20 -mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-8">
             
@@ -279,7 +273,7 @@ const BookingsPage = ({ userAsString }: BookingsPageProps) => {
             >
               <div className="bg-gray-50 rounded-2xl p-6 sticky top-24">
                 <h2 className="text-2xl font-franklin font-semibold mb-6">
-                  Your Booking Calendar
+                  {dictionary.bookings.calendar.title}
                 </h2>
                 
                 {/* Calendar Header */}
@@ -291,7 +285,7 @@ const BookingsPage = ({ userAsString }: BookingsPageProps) => {
                     <ChevronLeft className="w-5 h-5" />
                   </button>
                   <h3 className="text-xl font-franklin font-semibold">
-                    {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
+                    {dictionary.book.calendar.months[currentMonth.getMonth()]} {currentMonth.getFullYear()}
                   </h3>
                   <button
                     onClick={handleNextMonth}
@@ -303,7 +297,7 @@ const BookingsPage = ({ userAsString }: BookingsPageProps) => {
 
                 {/* Day Headers */}
                 <div className="grid grid-cols-7 gap-1 mb-2">
-                  {dayNames.map((day) => (
+                  {dictionary.book.calendar.days.map((day) => (
                     <div key={day} className="text-center text-sm font-franklin font-medium text-gray-600 py-2">
                       {day}
                     </div>
@@ -351,11 +345,11 @@ const BookingsPage = ({ userAsString }: BookingsPageProps) => {
                 <div className="mt-6 flex items-center justify-center gap-6 text-sm">
                   <div className="flex items-center gap-2">
                     <div className="w-4 h-4 bg-yellow-100 rounded"></div>
-                    <span className="font-franklin text-gray-600">Booked</span>
+                    <span className="font-franklin text-gray-600">{dictionary.bookings.calendar.booked}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-4 h-4 bg-blue-100 rounded"></div>
-                    <span className="font-franklin text-gray-600">Today</span>
+                    <span className="font-franklin text-gray-600">{dictionary.bookings.calendar.today}</span>
                   </div>
                 </div>
               </div>
@@ -404,7 +398,7 @@ const BookingsPage = ({ userAsString }: BookingsPageProps) => {
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   }`}
                 >
-                  Upcoming ({bookings?.upcoming.length || 0})
+                  {dictionary.bookings.tabs.upcoming} ({bookings?.upcoming.length || 0})
                 </button>
                 <button
                   onClick={() => setActiveTab("past")}
@@ -414,7 +408,7 @@ const BookingsPage = ({ userAsString }: BookingsPageProps) => {
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   }`}
                 >
-                  Past ({bookings?.past.length || 0})
+                  {dictionary.bookings.tabs.past} ({bookings?.past.length || 0})
                 </button>
               </div>
 
@@ -456,7 +450,7 @@ const BookingsPage = ({ userAsString }: BookingsPageProps) => {
                               <div className="flex items-center gap-2 text-gray-600">
                                 <CalendarIcon className="w-4 h-4" />
                                 <span className="font-franklin">
-                                  {bookingDate.toLocaleDateString('en-US', {
+                                  {bookingDate.toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-US', {
                                     weekday: 'long',
                                     year: 'numeric',
                                     month: 'long',
@@ -468,7 +462,7 @@ const BookingsPage = ({ userAsString }: BookingsPageProps) => {
                               <div className="flex items-center gap-2 text-gray-600">
                                 <Clock className="w-4 h-4" />
                                 <span className="font-franklin">
-                                  {bookingDate.toLocaleTimeString('en-US', {
+                                  {bookingDate.toLocaleTimeString(lang === 'ru' ? 'ru-RU' : 'en-US', {
                                     hour: '2-digit',
                                     minute: '2-digit'
                                   })}
@@ -500,12 +494,12 @@ const BookingsPage = ({ userAsString }: BookingsPageProps) => {
                           {booking.isPast ? (
                             <span className="inline-flex items-center gap-1 text-sm text-gray-500 font-franklin">
                               <CheckCircle className="w-4 h-4" />
-                              Completed
+                              {dictionary.bookings.status.completed}
                             </span>
                           ) : (
                             <span className="inline-flex items-center gap-1 text-sm text-green-600 font-franklin">
                               <AlertCircle className="w-4 h-4" />
-                              Confirmed
+                              {dictionary.bookings.status.confirmed}
                             </span>
                           )}
                         </div>
@@ -518,21 +512,21 @@ const BookingsPage = ({ userAsString }: BookingsPageProps) => {
                       <CalendarIcon className="w-10 h-10 text-gray-400" />
                     </div>
                     <h3 className="text-xl font-franklin font-semibold text-gray-900 mb-2">
-                      No {activeTab} bookings
+                      {activeTab === "upcoming" ? dictionary.bookings.empty.noUpcoming : dictionary.bookings.empty.noPast}
                     </h3>
                     <p className="text-gray-600 font-franklin mb-6">
                       {activeTab === "upcoming" 
-                        ? "You don't have any upcoming appointments"
-                        : "You haven't completed any appointments yet"
+                        ? dictionary.bookings.empty.noUpcomingDescription
+                        : dictionary.bookings.empty.noPastDescription
                       }
                     </p>
                     {activeTab === "upcoming" && (
                       <Button
-                        onClick={() => window.location.href = '/book'}
+                        onClick={() => window.location.href = `/${lang}/book`}
                         className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-franklin"
                       >
-                        <Link href="/book">
-                          Book New Appointment
+                        <Link href={`/${lang}/book`}>
+                          {dictionary.bookings.empty.bookNewButton}
                         </Link>
                       </Button>
                     )}
@@ -544,11 +538,11 @@ const BookingsPage = ({ userAsString }: BookingsPageProps) => {
               {displayedBookings && displayedBookings.length > 0 && activeTab === "upcoming" && (
                 <div className="mt-8">
                   <Button
-                    onClick={() => window.location.href = '/book'}
+                    onClick={() => window.location.href = `/${lang}/book`}
                     className="w-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-black font-franklin font-semibold py-4 text-lg hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 transition-all duration-300 shadow-lg hover:shadow-xl"
                   >
-                    <Link href="/book">
-                    Book New Appointment
+                    <Link href={`/${lang}/book`}>
+                      {dictionary.bookings.empty.bookNewButton}
                     </Link>
                   </Button>
                 </div>

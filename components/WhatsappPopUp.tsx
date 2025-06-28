@@ -1,8 +1,21 @@
 'use client';
 import { useState } from "react";
+import type { Dictionary } from "@/app/[lang]/dictionaries";
 
-const WhatsappPopUp = () => {
+interface WhatsappPopUpProps {
+  lang?: string;
+  dictionary?: Dictionary;
+}
+
+const WhatsappPopUp = ({ lang, dictionary }: WhatsappPopUpProps) => {
     const [open, setOpen] = useState(false);
+
+    // Fallback to English if no dictionary provided
+    const whatsappTexts = dictionary?.whatsapp || {
+        greeting: "Hello There",
+        helpMessage: "How can We help you?",
+        openChat: "Open Chat"
+    };
 
     return (
         <div className="fixed bottom-5  right-5 z-30">
@@ -25,8 +38,8 @@ const WhatsappPopUp = () => {
                     </div>
                     <div className="w-full h-2/5 flex ">
                         <div className="w-full h-[70%] m-5 px-4 flex flex-col justify-center rounded-2xl shadow-sm shadow-gray-400 bg-white">
-                            <p className="font-asap ">Hello There <span className="animate-wave">👋</span></p>
-                            <p className="font-asap ">How can We help you?</p>
+                            <p className="font-asap ">{whatsappTexts.greeting} <span className="animate-wave">👋</span></p>
+                            <p className="font-asap ">{whatsappTexts.helpMessage}</p>
                         </div>
                     </div>
                     <div className="w-full h-2/5 flex justify-end items-end p-2">
@@ -49,7 +62,7 @@ const WhatsappPopUp = () => {
                         </div>
                     </div>
                     </a>
-                    <span>Open Chat</span>
+                    <span>{whatsappTexts.openChat}</span>
                     </button>
 
                     </div>
