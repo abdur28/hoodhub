@@ -37,7 +37,7 @@ const Navbar = ({ variant = "transparent", className = "", lang, dictionary }: N
           <div className="flex-shrink-0">
             <Link 
               href={`/${lang}`}
-              className="flex items-center w-28 md:w-40 bg-white p-3 rounded-4xl hover:opacity-90 transition-opacity duration-200"
+              className="flex items-center h-max w-28 md:w-40 bg-white p-3 rounded-4xl hover:opacity-90 transition-opacity duration-200"
             >
               <Image
                 src="/logo.png"

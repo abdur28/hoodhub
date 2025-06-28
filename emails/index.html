@@ -116,6 +116,49 @@
       font-weight: 500;
     }
     
+    /* Admin notification styles */
+    .admin-notification {
+      background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+      border-left: 4px solid #2196f3;
+      padding: 20px;
+      margin: 25px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .admin-notification h3 {
+      margin: 0 0 15px 0;
+      color: #1565c0;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .customer-details {
+      background-color: #f0f4f8;
+      border-left: 4px solid #4fc3f7;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 0 6px 6px 0;
+    }
+    
+    .customer-details h4 {
+      margin: 0 0 10px 0;
+      color: #0277bd;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    
+    .booking-id-badge {
+      background: linear-gradient(135deg, #673ab7 0%, #9c27b0 100%);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 12px;
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      margin: 10px 0;
+      font-family: monospace;
+    }
+    
     .cta-button {
       display: inline-block;
       background: linear-gradient(135deg, #d4a853 0%, #c19a4a 100%);
@@ -264,6 +307,30 @@
         {{{message}}}
       </div>
       
+      <!-- Admin Notification Section -->
+      {{#if isAdminNotification}}
+      <div class="admin-notification">
+        <h3>📋 Admin Dashboard</h3>
+        <div class="booking-id-badge">
+          ID: {{bookingDetails.bookingId}}
+        </div>
+        
+        {{#if customerDetails}}
+        <div class="customer-details">
+          <h4>👤 Customer Information</h4>
+          <div class="booking-detail-item">
+            <span class="detail-label">Name:</span>
+            <span class="detail-value">{{customerDetails.name}}</span>
+          </div>
+          <div class="booking-detail-item">
+            <span class="detail-label">Email:</span>
+            <span class="detail-value">{{customerDetails.email}}</span>
+          </div>
+        </div>
+        {{/if}}
+      </div>
+      {{/if}}
+      
       <!-- Booking Details -->
       {{#if bookingDetails}}
       <div class="booking-details">
@@ -298,6 +365,18 @@
           <span class="detail-value">{{bookingDetails.location}}</span>
         </div>
         {{/if}}
+        {{#if bookingDetails.customer}}
+        <div class="booking-detail-item">
+          <span class="detail-label">Customer:</span>
+          <span class="detail-value">{{bookingDetails.customer}}</span>
+        </div>
+        {{/if}}
+        {{#if bookingDetails.email}}
+        <div class="booking-detail-item">
+          <span class="detail-label">Email:</span>
+          <span class="detail-value">{{bookingDetails.email}}</span>
+        </div>
+        {{/if}}
       </div>
       {{/if}}
       
@@ -311,8 +390,12 @@
       <!-- Cancellation Note -->
       {{#if isCancellation}}
       <div class="cancellation-note">
-        <strong>Appointment Cancelled</strong><br>
-        We're sorry to see you go! If you need to reschedule, we're here to help you find a new time that works.
+        <strong>{{#if isAdminNotification}}Booking Cancelled by Customer{{else}}Appointment Cancelled{{/if}}</strong><br>
+        {{#if isAdminNotification}}
+          The customer has cancelled their appointment. The time slot is now available for new bookings.
+        {{else}}
+          We're sorry to see you go! If you need to reschedule, we're here to help you find a new time that works.
+        {{/if}}
       </div>
       {{/if}}
       
@@ -336,6 +419,18 @@
         <h3 style="margin: 0 0 15px 0; color: #1a1a1a;">What's Next?</h3>
         <p style="margin: 0; color: #555555;">
           Explore our premium services: <strong>Expert Barbering</strong>, <strong>Custom Tattoo Artistry</strong>, and <strong>Luxury Lifestyle Experiences</strong>.
+        </p>
+      </div>
+      {{/if}}
+      
+      <!-- Admin Quick Actions -->
+      {{#if isAdminNotification}}
+      <div style="background-color: #e8f4fd; padding: 20px; border-radius: 8px; margin: 25px 0; text-align: center;">
+        <h3 style="margin: 0 0 15px 0; color: #1565c0;">Quick Actions</h3>
+        <p style="margin: 0; color: #0277bd; font-size: 14px;">
+          • Review all bookings in the admin dashboard<br>
+          • Contact the customer if needed<br>
+          • Prepare for the upcoming appointment
         </p>
       </div>
       {{/if}}

@@ -5,7 +5,7 @@ import type { NextRequest } from 'next/server';
 const locales = ['en', 'ru'] as const;
 const defaultLocale = 'en' as const;
 
-const isProtectedRoute = createRouteMatcher(['/bookings(.*)', '/book(.*)']);
+const isProtectedRoute = createRouteMatcher(['/en/bookings(.*)', '/en/book(.*)', '/en/admin(.*)', '/ru/bookings(.*)', '/ru/book(.*)', '/ru/admin(.*)']);
 
 function getLocale(request: NextRequest): string {
   // Check if locale is in URL

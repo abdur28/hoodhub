@@ -115,7 +115,6 @@ export async function POST(request: NextRequest) {
           emailResults.push({
             id: recipientId,
             success: false,
-            error: error.message
           });
         }
       }

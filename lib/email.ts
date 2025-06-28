@@ -22,6 +22,8 @@ export enum EmailType {
   BOOKING_REMINDER = 'booking_reminder',
   BOOKING_CANCELLATION = 'booking_cancellation',
   ADMIN_CUSTOM = 'admin_custom',
+  ADMIN_BOOKING_NOTIFICATION = 'admin_booking_notification',
+  ADMIN_CANCELLATION_NOTIFICATION = 'admin_cancellation_notification',
   PASSWORD_RESET = 'password_reset'
 }
 
@@ -208,6 +210,85 @@ export async function sendBookingCancellationEmail(
       buttonText: 'Book New Appointment',
       buttonUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/book`,
       isCancellation: true
+    }
+  });
+}
+
+/**
+ * Send admin notification for new booking
+ */
+export async function sendAdminBookingNotification(
+  bookingDetails: {
+    customerName: string;
+    customerEmail: string;
+    service: string;
+    date: string;
+    time: string;
+    bookingId: string;
+  }
+): Promise<boolean> {
+  return sendEmail({
+    to: 'contact@hoodhub.ru',
+    subject: `New Booking Alert - ${bookingDetails.service}`,
+    emailType: EmailType.ADMIN_BOOKING_NOTIFICATION,
+    templateData: {
+      title: '🎯 New Booking Alert!',
+      message: `A new appointment has been booked on the platform. Here are the details:`,
+      bookingDetails: {
+        service: bookingDetails.service,
+        date: bookingDetails.date,
+        time: bookingDetails.time,
+        customer: bookingDetails.customerName,
+        email: bookingDetails.customerEmail,
+        bookingId: bookingDetails.bookingId
+      },
+      buttonText: 'View All Bookings',
+      buttonUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/bookings`,
+      isAdminNotification: true,
+      customerDetails: {
+        name: bookingDetails.customerName,
+        email: bookingDetails.customerEmail
+      }
+    }
+  });
+}
+
+/**
+ * Send admin notification for booking cancellation
+ */
+export async function sendAdminCancellationNotification(
+  cancellationDetails: {
+    customerName: string;
+    customerEmail: string;
+    service: string;
+    date: string;
+    time: string;
+    bookingId: string;
+  }
+): Promise<boolean> {
+  return sendEmail({
+    to: 'contact@hoodhub.ru',
+    subject: `Booking Cancelled - ${cancellationDetails.service}`,
+    emailType: EmailType.ADMIN_CANCELLATION_NOTIFICATION,
+    templateData: {
+      title: '❌ Booking Cancellation Alert',
+      message: `An appointment has been cancelled. Here are the details:`,
+      bookingDetails: {
+        service: cancellationDetails.service,
+        date: cancellationDetails.date,
+        time: cancellationDetails.time,
+        customer: cancellationDetails.customerName,
+        email: cancellationDetails.customerEmail,
+        bookingId: cancellationDetails.bookingId
+      },
+      buttonText: 'View All Bookings',
+      buttonUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/bookings`,
+      isCancellation: true,
+      isAdminNotification: true,
+      customerDetails: {
+        name: cancellationDetails.customerName,
+        email: cancellationDetails.customerEmail
+      }
     }
   });
 }

@@ -4,7 +4,9 @@ import client from "@/lib/mongodb";
 import { ObjectId, PushOperator } from "mongodb";
 import { 
   sendBookingConfirmationEmail, 
-  sendBookingCancellationEmail 
+  sendBookingCancellationEmail,
+  sendAdminBookingNotification,
+  sendAdminCancellationNotification
 } from "@/lib/email";
 
 // GET: Fetch available time slots for a specific date
@@ -95,8 +97,6 @@ function formatDateTimeForEmail(dateTime: Date) {
   return { formattedDate, formattedTime };
 }
 
-
-
 // POST: Create a new booking
 export async function POST(request: NextRequest) {
   try {
@@ -179,16 +179,17 @@ export async function POST(request: NextRequest) {
       }
     );
 
-    // Send booking confirmation email
+    // Format date and time for emails
+    const { formattedDate, formattedTime } = formatDateTimeForEmail(dateTime);
+
+    // Send booking confirmation email to customer
     try {
-      const { formattedDate, formattedTime } = formatDateTimeForEmail(dateTime);
-      
       await sendBookingConfirmationEmail(user.email, {
         firstName: user.firstName || 'Valued Customer',
         service: service.name,
         date: formattedDate,
         time: formattedTime,
-        artist: 'Our Expert Team', // You can enhance this to assign specific artists
+        artist: 'Our Expert Team',
         location: 'HoodHub Studio'
       });
       
@@ -196,6 +197,23 @@ export async function POST(request: NextRequest) {
     } catch (emailError) {
       console.error('Failed to send booking confirmation email:', emailError);
       // Don't fail the booking creation if email fails
+    }
+
+    // Send admin notification email
+    try {
+      await sendAdminBookingNotification({
+        customerName: `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Customer',
+        customerEmail: user.email,
+        service: service.name,
+        date: formattedDate,
+        time: formattedTime,
+        bookingId: bookingId.toString()
+      });
+      
+      console.log(`Admin booking notification sent to contact@hoodhub.ru`);
+    } catch (adminEmailError) {
+      console.error('Failed to send admin booking notification:', adminEmailError);
+      // Don't fail the booking creation if admin email fails
     }
 
     return NextResponse.json({
@@ -277,10 +295,11 @@ export async function DELETE(request: NextRequest) {
       }
     );
 
-    // Send booking cancellation email
+    // Format date and time for emails
+    const { formattedDate, formattedTime } = formatDateTimeForEmail(new Date(booking.dateTime));
+
+    // Send booking cancellation email to customer
     try {
-      const { formattedDate, formattedTime } = formatDateTimeForEmail(new Date(booking.dateTime));
-      
       await sendBookingCancellationEmail(user.email, {
         firstName: user.firstName || 'Valued Customer',
         service: booking.service.name,
@@ -292,6 +311,23 @@ export async function DELETE(request: NextRequest) {
     } catch (emailError) {
       console.error('Failed to send booking cancellation email:', emailError);
       // Don't fail the cancellation if email fails
+    }
+
+    // Send admin cancellation notification email
+    try {
+      await sendAdminCancellationNotification({
+        customerName: `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Customer',
+        customerEmail: user.email,
+        service: booking.service.name,
+        date: formattedDate,
+        time: formattedTime,
+        bookingId: bookingId
+      });
+      
+      console.log(`Admin cancellation notification sent to contact@hoodhub.ru`);
+    } catch (adminEmailError) {
+      console.error('Failed to send admin cancellation notification:', adminEmailError);
+      // Don't fail the cancellation if admin email fails
     }
 
     return NextResponse.json({
