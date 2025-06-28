@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>{{title}} - HoodHub</title>
+  <!--[if mso]>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
+  <![endif]-->
+  <style>
+    /* Reset styles */
+    body, table, td, p, a, li, blockquote {
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+    table, td {
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+    img {
+      -ms-interpolation-mode: bicubic;
+      border: 0;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+    }
+
+    /* Main styles */
+    body {
+      margin: 0 !important;
+      padding: 0 !important;
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+    }
+    
+    .email-header {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      padding: 40px 30px;
+      text-align: center;
+    }
+    
+    .logo {
+      max-width: 120px;
+      height: auto;
+      margin-bottom: 20px;
+    }
+    
+    .email-body {
+      padding: 40px 30px;
+      line-height: 1.6;
+      color: #333333;
+    }
+    
+    .email-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin: 0 0 20px 0;
+      text-align: center;
+    }
+    
+    .email-message {
+      font-size: 16px;
+      color: #555555;
+      margin: 0 0 30px 0;
+    }
+    
+    .booking-details {
+      background-color: #f8f9fa;
+      border-left: 4px solid #d4a853;
+      padding: 20px;
+      margin: 25px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .booking-details h3 {
+      margin: 0 0 15px 0;
+      color: #1a1a1a;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .booking-detail-item {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+      padding: 5px 0;
+      border-bottom: 1px solid #e9ecef;
+    }
+    
+    .booking-detail-item:last-child {
+      border-bottom: none;
+    }
+    
+    .detail-label {
+      font-weight: 600;
+      color: #666666;
+    }
+    
+    .detail-value {
+      color: #1a1a1a;
+      font-weight: 500;
+    }
+    
+    .cta-button {
+      display: inline-block;
+      background: linear-gradient(135deg, #d4a853 0%, #c19a4a 100%);
+      color: #ffffff !important;
+      text-decoration: none;
+      padding: 15px 30px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 16px;
+      text-align: center;
+      margin: 20px 0;
+      box-shadow: 0 4px 15px rgba(212, 168, 83, 0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .cta-button:hover {
+      background: linear-gradient(135deg, #c19a4a 0%, #d4a853 100%);
+      box-shadow: 0 6px 20px rgba(212, 168, 83, 0.4);
+    }
+    
+    .button-container {
+      text-align: center;
+      margin: 30px 0;
+    }
+    
+    .email-footer {
+      background-color: #1a1a1a;
+      color: #ffffff;
+      padding: 30px;
+      text-align: center;
+    }
+    
+    .footer-content {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    
+    .footer-links {
+      margin: 20px 0;
+    }
+    
+    .footer-links a {
+      color: #d4a853;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: 500;
+    }
+    
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+    
+    .social-links {
+      margin: 20px 0;
+    }
+    
+    .social-links a {
+      display: inline-block;
+      margin: 0 10px;
+      color: #d4a853;
+      font-size: 18px;
+      text-decoration: none;
+    }
+    
+    .copyright {
+      font-size: 12px;
+      color: #999999;
+      margin-top: 20px;
+    }
+    
+    .welcome-badge {
+      background: linear-gradient(135deg, #d4a853 0%, #c19a4a 100%);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 20px;
+      display: inline-block;
+      font-size: 14px;
+      font-weight: 600;
+      margin: 0 0 20px 0;
+    }
+    
+    .reminder-highlight {
+      background-color: #fff3cd;
+      border: 1px solid #ffeaa7;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 20px 0;
+      text-align: center;
+    }
+    
+    .cancellation-note {
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 20px 0;
+      color: #721c24;
+    }
+    
+    /* Responsive design */
+    @media only screen and (max-width: 600px) {
+      .email-container {
+        width: 100% !important;
+      }
+      
+      .email-header,
+      .email-body,
+      .email-footer {
+        padding: 20px !important;
+      }
+      
+      .email-title {
+        font-size: 24px !important;
+      }
+      
+      .booking-detail-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .detail-label {
+        margin-bottom: 5px;
+      }
+      
+      .footer-links a {
+        display: block;
+        margin: 10px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <!-- Header -->
+    <div class="email-header">
+      {{#if logoUrl}}
+      <img src="{{logoUrl}}" alt="HoodHub Logo" class="logo">
+      {{/if}}
+    </div>
+    
+    <!-- Body -->
+    <div class="email-body">
+      <h1 class="email-title">{{title}}</h1>
+      
+      <div class="email-message">
+        {{{message}}}
+      </div>
+      
+      <!-- Booking Details -->
+      {{#if bookingDetails}}
+      <div class="booking-details">
+        <h3>📅 Appointment Details</h3>
+        {{#if bookingDetails.service}}
+        <div class="booking-detail-item">
+          <span class="detail-label">Service:</span>
+          <span class="detail-value">{{bookingDetails.service}}</span>
+        </div>
+        {{/if}}
+        {{#if bookingDetails.date}}
+        <div class="booking-detail-item">
+          <span class="detail-label">Date:</span>
+          <span class="detail-value">{{bookingDetails.date}}</span>
+        </div>
+        {{/if}}
+        {{#if bookingDetails.time}}
+        <div class="booking-detail-item">
+          <span class="detail-label">Time:</span>
+          <span class="detail-value">{{bookingDetails.time}}</span>
+        </div>
+        {{/if}}
+        {{#if bookingDetails.artist}}
+        <div class="booking-detail-item">
+          <span class="detail-label">Artist:</span>
+          <span class="detail-value">{{bookingDetails.artist}}</span>
+        </div>
+        {{/if}}
+        {{#if bookingDetails.location}}
+        <div class="booking-detail-item">
+          <span class="detail-label">Location:</span>
+          <span class="detail-value">{{bookingDetails.location}}</span>
+        </div>
+        {{/if}}
+      </div>
+      {{/if}}
+      
+      <!-- Reminder Highlight -->
+      {{#if isReminder}}
+      <div class="reminder-highlight">
+        <strong>⏰ Don't forget!</strong> Your appointment is tomorrow. We recommend arriving 10 minutes early.
+      </div>
+      {{/if}}
+      
+      <!-- Cancellation Note -->
+      {{#if isCancellation}}
+      <div class="cancellation-note">
+        <strong>Appointment Cancelled</strong><br>
+        We're sorry to see you go! If you need to reschedule, we're here to help you find a new time that works.
+      </div>
+      {{/if}}
+      
+      <!-- Password Reset Note -->
+      {{#if isPasswordReset}}
+      <div class="reminder-highlight">
+        <strong>🔒 Security Note:</strong> {{resetNote}}
+      </div>
+      {{/if}}
+      
+      <!-- Call to Action Button -->
+      {{#if buttonText}}
+      <div class="button-container">
+        <a href="{{buttonUrl}}" class="cta-button">{{buttonText}}</a>
+      </div>
+      {{/if}}
+      
+      <!-- Additional Message for Welcome Emails -->
+      {{#if isWelcome}}
+      <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 25px 0; text-align: center;">
+        <h3 style="margin: 0 0 15px 0; color: #1a1a1a;">What's Next?</h3>
+        <p style="margin: 0; color: #555555;">
+          Explore our premium services: <strong>Expert Barbering</strong>, <strong>Custom Tattoo Artistry</strong>, and <strong>Luxury Lifestyle Experiences</strong>.
+        </p>
+      </div>
+      {{/if}}
+    </div>
+    
+    <!-- Footer -->
+    <div class="email-footer">
+      <div class="footer-content">
+        <h3 style="margin: 0 0 15px 0; color: #d4a853;">HoodHub</h3>
+        <p style="margin: 0 0 15px 0;">Where Artistry Meets Precision</p>
+        
+        <div class="footer-links">
+          <a href="{{websiteUrl}}/barbing">Barbering</a>
+          <a href="{{websiteUrl}}/tattoo">Tattoo</a>
+          <a href="{{websiteUrl}}/lifestyle">Lifestyle</a>
+          <a href="{{websiteUrl}}/contact">Contact</a>
+        </div>
+        
+        <p style="margin: 15px 0 5px 0; font-size: 14px;">
+          📍 Visit us at our studio<br>
+          📞 Book your appointment today<br>
+          ✉️ Contact us anytime
+        </p>
+        
+        <div class="copyright">
+          © {{currentYear}} {{companyName}}. All rights reserved.
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

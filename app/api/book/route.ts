@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import client from "@/lib/mongodb";
 import { ObjectId, PushOperator } from "mongodb";
+import { 
+  sendBookingConfirmationEmail, 
+  sendBookingCancellationEmail 
+} from "@/lib/email";
 
 // GET: Fetch available time slots for a specific date
 export async function GET(request: NextRequest) {
@@ -70,6 +74,29 @@ export async function GET(request: NextRequest) {
   }
 }
 
+// Helper function to format date and time for emails
+function formatDateTimeForEmail(dateTime: Date) {
+  const options: Intl.DateTimeFormatOptions = {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  };
+  
+  const timeOptions: Intl.DateTimeFormatOptions = {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  };
+  
+  const formattedDate = dateTime.toLocaleDateString('en-US', options);
+  const formattedTime = dateTime.toLocaleTimeString('en-US', timeOptions);
+  
+  return { formattedDate, formattedTime };
+}
+
+
+
 // POST: Create a new booking
 export async function POST(request: NextRequest) {
   try {
@@ -85,9 +112,9 @@ export async function POST(request: NextRequest) {
     const { service, date, time } = body;
 
     // Validate required fields
-    if (!service || !date || !time) {
+    if (!service || !service.id || !service.name || !date || !time) {
       return NextResponse.json(
-        { error: "Service, date, and time are required" },
+        { error: "Service (with id and name), date, and time are required" },
         { status: 400 }
       );
     }
@@ -152,6 +179,25 @@ export async function POST(request: NextRequest) {
       }
     );
 
+    // Send booking confirmation email
+    try {
+      const { formattedDate, formattedTime } = formatDateTimeForEmail(dateTime);
+      
+      await sendBookingConfirmationEmail(user.email, {
+        firstName: user.firstName || 'Valued Customer',
+        service: service.name,
+        date: formattedDate,
+        time: formattedTime,
+        artist: 'Our Expert Team', // You can enhance this to assign specific artists
+        location: 'HoodHub Studio'
+      });
+      
+      console.log(`Booking confirmation email sent to ${user.email}`);
+    } catch (emailError) {
+      console.error('Failed to send booking confirmation email:', emailError);
+      // Don't fail the booking creation if email fails
+    }
+
     return NextResponse.json({
       success: true,
       booking: {
@@ -194,7 +240,7 @@ export async function DELETE(request: NextRequest) {
     const mongoClient = await client;
     const db = mongoClient.db("hoodhub");
 
-    // Find the booking
+    // Find the booking and get user info for email
     const booking = await db.collection("bookings").findOne({
       _id: new ObjectId(bookingId),
       clerkId: userId
@@ -203,6 +249,15 @@ export async function DELETE(request: NextRequest) {
     if (!booking) {
       return NextResponse.json(
         { error: "Booking not found or unauthorized" },
+        { status: 404 }
+      );
+    }
+
+    // Get user info for email
+    const user = await db.collection("users").findOne({ _id: booking.userId });
+    if (!user) {
+      return NextResponse.json(
+        { error: "User not found" },
         { status: 404 }
       );
     }
@@ -221,6 +276,23 @@ export async function DELETE(request: NextRequest) {
         } as PushOperator<Document>
       }
     );
+
+    // Send booking cancellation email
+    try {
+      const { formattedDate, formattedTime } = formatDateTimeForEmail(new Date(booking.dateTime));
+      
+      await sendBookingCancellationEmail(user.email, {
+        firstName: user.firstName || 'Valued Customer',
+        service: booking.service.name,
+        date: formattedDate,
+        time: formattedTime
+      });
+      
+      console.log(`Booking cancellation email sent to ${user.email}`);
+    } catch (emailError) {
+      console.error('Failed to send booking cancellation email:', emailError);
+      // Don't fail the cancellation if email fails
+    }
 
     return NextResponse.json({
       success: true,

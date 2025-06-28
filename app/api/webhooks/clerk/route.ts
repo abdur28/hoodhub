@@ -2,16 +2,13 @@ import { Webhook } from 'svix'
 import { headers } from 'next/headers'
 import { WebhookEvent } from '@clerk/nextjs/server'
 import client from '@/lib/mongodb'
-
-export const dynamic = 'force-dynamic'
-export const revalidate = 0;
+import { sendRegistrationEmail } from '@/lib/email'
 
 export async function POST(req: Request) {
-  // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
   const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET
 
   if (!WEBHOOK_SECRET) {
-    throw new Error('Please add CLERK_WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local')
+    throw new Error('Please add WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local')
   }
 
   // Get the headers
@@ -60,16 +57,30 @@ export async function POST(req: Request) {
       const mongoClient = await client;
       const db = mongoClient.db("hoodhub");
       const email = evt.data.email_addresses[0].email_address
+      const firstName = evt.data.first_name || 'Valued Customer';
+      
       const user = {
         clerkId: id,
-        firstName: evt.data.first_name,
+        firstName: firstName,
         lastName: evt.data.last_name,
         userName: evt.data.username,
         profilePicture: evt.data.image_url,
         email: email,
         role: 'user',
+        createdAt: new Date()
       }
+      
       await db.collection("users").insertOne(user)
+      
+      // Send welcome email
+      try {
+        await sendRegistrationEmail(email, firstName);
+        console.log(`Welcome email sent to ${email}`);
+      } catch (emailError) {
+        console.error('Failed to send welcome email:', emailError);
+        // Don't fail user creation if email fails
+      }
+      
     } catch (err) {
       console.error('Database error:', err)
       return new Response('Failed to add user to database', { status: 500 })
@@ -88,7 +99,8 @@ export async function POST(req: Request) {
             lastName: evt.data.last_name,
             userName: evt.data.username,
             profilePicture: evt.data.image_url,
-            email: evt.data.email_addresses[0].email_address
+            email: evt.data.email_addresses[0].email_address,
+            updatedAt: new Date()
           }
         }
       )
@@ -102,7 +114,13 @@ export async function POST(req: Request) {
     try {
       const mongoClient = await client;
       const db = mongoClient.db("hoodhub");
-      await db.collection("users").deleteOne({ clerkId: id })
+      
+      // Also delete all user's bookings
+      await db.collection("bookings").deleteMany({ clerkId: id });
+      
+      // Delete user
+      await db.collection("users").deleteOne({ clerkId: id });
+      
     } catch (err) {
       console.error('Database error:', err)
       return new Response('Failed to delete user from database', { status: 500 })
