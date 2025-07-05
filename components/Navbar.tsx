@@ -52,6 +52,16 @@ const Navbar = ({ variant = "transparent", className = "", lang, dictionary }: N
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
             <div className="flex items-center space-x-6">
+            <Link
+                href={`https://hoodskool.com/`}
+                className={`${
+                  isTransparent 
+                    ? "text-white/90 hover:text-white" 
+                    : "text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                } font-franklin text-sm font-medium transition-colors duration-200`}
+              >
+                {dictionary.nav.clothing}
+              </Link>
               <Link
                 href={`/${lang}/barbing`}
                 className={`${
@@ -138,17 +148,6 @@ const Navbar = ({ variant = "transparent", className = "", lang, dictionary }: N
             {/* Icons and Language Switcher */}
             <div className="flex items-center space-x-4">
 
-              
-              <Link 
-                href="https://hoodskool.com"
-                className={`${
-                  isTransparent 
-                    ? "text-white/80 hover:text-white" 
-                    : "text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-                } transition-colors duration-200`}
-              >
-                <ShoppingBag className="h-5 w-5" />
-              </Link>
               <SignedIn>
                 <Link 
                   href={`/${lang}/bookings`}
@@ -266,7 +265,7 @@ const Navbar = ({ variant = "transparent", className = "", lang, dictionary }: N
                       href="https://hoodskool.com/"
                       className="block px-6 py-4 font-franklin text-base hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                     >
-                      HoodSkool
+                      {dictionary.nav.clothing}
                     </Link>
                   </nav>
                   

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FloatingNav } from "@/components/ui/floating-navbar";
 import Navbar from "@/components/Navbar";
-import {  Instagram, Twitter, MessageCircle, X } from "lucide-react";
+import {  Instagram, Twitter, MessageCircle, X, Music2Icon } from "lucide-react";
 import { teamMembers, getLocalizedData } from "@/constants";
 import Link from "next/link";
 import Image from "next/image";
@@ -193,15 +193,21 @@ const OurTeamPage = ({ lang, dictionary }: OurTeamPageProps) => {
                   `}>
                     <p className="text-sm font-light mb-4">{member.bio}</p>
                     <div className="flex space-x-3">
-                      <a href={member.social.instagram} className="hover:text-yellow-400 transition-colors">
+                      { member.social.instagram && <a href={member.social.instagram} className="hover:text-yellow-400 transition-colors">
                         <Instagram size={20} />
-                      </a>
-                      <a href={member.social.twitter} className="hover:text-yellow-400 transition-colors">
+                      </a>}
+                      { member.social.twitter && <a href={member.social.twitter} className="hover:text-yellow-400 transition-colors">
                         <Twitter size={20} />
-                      </a>
-                      <a href={member.social.whatsapp} className="hover:text-yellow-400 transition-colors">
+                      </a>}
+                      { member.social.whatsapp && <a href={member.social.whatsapp} className="hover:text-yellow-400 transition-colors">
                         <MessageCircle size={20} />
-                      </a>
+                      </a>}
+                      { member.social.tiktok && (
+                        <a href={member.social.tiktok} className="hover:text-yellow-400 transition-colors">
+                          <Music2Icon size={20} />
+                        </a>
+                      )}
+
                     </div>
                   </div>
                   

@@ -190,83 +190,75 @@ export const femaleServices = [
 export const hoodskoolProducts = [
   {
     id: "hsk-001",
-    src: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=2340&auto=format&fit=crop",
-    titleKey: "products.urbanTee",
-    price: "6,450.00 ₽",
-    categoryKey: "products.categories.streetwear",
-    link: "https://hoodskool.com/"
+    src: "https://hoodskool.com/wp-content/uploads/2024/12/HoodSkool_1711202451400.jpg",
+    titleKey: "products.pants1",
+    price: "14,999.00 ₽",
+    categoryKey: "products.categories.pants",
+    link: "https://hoodskool.com/product/hood-signature-pant-in-coffee-brown-x-black-lining/"
   },
   {
     id: "hsk-002",
-    src: "https://images.unsplash.com/photo-1556306535-0f09a537f0a3?q=80&w=2340&auto=format&fit=crop",
-    titleKey: "products.leatherJacket",
-    price: "10,250.00 ₽",
-    categoryKey: "products.categories.outerwear",
-    link: "https://hoodskool.com/"
+    src: "https://hoodskool.com/wp-content/uploads/2024/12/HoodSkool_1711202451914.jpg",
+    titleKey: "products.hoodies1",
+    price: "26,950.00 ₽",
+    categoryKey: "products.categories.hoodies",
+    link: "https://hoodskool.com/product/vintage-hoodie-in-black/"
   },
   {
     id: "hsk-003",
-    src: "https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=2340&auto=format&fit=crop",
-    titleKey: "products.goldChain",
-    price: "3,750.00 ₽",
-    categoryKey: "products.categories.accessories",
-    link: "https://hoodskool.com/"
+    src: "https://hoodskool.com/wp-content/uploads/2024/12/DSC04297.jpg",
+    titleKey: "products.shirt1",
+    price: "8,999.00 ₽",
+    categoryKey: "products.categories.shirts",
+    link: "https://hoodskool.com/product/t-shirt-with-hood-silicone-in-graphite-black/"
   },
   {
     id: "hsk-004",
-    src: "https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=2340&auto=format&fit=crop",
-    titleKey: "products.sneakers",
-    price: "12,500.00 ₽",
-    categoryKey: "products.categories.footwear",
-    link: "https://hoodskool.com/"
+    src: "https://hoodskool.com/wp-content/uploads/2024/09/HoodSkool_Catalog_0408202313154-scaled.jpg",
+    titleKey: "products.pants2",
+    price: "15,250.00 ₽",
+    categoryKey: "products.categories.pants",
+    link: "https://hoodskool.com/product/hood-signature-pant-with-split-bottom/"
   },
   {
     id: "hsk-005",
-    src: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=2340&auto=format&fit=crop",
-    titleKey: "products.hoodie",
-    price: "9,000.00 ₽",
-    categoryKey: "products.categories.streetwear",
-    link: "https://hoodskool.com/"
+    src: "https://hoodskool.com/wp-content/uploads/2024/12/HoodSkool_1711202451763.jpg",
+    titleKey: "products.hoodies2",
+    price: "22,500.00 ₽",
+    categoryKey: "products.categories.hoodies",
+    link: "https://hoodskool.com/product/vintage-hoodie-in-black-2/"
   },
   {
     id: "hsk-006",
-    src: "https://images.unsplash.com/photo-1622445275463-afa2ab738c34?q=80&w=2340&auto=format&fit=crop",
-    titleKey: "products.snapback",
-    price: "2,500.00 ₽",
-    categoryKey: "products.categories.headwear",
-    link: "https://hoodskool.com/"
+    src: "https://hoodskool.com/wp-content/uploads/2024/12/DSC03659-1.jpg",
+    titleKey: "products.shirt2",
+    price: "10,999.00 ₽",
+    categoryKey: "products.categories.shirts",
+    link: "https://hoodskool.com/product/hoodskool-t-shirt-in-black/"
   },
   {
     id: "hsk-007",
-    src: "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=2340&auto=format&fit=crop",
-    titleKey: "products.tracksuit",
-    price: "7,500.00 ₽",
-    categoryKey: "products.categories.athleisure",
-    link: "https://hoodskool.com/"
+    src: "https://hoodskool.com/wp-content/uploads/2024/09/DSC08968.jpg",
+    titleKey: "products.shirt3",
+    price: "3,500.00 ₽",
+    categoryKey: "products.categories.shirts",
+    link: "https://hoodskool.com/product/hoodskool-plain-white-ts/"
   },
   {
     id: "hsk-008",
-    src: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?q=80&w=2340&auto=format&fit=crop",
-    titleKey: "products.canvasShoes",
-    price: "5,000.00 ₽",
-    categoryKey: "products.categories.footwear",
-    link: "https://hoodskool.com/"
+    src: "https://hoodskool.com/wp-content/uploads/2024/09/HoodSkool_Catalog_0408202313111-scaled.jpg",
+    titleKey: "products.vest1",
+    price: "6,999.00 ₽",
+    categoryKey: "products.categories.vest",
+    link: "https://hoodskool.com/product/hood-signature-vest-in-black-checkers/"
   },
   {
     id: "hsk-009",
-    src: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?q=80&w=2340&auto=format&fit=crop",
-    titleKey: "products.watch",
-    price: "23,000.00 ₽",
+    src: "https://hoodskool.com/wp-content/uploads/2024/09/DSC08958.jpg",
+    titleKey: "products.socks1",
+    price: "500.00 ₽",
     categoryKey: "products.categories.accessories",
-    link: "https://hoodskool.com/"
-  },
-  {
-    id: "hsk-010",
-    src: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=2340&auto=format&fit=crop",
-    titleKey: "products.crossbodyBag",
-    price: "6,000.00 ₽",
-    categoryKey: "products.categories.accessories",
-    link: "https://hoodskool.com/"
+    link: "https://hoodskool.com/product/hoodskool-socks-in-white-x-black/"
   },
 ];
 
@@ -318,26 +310,23 @@ export const storyPhases = [
 export const teamMembers = [
   {
     id: 1,
-    nameKey: "team.marcus.name",
-    roleKey: "team.marcus.role",
+    nameKey: "team.antonio.name",
+    roleKey: "team.antonio.role",
     image: "/AAA03178.jpg",
-    bioKey: "team.marcus.bio",
+    bioKey: "team.antonio.bio",
     social: {
-      instagram: "#",
-      twitter: "#",
-      whatsapp: "#",
+      instagram: "anthony.tattoo_ink",
     }
   },
   {
     id: 2,
-    nameKey: "team.jamal.name",
-    roleKey: "team.jamal.role",
+    nameKey: "team.mikkie.name",
+    roleKey: "team.mikkie.role",
     image: "/AAA03421.jpg",
-    bioKey: "team.jamal.bio",
+    bioKey: "team.mikkie.bio",
     social: {
-      instagram: "#",
-      twitter: "#",
-      whatsapp: "#"
+      instagram: "mikkies_hair",
+      tiktok: "staycute03",
     }
   },
 ];

@@ -5,6 +5,7 @@
       "lifestyle": "Lifestyle",
       "braidslocks": "Braids & Locks",
       "about": "About",
+      "clothing": "Clothing",
       "ourStory": "Our Story",
       "ourTeam": "Our Team",
       "faq": "FAQ",
@@ -344,7 +345,15 @@
       }
     },
     "products": {
-      "urbanTee": "Urban Essential Tee",
+      "pants1": "Hood Signature Pant in Coffee Brown x Black Lining",
+      "pants2": "Hood Signature Pant with Split Bottom",
+      "hoodies1": "Vintage Hoodie in Black",
+      "hoodies2": "Vintage Hoodie in Beige",
+      "shirt1": "T-shirt with HooD Silicone in Grey/Black",
+      "shirt2": "HoodSkool T-shirt in Black",
+      "shirt3": "Hoodskool Plain White T’s",
+      "vest1": "Hood Signature Vest in Black Checkers",
+      "socks1": "Hoodskool Socks in White x Black",
       "leatherJacket": "Vintage Leather Jacket",
       "goldChain": "Gold Chain Necklace",
       "sneakers": "Limited Edition Sneakers",
@@ -355,6 +364,10 @@
       "watch": "Minimalist Watch",
       "crossbodyBag": "Crossbody Bag",
       "categories": {
+        "pants": "Hood Pants Trousers",
+        "vest": "Hood Vest",
+        "hoodies": "Hoodies", 
+        "shirts": "T-shirts",
         "streetwear": "Streetwear",
         "outerwear": "Outerwear",
         "accessories": "Accessories",
@@ -391,45 +404,15 @@
       }
     },
     "team": {
-      "marcus": {
-        "name": "Marcus Johnson",
-        "role": "Master Barber",
-        "bio": "With over 15 years of experience, Marcus specializes in precision cuts and modern styles. Trained in London and New York."
+      "mikkie": {
+        "name": "Mikkie's Hair",
+        "role": "Master Stylist",
+        "bio": "Transform into the best fashion of yourself starting with your look. Mikkie has 12 years of experience in the industry."
       },
-      "isabella": {
-        "name": "Isabella Chen",
-        "role": "Lead Tattoo Artist",
-        "bio": "Specializing in geometric and watercolor styles, Isabella brings 10 years of international tattooing experience."
-      },
-      "jamal": {
-        "name": "Jamal Williams",
-        "role": "Lifestyle Director",
-        "bio": "Jamal curates our premium experiences, blending wellness with urban sophistication for complete transformations."
-      },
-      "sophie": {
-        "name": "Sophie Laurent",
-        "role": "Creative Director",
-        "bio": "Former fashion designer who brings avant-garde vision to HoodHub's brand identity and space design."
-      },
-      "diego": {
-        "name": "Diego Rodriguez",
-        "role": "Senior Barber",
-        "bio": "Beard specialist with expertise in traditional straight razor techniques and modern grooming solutions."
-      },
-      "aisha": {
-        "name": "Aisha Khan",
-        "role": "Tattoo Artist",
-        "bio": "Expert in intricate mandala and dotwork designs, blending cultural heritage with contemporary styles."
-      },
-      "tyrone": {
-        "name": "Tyrone Jenkins",
-        "role": "Barber Educator",
-        "bio": "Develops our HoodSkool curriculum and mentors the next generation of barbering professionals."
-      },
-      "elena": {
-        "name": "Elena Petrova",
-        "role": "Wellness Specialist",
-        "bio": "Holistic practitioner integrating ancient healing techniques with modern luxury spa experiences."
+      "antonio":{
+        "name": "Anthony",
+        "role": "Master Tartoonist",
+        "bio": "Antonio, a Spanish master tattooist, has 7 years of experience in the art of tattooing."
       }
     },
     "barbingServices": {
