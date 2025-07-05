@@ -275,7 +275,7 @@ const OurStoryPage = ({ lang, dictionary }: OurStoryPageProps) => {
                     transition={{ duration: 0.5 }}
                     className="absolute inset-0"
                   >
-                    <div className={`absolute inset-0 bg-gradient-to-b ${localizedStoryPhasesWithSubtitle[activePhase]?.color || "from-yellow-400/20 to-yellow-600/10"}`} />
+                    <div className={`absolute inset-0 bg-gradient-to-b`} />
                     <Image
                       width={700}
                       height={700}
@@ -321,7 +321,7 @@ const OurStoryPage = ({ lang, dictionary }: OurStoryPageProps) => {
                         className="absolute inset-0"
                         initial={false}
                       >
-                        <div className={`absolute inset-0 bg-gradient-to-b ${phase.color}`} />
+                        <div className={`absolute inset-0 bg-gradient-to-b `} />
                         <Image
                           width={700}
                           height={700}

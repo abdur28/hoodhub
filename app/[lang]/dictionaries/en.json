@@ -3,6 +3,7 @@
       "barbing": "Barbing",
       "tattoo": "Tattoo",
       "lifestyle": "Lifestyle",
+      "braidslocks": "Braids & Locks",
       "about": "About",
       "ourStory": "Our Story",
       "ourTeam": "Our Team",
@@ -145,6 +146,26 @@
         "button": "Book Your Consultation"
       }
     },
+    "braidsLocs": {
+      "hero": {
+        "title": "Braids &",
+        "titleHighlight": "Locs"
+      },
+      "content": {
+        "category": "Natural Hair Artistry",
+        "title1": "Protective Styling Excellence",
+        "description1": "Our expert stylists specialize in creating beautiful, healthy protective styles that celebrate natural hair. From intricate braiding patterns to perfectly maintained locs, we understand the artistry and care that goes into each strand. Experience the perfect blend of traditional techniques and modern innovation.",
+        "title2": "Precision & Care",
+        "description2": "Every braid, twist, and loc is crafted with meticulous attention to detail and scalp health. We use premium products designed specifically for natural hair, ensuring your styles not only look stunning but also promote healthy hair growth and longevity."
+      },
+      "cta": {
+        "title": "Ready for Your Transformation?",
+        "subtitle": "Book your appointment today and let our master stylists create the perfect protective style for you.",
+        "hours": "Mon-Sat: 9AM-7PM",
+        "address": "Fashion District Studio",
+        "button": "Book Appointment"
+      }
+    },
     "ourStory": {
       "hero": {
         "title": "Our",
@@ -280,6 +301,10 @@
       "premiumExperience": "Premium Experience",
       "modernTechniques": "Modern Techniques",
       "attentionToDetail": "Attention to Detail",
+      "hairArtistry": "Hair Artistry",
+      "braids&locks": "Braids & Locks",
+      "clothingStore": "Clothing Store",
+      "hoodskoolStore": "HoodSkool Store",
       "creativeVision": "Creative Vision",
       "barbing": "Barbing",
       "tattoo": "Tattoo",

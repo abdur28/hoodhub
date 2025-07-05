@@ -271,14 +271,16 @@ function ImageCard({
   title,
   category,
   className,
+  link
 }: {
   src: string
   title: string
   category?: string
   className?: string
+  link: string
 }) {
   return (
-    <div
+    <Link href={link}
       className={cn(
         "relative h-84 w-64 md:h-[30rem] md:w-[24rem] flex-shrink-0 overflow-hidden rounded-4xl bg-gray-900 group cursor-pointer",
         className
@@ -307,7 +309,7 @@ function ImageCard({
           {title}
         </h3>
       </div>
-    </div>
+    </Link>
   )
 }
 

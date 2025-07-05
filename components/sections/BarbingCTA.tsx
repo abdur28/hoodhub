@@ -20,7 +20,7 @@ const BarbingCTA = ({ lang, dictionary }: BarbingCTAProps) => {
         <Image
           width={700}
           height={700}
-          src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?q=80&w=2340&auto=format&fit=crop"
+          src="/AAA03036.jpg"
           alt="Luxury barbershop interior"
           className="w-full h-full object-cover"
         />

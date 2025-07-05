@@ -56,6 +56,7 @@ const About = ({ lang, dictionary }: AboutProps) => {
               src={item.src}
               title={item.title}
               category={item.category}
+              link={item.link}
             />
           ))}
         </EdgeCarousel>

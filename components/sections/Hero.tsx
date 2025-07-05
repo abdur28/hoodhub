@@ -57,21 +57,21 @@ const Hero = ({ lang, dictionary }: HeroProps) => {
               className="absolute inset-0"
             >
               <Image
-                width={1000}
+                width={1500}
                 height={1000}
                 src={heroImages[currentImageIndex].url.mobile}
                 alt={heroImages[currentImageIndex].alt}
                 className="w-full h-full object-cover lg:hidden"
               />
               <Image
-                width={1000}
-                height={1000}
+                width={1500}
+                height={1500}
                 src={heroImages[currentImageIndex].url.desktop}
                 alt={heroImages[currentImageIndex].alt}
                 className="w-full h-full object-cover hidden lg:block"
               />
               {/* Dark overlay for better text readability if needed later */}
-              <div className="absolute inset-0 bg-black/30" />
+              {/* <div className="absolute inset-0 bg-black/30" /> */}
             </motion.div>
           </AnimatePresence>
         </div>

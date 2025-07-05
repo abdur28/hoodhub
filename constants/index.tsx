@@ -6,50 +6,88 @@ export const heroImages = [
   {
     id: 1,
     url: {
-      mobile: '/Hoodxhub-display-board.jpg',
-      desktop: '/Hoodxhub-display-board-2.jpg',
+      mobile: '/AAA02646.jpg',
+      desktop: '/AAA02646.jpg',
     },
     alt: "Hoodxhub display board",
-  }
+  },
+  {
+    id: 2,
+    url: {
+      mobile: '/AAA02685.jpg',
+      desktop: '/AAA02685.jpg',
+    },
+    alt: "Hoodxhub display board",
+  },
+  {
+    id: 3,
+    url: {
+      mobile: '/AAA03207.jpg',
+      desktop: '/AAA03211.jpg',
+    },
+    alt: "Hoodxhub display board",
+  },
+  {
+    id: 4,
+    url: {
+      mobile: '/AAA03036.jpg',
+      desktop: '/AAA03036.jpg',
+    },
+    alt: "Hoodxhub display board",
+  },
+  {
+    id: 5,
+    url: {
+      mobile: '/AAA03311.jpg',
+      desktop: '/AAA03336.jpg',
+    },
+    alt: "Hoodxhub display board",
+  },
 ];
 
 // About data with dictionary keys
 export const aboutData = [
   {
     id: 1,
-    src: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=2340&auto=format&fit=crop",
+    src: "/AAA02648.jpg",
     titleKey: "about.masterCraftsmanship",
     categoryKey: "about.barbing",
+    link: "/barbing",
   },
   {
     id: 2,
-    src: "https://images.unsplash.com/photo-1586243287039-23f4c8e2e7ab?q=80&w=2667&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    src: "/AAA02932.jpg",
     titleKey: "about.artisticExcellence",
     categoryKey: "about.tattoo",
+    link: "/tattoo",
   },
   {
     id: 3,
-    src: "https://images.unsplash.com/photo-1612887390768-fb02affea7a6?q=80&w=3024&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    src: "/AAA03009.jpg",
     titleKey: "about.premiumExperience",
     categoryKey: "about.lifestyle",
+    link: "/lifestyle",
   },
   {
     id: 4,
-    src: "https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?q=80&w=2340&auto=format&fit=crop",
-    titleKey: "about.modernTechniques",
-    categoryKey: "about.innovation",
+    src: "/AAA02778.jpg",
+    titleKey: "about.hairArtistry",
+    categoryKey: "about.braids&locks",
+    link: "/braids-locs",
   },
   {
     id: 5,
-    src: "https://images.unsplash.com/photo-1604449325317-4967c715538a?q=80&w=3088&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    titleKey: "about.attentionToDetail",
-    categoryKey: "about.precision",
+    src: "/AAA02963.jpg",
+    titleKey: "about.clothingStore",
+    categoryKey: "about.hoodskoolStore",
+    link: "https://hoodskool.com/",
   },
   {
     id: 6,
-    src: "https://images.unsplash.com/photo-1522337094846-8a818192de1f?q=80&w=3094&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    src: "/AAA03311.jpg",
     titleKey: "about.creativeVision",
     categoryKey: "about.design",
+    link: "/our-story",
   },
 ];
 
@@ -57,17 +95,17 @@ export const aboutData = [
 export const barbingImages = [
   {
     id: 1,
-    url: "https://images.unsplash.com/photo-1567894340315-735d7c361db0?q=80&w=3044&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    url: "/AAA02648.jpg",
     alt: "Classic barbershop interior with vintage chair",
   },
   {
     id: 2,
-    url: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=2340&auto=format&fit=crop",
+    url: "/AAA03036.jpg",
     alt: "Professional barber cutting hair with precision",
   },
   {
     id: 3,
-    url: "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=2340&auto=format&fit=crop",
+    url: "/AAA03207.jpg",
     alt: "Professional barber tools and accessories",
   },
 ];
@@ -75,17 +113,17 @@ export const barbingImages = [
 export const tattooImages = [
   {
     id: 1,
-    url: "https://images.unsplash.com/photo-1565058379802-bbe93b2f703a?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    url: "/AAA02932.jpg",
     alt: "Tattoo artist creating detailed artwork",
   },
   {
     id: 2,
-    url: "https://images.unsplash.com/photo-1604374376934-2df6fad6519b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    url: "/AAA02958.jpg",
     alt: "Professional tattoo equipment and inks",
   },
   {
     id: 3,
-    url: "https://images.unsplash.com/photo-1724343163782-52276ca2e6c2?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    url: "/AAA03313.jpg",
     alt: "Detailed tattoo artwork in progress",
   },
   {
@@ -111,19 +149,19 @@ export const maleServices = [
     id: 1,
     titleKey: "services.male.executiveGrooming.title",
     descriptionKey: "services.male.executiveGrooming.description",
-    image: "https://images.unsplash.com/photo-1733995471058-3d6ff2013de3?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: "/AAA03036.jpg",
   },
   {
     id: 2,
     titleKey: "services.male.spaWellness.title",
     descriptionKey: "services.male.spaWellness.description",
-    image: "https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=2340&auto=format&fit=crop",
+    image: "/AAA02647.jpg",
   },
   {
     id: 3,
     titleKey: "services.male.styleConsultation.title",
     descriptionKey: "services.male.styleConsultation.description",
-    image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=2340&auto=format&fit=crop",
+    image: "/AAA02963.jpg",
   },
 ];
  
@@ -132,13 +170,13 @@ export const femaleServices = [
     id: 1,
     titleKey: "services.female.beautyMakeup.title",
     descriptionKey: "services.female.beautyMakeup.description",
-    image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=2340&auto=format&fit=crop",
+    image: "/AAA03009.jpg",
   },
   {
     id: 2,
     titleKey: "services.female.hairStyling.title",
     descriptionKey: "services.female.hairStyling.description",
-    image: "https://images.unsplash.com/photo-1562322140-8baeececf3df?q=80&w=2340&auto=format&fit=crop",
+    image: "/AAA03275.jpg",
   },
   {
     id: 3,
@@ -239,45 +277,40 @@ export const storyPhases = [
     titleKey: "story.vision.title",
     subtitleKey: "story.vision.year",
     contentKey: "story.vision.content",
-    image: "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=2340&auto=format&fit=crop",
+    image: "/AAA02646.jpg",
     icon: Star,
-    color: "from-yellow-400/20 to-yellow-600/10"
   },
   {
     id: 2,
     titleKey: "story.craft.title",
     subtitleKey: "story.craft.year",
     contentKey: "story.craft.content",
-    image: "https://images.unsplash.com/photo-1559599101-f09722fb4948?q=80&w=2340&auto=format&fit=crop",
+    image: "/AAA02821.jpg",
     icon: Scissors,
-    color: "from-amber-400/20 to-amber-600/10"
   },
   {
     id: 3,
     titleKey: "story.art.title",
     subtitleKey: "story.art.year",
     contentKey: "story.art.content",
-    image: "https://images.unsplash.com/photo-1604374376934-2df6fad6519b?q=80&w=2940&auto=format&fit=crop",
+    image: "/AAA02909.jpg",
     icon: PaintBucket,
-    color: "from-rose-400/20 to-rose-600/10"
   },
   {
     id: 4,
     titleKey: "story.community.title",
     subtitleKey: "story.community.year",
     contentKey: "story.community.content",
-    image: "https://images.unsplash.com/photo-1522337094846-8a818192de1f?q=80&w=3094&auto=format&fit=crop",
+    image: "/AAA03258.jpg",
     icon: Users,
-    color: "from-emerald-400/20 to-emerald-600/10"
   },
   {
     id: 5,
     titleKey: "story.legacy.title",
     subtitleKey: "story.legacy.year",
     contentKey: "story.legacy.content",
-    image: "https://images.unsplash.com/photo-1621605815971-fbc98d665033?q=80&w=2340&auto=format&fit=crop",
+    image: "/AAA02688.jpg",
     icon: Heart,
-    color: "from-purple-400/20 to-purple-600/10"
   },
 ];
 
@@ -287,7 +320,7 @@ export const teamMembers = [
     id: 1,
     nameKey: "team.marcus.name",
     roleKey: "team.marcus.role",
-    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=2574&auto=format&fit=crop",
+    image: "/AAA03178.jpg",
     bioKey: "team.marcus.bio",
     social: {
       instagram: "#",
@@ -297,82 +330,10 @@ export const teamMembers = [
   },
   {
     id: 2,
-    nameKey: "team.isabella.name",
-    roleKey: "team.isabella.role",
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2576&auto=format&fit=crop",
-    bioKey: "team.isabella.bio",
-    social: {
-      instagram: "#",
-      twitter: "#",
-      whatsapp: "#"
-    }
-  },
-  {
-    id: 3,
     nameKey: "team.jamal.name",
     roleKey: "team.jamal.role",
-    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=2574&auto=format&fit=crop",
+    image: "/AAA03421.jpg",
     bioKey: "team.jamal.bio",
-    social: {
-      instagram: "#",
-      twitter: "#",
-      whatsapp: "#"
-    }
-  },
-  {
-    id: 4,
-    nameKey: "team.sophie.name",
-    roleKey: "team.sophie.role",
-    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=2561&auto=format&fit=crop",
-    bioKey: "team.sophie.bio",
-    social: {
-      instagram: "#",
-      twitter: "#",
-      whatsapp: "#"
-    }
-  },
-  {
-    id: 5,
-    nameKey: "team.diego.name",
-    roleKey: "team.diego.role",
-    image: "https://images.unsplash.com/photo-1590086782792-42dd2350140d?q=80&w=2574&auto=format&fit=crop",
-    bioKey: "team.diego.bio",
-    social: {
-      instagram: "#",
-      twitter: "#",
-      whatsapp: "#"
-    }
-  },
-  {
-    id: 6,
-    nameKey: "team.aisha.name",
-    roleKey: "team.aisha.role",
-    image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=2564&auto=format&fit=crop",
-    bioKey: "team.aisha.bio",
-    social: {
-      instagram: "#",
-      twitter: "#",
-      whatsapp: "#"
-    }
-  },
-  {
-    id: 7,
-    nameKey: "team.tyrone.name",
-    roleKey: "team.tyrone.role",
-    image: "https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?q=80&w=2576&auto=format&fit=crop",
-    bioKey: "team.tyrone.bio",
-    social: {
-      instagram: "#",
-      twitter: "#",
-      whatsapp: "#"
-    }
-  },
-  {
-    id: 8,
-    nameKey: "team.elena.name",
-    roleKey: "team.elena.role",
-    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=2576&auto=format&fit=crop",
-    bioKey: "team.elena.bio",
     social: {
       instagram: "#",
       twitter: "#",
@@ -446,23 +407,8 @@ export const tattooArtists = [
   {
     nameKey: "tattooArtists.isabella.name",
     specialtyKey: "tattooArtists.isabella.specialty",
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2576&auto=format&fit=crop"
+    image: "/AAA03178.jpg"
   },
-  {
-    nameKey: "tattooArtists.aisha.name",
-    specialtyKey: "tattooArtists.aisha.specialty",
-    image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=2564&auto=format&fit=crop"
-  },
-  {
-    nameKey: "tattooArtists.diego.name",
-    specialtyKey: "tattooArtists.diego.specialty",
-    image: "https://images.unsplash.com/photo-1552058544-f2b08422138a?q=80&w=2598&auto=format&fit=crop"
-  },
-  {
-    nameKey: "tattooArtists.nikolai.name",
-    specialtyKey: "tattooArtists.nikolai.specialty",
-    image: "https://images.unsplash.com/photo-1570158268183-d296b2892211?q=80&w=2574&auto=format&fit=crop"
-  }
 ];
 
 // FAQ sections with dictionary keys
@@ -494,6 +440,19 @@ export const faqSections = [
     icon: Diamond,
     color: "text-purple-500",
     questionsKey: "faq.lifestyle.questions"
+  }
+];
+
+export const braidsLocsImages = [
+  {
+    id: 1,
+    url: "/AAA03211.jpg",
+    alt: "Beautiful braids and locs styling"
+  },
+  {
+    id: 2,
+    url: "/AAA02821.jpg",
+    alt: "Professional braiding technique"
   }
 ];
 
