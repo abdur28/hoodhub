@@ -65,6 +65,7 @@ export default async function RootLayout({
       <html lang={lang}>
         <head>
           <meta name="apple-mobile-web-app-title" content="Hoodhub" />
+          <meta name="yandex-verification" content="b695a93374d0e257" />
         </head>
         <body
           className={`${geistSans.variable} ${geistMono.variable} ${franklinGothic.variable} font-franklin antialiased`}
