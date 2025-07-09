@@ -7,6 +7,19 @@ const defaultLocale = 'en' as const;
 
 const isProtectedRoute = createRouteMatcher(['/en/bookings(.*)', '/en/book(.*)', '/en/admin(.*)', '/ru/bookings(.*)', '/ru/book(.*)', '/ru/admin(.*)']);
 
+// SEO and static files that should NOT be redirected with locale
+const seoAndStaticFiles = [
+  '/sitemap.xml',
+  '/robots.txt',
+  '/favicon.ico',
+  '/apple-touch-icon.png',
+  '/icon.png',
+  '/manifest.json',
+  '/sw.js',
+  '/service-worker.js',
+  'yandex_b695a93374d0e257.html'
+];
+
 function getLocale(request: NextRequest): string {
   // Check if locale is in URL
   const pathname = request.nextUrl.pathname;
@@ -29,6 +42,11 @@ export default clerkMiddleware(async (auth, req) => {
   
   // Skip internal Next.js paths and api routes
   if (pathname.startsWith('/_next') || pathname.startsWith('/api')) {
+    return;
+  }
+  
+  // Skip SEO and static files - these should be accessible at root level
+  if (seoAndStaticFiles.includes(pathname)) {
     return;
   }
   
