@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { service, date, time } = body;
+    const { service, date, time, referralCode, referralUserEmail } = body;
 
     // Validate required fields
     if (!service || !service.id || !service.name || !date || !time) {
@@ -149,12 +149,30 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate referral code if provided
+    let referralData = null;
+    if (referralCode && referralCode.trim()) {
+      const referralUser = await db.collection("users").findOne({ 
+        referralCode: referralCode.trim().toUpperCase() 
+      });
+      
+      if (referralUser) {
+        referralData = {
+          referralCode: referralCode.trim().toUpperCase(),
+          referralUserEmail: referralUser.email,
+          referralUserName: `${referralUser.firstName} ${referralUser.lastName}`,
+          referralUserId: referralUser._id
+        };
+      }
+    }
+
     // Create booking document
     const bookingData = {
       userId: user._id,
       clerkId: userId,
       service: service,
       dateTime: dateTime,
+      referral: referralData,
       createdAt: new Date()
     };
 
@@ -167,6 +185,7 @@ export async function POST(request: NextRequest) {
       id: bookingId,
       dateTime: dateTime,
       service: service,
+      referral: referralData,
       createdAt: new Date()
     };
 
@@ -178,6 +197,25 @@ export async function POST(request: NextRequest) {
         } as PushOperator<Document>
       }
     );
+
+    // If there's a referral, track it for the referring user
+    if (referralData) {
+      await db.collection("users").updateOne(
+        { _id: referralData.referralUserId },
+        {
+          $push: {
+            referrals: {
+              bookingId: bookingId,
+              referredUserEmail: user.email,
+              referredUserName: `${user.firstName} ${user.lastName}`,
+              service: service,
+              dateTime: dateTime,
+              createdAt: new Date()
+            }
+          } as PushOperator<Document>
+        }
+      );
+    }
 
     // Format date and time for emails
     const { formattedDate, formattedTime } = formatDateTimeForEmail(dateTime);
@@ -207,7 +245,9 @@ export async function POST(request: NextRequest) {
         service: service.name,
         date: formattedDate,
         time: formattedTime,
-        bookingId: bookingId.toString()
+        bookingId: bookingId.toString(),
+        referralCode: referralData?.referralCode || null,
+        referralUserEmail: referralData?.referralUserEmail || null
       });
       
       console.log(`Admin booking notification sent to contact@hoodhub.ru`);
@@ -294,6 +334,18 @@ export async function DELETE(request: NextRequest) {
         } as PushOperator<Document>
       }
     );
+
+    // Remove referral tracking if it exists
+    if (booking.referral) {
+      await db.collection("users").updateOne(
+        { _id: booking.referral.referralUserId },
+        {
+          $pull: {
+            referrals: { bookingId: new ObjectId(bookingId) }
+          } as PushOperator<Document>
+        }
+      );
+    }
 
     // Format date and time for emails
     const { formattedDate, formattedTime } = formatDateTimeForEmail(new Date(booking.dateTime));

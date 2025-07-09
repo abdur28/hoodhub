@@ -225,22 +225,34 @@ export async function sendAdminBookingNotification(
     date: string;
     time: string;
     bookingId: string;
+    referralCode?: string | null;
+    referralUserEmail?: string | null;
   }
 ): Promise<boolean> {
+  // Build referral message if referral exists
+  let referralMessage = '';
+  if (bookingDetails.referralCode && bookingDetails.referralUserEmail) {
+    referralMessage = `<br><br><strong>🎁 Referral Information:</strong><br>
+    • Referral Code: <code>${bookingDetails.referralCode}</code><br>
+    • Referred by: ${bookingDetails.referralUserEmail}`;
+  }
+
   return sendEmail({
     to: 'contact@hoodhub.ru',
     subject: `New Booking Alert - ${bookingDetails.service}`,
     emailType: EmailType.ADMIN_BOOKING_NOTIFICATION,
     templateData: {
       title: '🎯 New Booking Alert!',
-      message: `A new appointment has been booked on the platform. Here are the details:`,
+      message: `A new appointment has been booked on the platform. Here are the details:${referralMessage}`,
       bookingDetails: {
         service: bookingDetails.service,
         date: bookingDetails.date,
         time: bookingDetails.time,
         customer: bookingDetails.customerName,
         email: bookingDetails.customerEmail,
-        bookingId: bookingDetails.bookingId
+        bookingId: bookingDetails.bookingId,
+        referralCode: bookingDetails.referralCode,
+        referralUserEmail: bookingDetails.referralUserEmail
       },
       buttonText: 'View All Bookings',
       buttonUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/bookings`,
@@ -248,7 +260,11 @@ export async function sendAdminBookingNotification(
       customerDetails: {
         name: bookingDetails.customerName,
         email: bookingDetails.customerEmail
-      }
+      },
+      referralDetails: bookingDetails.referralCode ? {
+        code: bookingDetails.referralCode,
+        userEmail: bookingDetails.referralUserEmail
+      } : null
     }
   });
 }

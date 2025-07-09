@@ -6,6 +6,7 @@ import { FloatingNav } from "@/components/ui/floating-navbar";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -22,7 +23,9 @@ import {
   ChevronRight,
   Loader2,
   AlertTriangle,
-  X
+  X,
+  Gift,
+  Info
 } from "lucide-react";
 import Image from "next/image";
 import type { Dictionary } from "../dictionaries";
@@ -47,11 +50,15 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService }: BookPageP
   const [selectedServiceId, setSelectedServiceId] = useState(selectedService || "");
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
+  const [referralCode, setReferralCode] = useState("");
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [calendarDays, setCalendarDays] = useState<Date[]>([]);
   const [availableSlots, setAvailableSlots] = useState<{time: string, available: boolean}[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetchingSlots, setIsFetchingSlots] = useState(false);
+  const [isValidatingReferral, setIsValidatingReferral] = useState(false);
+  const [referralStatus, setReferralStatus] = useState<'valid' | 'invalid' | 'not-checked'>('not-checked');
+  const [referralUserEmail, setReferralUserEmail] = useState("");
 
   const user: User | null = userAsString ? JSON.parse(userAsString) : null;
 
@@ -95,6 +102,16 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService }: BookPageP
     }
   }, [selectedDate]);
 
+  // Validate referral code when it changes
+  useEffect(() => {
+    if (referralCode.trim() && referralCode.length >= 8) {
+      validateReferralCode();
+    } else {
+      setReferralStatus('not-checked');
+      setReferralUserEmail("");
+    }
+  }, [referralCode]);
+
   const fetchAvailableSlots = async () => {
     setIsFetchingSlots(true);
     try {
@@ -118,6 +135,30 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService }: BookPageP
       });
     } finally {
       setIsFetchingSlots(false);
+    }
+  };
+
+  const validateReferralCode = async () => {
+    if (!referralCode.trim()) return;
+    
+    setIsValidatingReferral(true);
+    try {
+      const response = await fetch(`/api/referral/validate?code=${referralCode.trim()}`);
+      const data = await response.json();
+      
+      if (response.ok && data.valid) {
+        setReferralStatus('valid');
+        setReferralUserEmail(data.userEmail);
+      } else {
+        setReferralStatus('invalid');
+        setReferralUserEmail("");
+      }
+    } catch (error) {
+      console.error('Error validating referral code:', error);
+      setReferralStatus('invalid');
+      setReferralUserEmail("");
+    } finally {
+      setIsValidatingReferral(false);
     }
   };
 
@@ -192,7 +233,9 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService }: BookPageP
             category: selectedServiceData?.category || ''
           },
           date: selectedDate,
-          time: selectedTime
+          time: selectedTime,
+          referralCode: referralCode.trim() || null,
+          referralUserEmail: referralUserEmail || null
         }),
       });
 
@@ -210,6 +253,9 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService }: BookPageP
         setSelectedServiceId('');
         setSelectedDate('');
         setSelectedTime('');
+        setReferralCode('');
+        setReferralStatus('not-checked');
+        setReferralUserEmail('');
         setAvailableSlots([]);
       } else {
         toast.dismiss(toastId);
@@ -454,7 +500,7 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService }: BookPageP
               </div>
             </motion.div>
 
-            {/* Right Side - User Profile & Book Button */}
+            {/* Right Side - User Profile, Referral & Book Button */}
             <motion.div
               className="w-full lg:w-1/2 space-y-8"
               initial={{ opacity: 0, x: -50 }}
@@ -505,6 +551,55 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService }: BookPageP
                 )}
               </div>
 
+              {/* Referral Code Section */}
+              <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-8 border border-green-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <Gift className="w-6 h-6 text-green-600" />
+                  <h3 className="text-xl font-franklin font-semibold text-gray-900">
+                    Referral Code
+                  </h3>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="relative">
+                    <Input
+                      type="text"
+                      value={referralCode}
+                      onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+                      placeholder="Enter 12-character referral code (optional)"
+                      className="w-full h-12 text-lg font-franklin font-mono tracking-wider"
+                      maxLength={12}
+                    />
+                    {isValidatingReferral && (
+                      <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                        <Loader2 className="w-4 h-4 animate-spin text-gray-500" />
+                      </div>
+                    )}
+                  </div>
+                  
+                  {referralStatus === 'valid' && (
+                    <div className="flex items-center gap-2 text-green-700 text-sm font-franklin">
+                      <CheckCircle className="w-4 h-4" />
+                      <span>Valid referral code from {referralUserEmail}</span>
+                    </div>
+                  )}
+                  
+                  {referralStatus === 'invalid' && (
+                    <div className="flex items-center gap-2 text-red-700 text-sm font-franklin">
+                      <X className="w-4 h-4" />
+                      <span>Invalid referral code</span>
+                    </div>
+                  )}
+                  
+                  <div className="flex items-start gap-2 text-sm text-gray-600 font-franklin">
+                    <Info className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                    <span>
+                      Have a 12-character referral code? Enter it above to connect with the person who referred you.
+                    </span>
+                  </div>
+                </div>
+              </div>
+
               {/* Booking Summary */}
               <div className="bg-gray-50 rounded-2xl p-8">
                 <h3 className="text-xl font-franklin font-semibold text-gray-900 mb-6">
@@ -532,6 +627,15 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService }: BookPageP
                       {selectedTime || dictionary.book.summary.notSelected}
                     </span>
                   </div>
+                  
+                  {referralStatus === 'valid' && (
+                    <div className="flex items-center justify-between">
+                      <span className="font-franklin text-gray-600">Referral:</span>
+                      <span className="font-franklin font-medium text-green-700">
+                        {referralCode}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="mt-8">

@@ -11,7 +11,12 @@ import {
   Loader2,
   Crown,
   User as UserIcon,
-  RefreshCw
+  RefreshCw,
+  Eye,
+  Gift,
+  Copy,
+  Check,
+  TrendingUp
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,6 +26,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
 import type { Dictionary } from "../../dictionaries";
 
 interface User {
@@ -33,6 +47,10 @@ interface User {
   createdAt: string;
   bookings?: any[];
   profilePicture?: string;
+  referralCode?: string;
+  referralCodeGeneratedAt?: string;
+  referralCount?: number;
+  referralBookings?: number;
 }
 
 interface UsersPageProps {
@@ -46,7 +64,12 @@ export default function UsersPage({ lang, dictionary }: UsersPageProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [activeTab, setActiveTab] = useState("users");
-  const [updatingRole, setUpdatingRole] = useState<string | null>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [loadingUserDetails, setLoadingUserDetails] = useState(false);
+  const [generatingReferral, setGeneratingReferral] = useState(false);
+  const [updatingRole, setUpdatingRole] = useState(false);
+  const [copiedCode, setCopiedCode] = useState(false);
 
   // Admin tabs configuration
   const adminTabs = [
@@ -96,13 +119,38 @@ export default function UsersPage({ lang, dictionary }: UsersPageProps) {
     }
   };
 
-  const handleRoleToggle = async (user: User) => {
-    if (updatingRole === user._id) return;
+  const fetchUserDetails = async (userId: string) => {
+    try {
+      setLoadingUserDetails(true);
+      const response = await fetch(`/api/admin/users/referral?userId=${userId}`);
+      const data = await response.json();
+      
+      if (data.success) {
+        setSelectedUser(data.user);
+      } else {
+        toast.error(data.error || "Failed to fetch user details");
+      }
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+      toast.error("Failed to fetch user details");
+    } finally {
+      setLoadingUserDetails(false);
+    }
+  };
+
+  const handleUserClick = async (user: User) => {
+    setSelectedUser(user);
+    setDialogOpen(true);
+    await fetchUserDetails(user._id);
+  };
+
+  const handleRoleToggle = async () => {
+    if (!selectedUser) return;
     
-    const newRole = user.role === 'admin' ? 'user' : 'admin';
+    const newRole = selectedUser.role === 'admin' ? 'user' : 'admin';
     
     try {
-      setUpdatingRole(user._id);
+      setUpdatingRole(true);
       
       const response = await fetch('/api/admin/users/role', {
         method: 'PUT',
@@ -110,7 +158,7 @@ export default function UsersPage({ lang, dictionary }: UsersPageProps) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userId: user._id,
+          userId: selectedUser._id,
           newRole: newRole
         }),
       });
@@ -120,10 +168,14 @@ export default function UsersPage({ lang, dictionary }: UsersPageProps) {
       if (data.success) {
         // Update the user in the local state
         setUsers(users.map(u => 
-          u._id === user._id 
+          u._id === selectedUser._id 
             ? { ...u, role: newRole }
             : u
         ));
+        
+        // Update selected user
+        setSelectedUser({ ...selectedUser, role: newRole });
+        
         toast.success(`User role updated to ${newRole}`);
       } else {
         toast.error(data.error || "Failed to update user role");
@@ -132,7 +184,64 @@ export default function UsersPage({ lang, dictionary }: UsersPageProps) {
       console.error("Error updating user role:", error);
       toast.error("Failed to update user role");
     } finally {
-      setUpdatingRole(null);
+      setUpdatingRole(false);
+    }
+  };
+
+  const handleGenerateReferralCode = async () => {
+    if (!selectedUser) return;
+    
+    try {
+      setGeneratingReferral(true);
+      
+      const response = await fetch('/api/admin/users/referral', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          targetUserId: selectedUser._id
+        }),
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        // Update the selected user with the new referral code
+        setSelectedUser({
+          ...selectedUser,
+          referralCode: data.referralCode,
+          referralCodeGeneratedAt: new Date().toISOString()
+        });
+        
+        // Update the user in the main list
+        setUsers(users.map(u => 
+          u._id === selectedUser._id 
+            ? { ...u, referralCode: data.referralCode }
+            : u
+        ));
+        
+        toast.success("Referral code generated successfully!");
+      } else {
+        toast.error(data.error || "Failed to generate referral code");
+      }
+    } catch (error) {
+      console.error("Error generating referral code:", error);
+      toast.error("Failed to generate referral code");
+    } finally {
+      setGeneratingReferral(false);
+    }
+  };
+
+  const handleCopyReferralCode = async (code: string) => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopiedCode(true);
+      toast.success("Referral code copied to clipboard!");
+      setTimeout(() => setCopiedCode(false), 2000);
+    } catch (error) {
+      console.error("Error copying referral code:", error);
+      toast.error("Failed to copy referral code");
     }
   };
 
@@ -274,7 +383,8 @@ export default function UsersPage({ lang, dictionary }: UsersPageProps) {
                     key={user._id}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="hover:bg-gray-50"
+                    className="hover:bg-gray-50 cursor-pointer"
+                    onClick={() => handleUserClick(user)}
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
@@ -325,25 +435,18 @@ export default function UsersPage({ lang, dictionary }: UsersPageProps) {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {user.bookings || 0}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                    <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium" onClick={(e) => e.stopPropagation()}>
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handleRoleToggle(user)}
-                        disabled={updatingRole === user._id}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleUserClick(user);
+                        }}
                         className="inline-flex items-center"
                       >
-                        {updatingRole === user._id ? (
-                          <>
-                            <RefreshCw className="w-3 h-3 mr-1 animate-spin" />
-                            {dictionary.admin?.updating || "Updating..."}
-                          </>
-                        ) : (
-                          <>
-                            <RefreshCw className="w-3 h-3 mr-1" />
-                            {dictionary.admin?.actions?.changeRole || "Change Role"}
-                          </>
-                        )}
+                        <Eye className="w-3 h-3 mr-1" />
+                        View Details
                       </Button>
                     </td>
                   </motion.tr>
@@ -353,6 +456,180 @@ export default function UsersPage({ lang, dictionary }: UsersPageProps) {
           </div>
         )}
       </div>
+
+      {/* User Details Dialog */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              User Details
+            </DialogTitle>
+            <DialogDescription>
+              View and manage user information
+            </DialogDescription>
+          </DialogHeader>
+          
+          {loadingUserDetails ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="w-6 h-6 animate-spin text-gray-500" />
+              <span className="ml-2 text-gray-500">Loading user details...</span>
+            </div>
+          ) : selectedUser ? (
+            <div className="space-y-6">
+              {/* User Information */}
+              <div>
+                <h4 className="text-sm font-medium text-gray-700 mb-2">User Information</h4>
+                <div className="flex items-center space-x-3">
+                  <div className="flex-shrink-0">
+                    {selectedUser.profilePicture ? (
+                      <img 
+                        className="h-12 w-12 rounded-full object-cover" 
+                        src={selectedUser.profilePicture} 
+                        alt={`${selectedUser.firstName} ${selectedUser.lastName}`}
+                      />
+                    ) : (
+                      <div className="h-12 w-12 rounded-full bg-gray-300 flex items-center justify-center">
+                        <UserIcon className="w-6 h-6 text-gray-600" />
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">
+                      {selectedUser.firstName} {selectedUser.lastName}
+                    </p>
+                    <p className="text-sm text-gray-500">{selectedUser.email}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Account Details */}
+              <div>
+                <h4 className="text-sm font-medium text-gray-700 mb-2">Account Details</h4>
+                <div className="bg-gray-50 p-3 rounded-lg space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">Role:</span>
+                    <div className="flex items-center">
+                      {selectedUser.role === 'admin' ? (
+                        <Crown className="w-4 h-4 text-yellow-500 mr-1" />
+                      ) : (
+                        <UserIcon className="w-4 h-4 text-gray-500 mr-1" />
+                      )}
+                      <span className="font-medium capitalize">{selectedUser.role}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">Join Date:</span>
+                    <span className="font-medium">{formatDate(selectedUser.createdAt)}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">Total Bookings:</span>
+                    <span className="font-medium">{selectedUser.bookings || 0}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Role Management */}
+              <div>
+                <h4 className="text-sm font-medium text-gray-700 mb-2">Role Management</h4>
+                <Button
+                  variant="outline"
+                  onClick={handleRoleToggle}
+                  disabled={updatingRole}
+                  className="w-full flex items-center justify-center"
+                >
+                  {updatingRole ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Updating Role...
+                    </>
+                  ) : (
+                    <>
+                      <RefreshCw className="w-4 h-4 mr-2" />
+                      Change to {selectedUser.role === 'admin' ? 'User' : 'Admin'}
+                    </>
+                  )}
+                </Button>
+              </div>
+
+              {/* Referral Information */}
+              <div>
+                <h4 className="text-sm font-medium text-gray-700 mb-2 flex items-center">
+                  <Gift className="w-4 h-4 mr-1" />
+                  Referral Information
+                </h4>
+                
+                {selectedUser.referralCode ? (
+                  <div className="bg-gray-50 p-3 rounded-lg space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">Referral Code:</span>
+                      <div className="flex items-center space-x-2">
+                        <code className="bg-white px-2 py-1 rounded text-xs font-mono border">
+                          {selectedUser.referralCode}
+                        </code>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleCopyReferralCode(selectedUser.referralCode!)}
+                          className="h-6 w-6 p-0"
+                        >
+                          {copiedCode ? (
+                            <Check className="w-3 h-3 text-green-600" />
+                          ) : (
+                            <Copy className="w-3 h-3" />
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">Generated On:</span>
+                      <span className="font-medium">
+                        {selectedUser.referralCodeGeneratedAt ? formatDate(selectedUser.referralCodeGeneratedAt) : 'N/A'}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">People Referred:</span>
+                      <span className="font-medium">{selectedUser.referralCount || 0}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">Referral Bookings:</span>
+                      <span className="font-medium">{selectedUser.referralBookings || 0}</span>
+                    </div>
+                  </div>
+                ) : (
+                  <Button
+                    onClick={handleGenerateReferralCode}
+                    disabled={generatingReferral}
+                    variant="outline"
+                    className="w-full flex items-center justify-center"
+                  >
+                    {generatingReferral ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Generating...
+                      </>
+                    ) : (
+                      <>
+                        <Gift className="w-4 h-4 mr-2" />
+                        Generate Referral Code
+                      </>
+                    )}
+                  </Button>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-gray-500">No user selected</p>
+            </div>
+          )}
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDialogOpen(false)}>
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

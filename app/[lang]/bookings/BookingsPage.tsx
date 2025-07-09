@@ -28,10 +28,13 @@ import {
   Diamond,
   Heart,
   X,
-  AlertTriangle
+  AlertTriangle,
+  Gift,
+  Copy
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { Badge } from "@/components/ui/badge";
 import type { Dictionary } from "../dictionaries";
 
 interface User {
@@ -41,6 +44,7 @@ interface User {
   lastName: string;
   email: string;
   profilePicture?: string;
+  referralCode?: string;
 }
 
 interface Booking {
@@ -80,6 +84,7 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
   const [activeTab, setActiveTab] = useState<"upcoming" | "past">("upcoming");
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [bookingToDelete, setBookingToDelete] = useState<{id: string, serviceName: string, dateTime: string} | null>(null);
+  const [copiedCode, setCopiedCode] = useState(false);
 
   const user: User = JSON.parse(userAsString);
 
@@ -181,6 +186,26 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
     } finally {
       setDeletingId(null);
       setBookingToDelete(null);
+    }
+  };
+
+  const handleCopyReferralCode = async () => {
+    if (!user.referralCode) return;
+    
+    try {
+      await navigator.clipboard.writeText(user.referralCode);
+      setCopiedCode(true);
+      toast.success("Referral code copied!", {
+        description: "Share this code with friends to refer them to HoodHub.",
+        icon: <CheckCircle className="w-4 h-4" />
+      });
+      setTimeout(() => setCopiedCode(false), 2000);
+    } catch (error) {
+      console.error("Error copying referral code:", error);
+      toast.error("Failed to copy code", {
+        description: "Please try selecting and copying the code manually.",
+        icon: <X className="w-4 h-4" />
+      });
     }
   };
 
@@ -438,6 +463,41 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
                   </div>
                 </div>
               </div>
+
+              {/* Referral Code Section */}
+              {user.referralCode && (
+                <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-6 mb-6 border border-green-200">
+                  <div className="flex items-center gap-3 mb-3">
+                    <Gift className="w-5 h-5 text-green-600" />
+                    <h3 className="text-lg font-franklin font-semibold text-gray-900">
+                      Your Referral Code
+                    </h3>
+                  </div>
+                  
+                  <div className="flex items-center gap-3">
+                    <Badge variant="secondary" className="bg-white text-gray-900 font-mono text-base px-3 py-2 border border-gray-200">
+                      {user.referralCode}
+                    </Badge>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleCopyReferralCode}
+                      className="flex items-center gap-2"
+                    >
+                      {copiedCode ? (
+                        <CheckCircle className="w-4 h-4 text-green-600" />
+                      ) : (
+                        <Copy className="w-4 h-4" />
+                      )}
+                      {copiedCode ? "Copied!" : "Copy"}
+                    </Button>
+                  </div>
+                  
+                  <p className="text-sm text-gray-600 font-franklin mt-3">
+                    Share this code with friends to refer them to HoodHub and earn rewards!
+                  </p>
+                </div>
+              )}
 
               {/* Tabs */}
               <div className="flex gap-2 mb-6">

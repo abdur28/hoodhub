@@ -53,6 +53,7 @@ export async function GET(request: NextRequest) {
           service: 1,
           dateTime: 1,
           createdAt: 1,
+          referral: 1, // Include referral information
           user: {
             firstName: "$user.firstName",
             lastName: "$user.lastName",
@@ -74,6 +75,7 @@ export async function GET(request: NextRequest) {
       service: booking.service,
       dateTime: booking.dateTime,
       createdAt: booking.createdAt,
+      referral: booking.referral || null, // Include referral data
       user: booking.user
     }));
 
@@ -92,28 +94,6 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// Helper function to format date and time for emails
-function formatDateTimeForEmail(dateTime: Date) {
-  const options: Intl.DateTimeFormatOptions = {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  };
-  
-  const timeOptions: Intl.DateTimeFormatOptions = {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true
-  };
-  
-  const formattedDate = dateTime.toLocaleDateString('en-US', options);
-  const formattedTime = dateTime.toLocaleTimeString('en-US', timeOptions);
-  
-  return { formattedDate, formattedTime };
-}
-
-
 // DELETE: Cancel a booking (admin only)
 export async function DELETE(request: NextRequest) {
   try {
@@ -122,6 +102,23 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
+      );
+    }
+
+    // Connect to MongoDB
+    const mongoClient = await client;
+    const db = mongoClient.db("hoodhub");
+
+    // Check if user is admin
+    const adminUser = await db.collection("users").findOne({ 
+      clerkId: userId,
+      role: 'admin'
+    });
+
+    if (!adminUser) {
+      return NextResponse.json(
+        { error: "Admin access required" },
+        { status: 403 }
       );
     }
 
@@ -135,24 +132,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // Connect to MongoDB
-    const mongoClient = await client;
-    const db = mongoClient.db("hoodhub");
-
-    // Check if user is admin
-    const adminUser = await db.collection("users").findOne({ 
-      clerkId: userId,
-      role: 'admin'
-    });
-
-    if (!adminUser) {
-      return NextResponse.json(
-        { error: "Admin access required" },
-        { status: 403 }
-      );
-    }
-
-    // Find the booking
+    // Find the booking to cancel
     const booking = await db.collection("bookings").findOne({
       _id: new ObjectId(bookingId)
     });
@@ -164,46 +144,81 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // Get user info for potential email notification
+    // Get user info for email
     const user = await db.collection("users").findOne({ 
       _id: booking.userId 
     });
+
+    if (!user) {
+      return NextResponse.json(
+        { error: "User not found" },
+        { status: 404 }
+      );
+    }
 
     // Delete the booking
     await db.collection("bookings").deleteOne({
       _id: new ObjectId(bookingId)
     });
 
-    // Remove booking reference from user document if it exists
-    if (user) {
+    // Remove booking reference from user document
+    await db.collection("users").updateOne(
+      { _id: booking.userId },
+      { 
+        $pull: { 
+          bookings: { id: new ObjectId(bookingId) } 
+        } as any
+      }
+    );
+
+    // Remove referral tracking if it exists
+    if (booking.referral && booking.referral.referralUserId) {
       await db.collection("users").updateOne(
-        { _id: booking.userId },
-        { 
-          $pull: { 
-            bookings: { id: new ObjectId(bookingId) } 
+        { _id: new ObjectId(booking.referral.referralUserId) },
+        {
+          $pull: {
+            referrals: { bookingId: new ObjectId(bookingId) }
           } as any
         }
       );
     }
 
-    // TODO: Send cancellation email notification to user
-    if (user) {
-        try {
-            // Format date and time for email
-            const { formattedDate, formattedTime } = formatDateTimeForEmail(new Date(booking.dateTime));
-            
-            await sendBookingCancellationEmail(user.email, {
-            firstName: user.firstName || 'Valued Customer',
-            service: booking.service.name,
-            date: formattedDate,
-            time: formattedTime
-            });
-            
-            console.log(`Booking cancellation email sent to ${user.email}`);
-        } catch (emailError) {
-            console.error('Failed to send booking cancellation email:', emailError);
-            // Don't fail the cancellation if email fails
-        }
+    // Format date and time for emails
+    const formatDateTimeForEmail = (dateTime: Date) => {
+      const options: Intl.DateTimeFormatOptions = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      };
+      
+      const timeOptions: Intl.DateTimeFormatOptions = {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      };
+      
+      const formattedDate = dateTime.toLocaleDateString('en-US', options);
+      const formattedTime = dateTime.toLocaleTimeString('en-US', timeOptions);
+      
+      return { formattedDate, formattedTime };
+    };
+
+    const { formattedDate, formattedTime } = formatDateTimeForEmail(new Date(booking.dateTime));
+
+    // Send booking cancellation email to customer
+    try {
+      await sendBookingCancellationEmail(user.email, {
+        firstName: user.firstName || 'Valued Customer',
+        service: booking.service.name,
+        date: formattedDate,
+        time: formattedTime
+      });
+      
+      console.log(`Booking cancellation email sent to ${user.email}`);
+    } catch (emailError) {
+      console.error('Failed to send booking cancellation email:', emailError);
+      // Don't fail the cancellation if email fails
     }
 
     return NextResponse.json({
@@ -215,84 +230,6 @@ export async function DELETE(request: NextRequest) {
     console.error("Error cancelling booking:", error);
     return NextResponse.json(
       { error: "Failed to cancel booking" },
-      { status: 500 }
-    );
-  }
-}
-
-// PUT: Update a booking (admin only)
-export async function PUT(request: NextRequest) {
-  try {
-    const { userId } = await auth();
-    if (!userId) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    // Connect to MongoDB
-    const mongoClient = await client;
-    const db = mongoClient.db("hoodhub");
-
-    // Check if user is admin
-    const adminUser = await db.collection("users").findOne({ 
-      clerkId: userId,
-      role: 'admin'
-    });
-
-    if (!adminUser) {
-      return NextResponse.json(
-        { error: "Admin access required" },
-        { status: 403 }
-      );
-    }
-
-    const body = await request.json();
-    const { bookingId, dateTime, service } = body;
-
-    if (!bookingId) {
-      return NextResponse.json(
-        { error: "Booking ID is required" },
-        { status: 400 }
-      );
-    }
-
-    // Find the booking
-    const booking = await db.collection("bookings").findOne({
-      _id: new ObjectId(bookingId)
-    });
-
-    if (!booking) {
-      return NextResponse.json(
-        { error: "Booking not found" },
-        { status: 404 }
-      );
-    }
-
-    // Prepare update data
-    const updateData: any = {};
-    if (dateTime) updateData.dateTime = new Date(dateTime);
-    if (service) updateData.service = service;
-
-    // Update the booking
-    await db.collection("bookings").updateOne(
-      { _id: new ObjectId(bookingId) },
-      { $set: updateData }
-    );
-
-    // TODO: Send update notification email to user
-    // You can implement this using your existing email service
-
-    return NextResponse.json({
-      success: true,
-      message: "Booking updated successfully"
-    });
-
-  } catch (error) {
-    console.error("Error updating booking:", error);
-    return NextResponse.json(
-      { error: "Failed to update booking" },
       { status: 500 }
     );
   }

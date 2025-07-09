@@ -16,9 +16,12 @@ import {
   Eye,
   Trash2,
   MoreHorizontal,
-  AlertTriangle
+  AlertTriangle,
+  Gift,
+  Badge as BadgeIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -53,6 +56,12 @@ interface Booking {
   };
   dateTime: string;
   createdAt: string;
+  referral?: {
+    referralCode: string;
+    referralUserEmail: string;
+    referralUserName: string;
+    referralUserId: string;
+  };
   user?: {
     firstName: string;
     lastName: string;
@@ -174,12 +183,15 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
       booking.user?.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.user?.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.user?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      booking.service.name.toLowerCase().includes(searchTerm.toLowerCase());
+      booking.service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      booking.referral?.referralCode?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      booking.referral?.referralUserEmail?.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesFilter = 
       filterStatus === "all" ||
       (filterStatus === "upcoming" && isUpcoming(booking.dateTime)) ||
-      (filterStatus === "past" && !isUpcoming(booking.dateTime));
+      (filterStatus === "past" && !isUpcoming(booking.dateTime)) ||
+      (filterStatus === "referred" && booking.referral);
 
     return matchesSearch && matchesFilter;
   });
@@ -201,6 +213,7 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
 
   const upcomingBookings = bookings.filter(booking => isUpcoming(booking.dateTime));
   const pastBookings = bookings.filter(booking => !isUpcoming(booking.dateTime));
+  const referredBookings = bookings.filter(booking => booking.referral);
 
   return (
     <div className="space-y-6">
@@ -251,7 +264,7 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <input
             type="text"
-            placeholder={dictionary.admin?.bookings?.searchPlaceholder || "Search bookings..."}
+            placeholder={dictionary.admin?.bookings?.searchPlaceholder || "Search bookings, customers, or referral codes..."}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
@@ -266,12 +279,13 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
             <SelectItem value="all">{dictionary.admin?.filters?.all || "All Bookings"}</SelectItem>
             <SelectItem value="upcoming">{dictionary.admin?.filters?.upcoming || "Upcoming"}</SelectItem>
             <SelectItem value="past">{dictionary.admin?.filters?.past || "Past"}</SelectItem>
+            <SelectItem value="referred">Referred Bookings</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       {/* Booking Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-white p-6 rounded-lg border border-gray-200">
           <div className="flex items-center">
             <div className="p-2 bg-blue-100 rounded-lg">
@@ -313,6 +327,20 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
             </div>
           </div>
         </div>
+
+        <div className="bg-white p-6 rounded-lg border border-gray-200">
+          <div className="flex items-center">
+            <div className="p-2 bg-purple-100 rounded-lg">
+              <Gift className="w-6 h-6 text-purple-600" />
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-600">
+                Referred Bookings
+              </p>
+              <p className="text-2xl font-semibold text-gray-900">{referredBookings.length}</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Bookings Table */}
@@ -337,6 +365,9 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     {dictionary.admin?.bookings?.table?.datetime || "Date & Time"}
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Referral
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     {dictionary.admin?.bookings?.table?.status || "Status"}
@@ -399,6 +430,21 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                         <div className="text-sm text-gray-500">{time}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
+                        {booking.referral ? (
+                          <div className="space-y-1">
+                            <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs">
+                              <Gift className="w-3 h-3 mr-1" />
+                              {booking.referral.referralCode}
+                            </Badge>
+                            <div className="text-xs text-gray-500">
+                              by {booking.referral.referralUserEmail}
+                            </div>
+                          </div>
+                        ) : (
+                          <span className="text-gray-400 text-sm">No referral</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                           upcoming 
                             ? 'bg-green-100 text-green-800'
@@ -410,7 +456,7 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                           }
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium" onClick={(e) => e.stopPropagation()}>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button variant="ghost" className="h-8 w-8 p-0">
@@ -448,7 +494,7 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
 
       {/* Booking Details Modal */}
       <Dialog open={showBookingDetails} onOpenChange={setShowBookingDetails}>
-        <DialogContent>
+        <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {dictionary.admin?.bookings?.bookingDetails || "Booking Details"}
@@ -460,7 +506,7 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
           
           {selectedBooking && (
             <div className="space-y-6">
-              <div className="grid  gap-6">
+              <div className="grid gap-6">
                 <div>
                   <h4 className="text-sm font-medium text-gray-700 mb-2">
                     {dictionary.admin?.bookings?.customer || "Customer"}
@@ -483,7 +529,7 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                       <p className="text-sm font-medium text-gray-900">
                         {selectedBooking.user?.firstName} {selectedBooking.user?.lastName}
                       </p>
-                      <p className="text-sm flex text-gray-500">{selectedBooking.user?.email}</p>
+                      <p className="text-sm text-gray-500">{selectedBooking.user?.email}</p>
                     </div>
                   </div>
                 </div>
@@ -516,6 +562,33 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                   )}
                 </div>
               </div>
+
+              {/* Referral Information */}
+              {selectedBooking.referral && (
+                <div>
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">
+                    <Gift className="w-4 h-4 inline mr-1" />
+                    Referral Information
+                  </h4>
+                  <div className="bg-gradient-to-r from-green-50 to-blue-50 p-4 rounded-lg border border-green-200">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Referral Code</label>
+                        <div className="mt-1">
+                          <Badge variant="secondary" className="bg-green-100 text-green-800">
+                            {selectedBooking.referral.referralCode}
+                          </Badge>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Referred By</label>
+                        <p className="text-sm text-gray-900 mt-1">{selectedBooking.referral.referralUserName}</p>
+                        <p className="text-xs text-gray-600">{selectedBooking.referral.referralUserEmail}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -577,6 +650,11 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                 <p className="text-gray-500">
                   {formatDateTime(bookingToCancel.dateTime).date} at {formatDateTime(bookingToCancel.dateTime).time}
                 </p>
+                {bookingToCancel.referral && (
+                  <p className="text-green-600 text-xs mt-1">
+                    Referred by: {bookingToCancel.referral.referralUserEmail}
+                  </p>
+                )}
               </div>
             </div>
           )}

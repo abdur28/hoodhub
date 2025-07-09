@@ -12,7 +12,8 @@
       "contact": "Контакты",
       "bookAppointment": "Записаться",
       "language": "Язык",
-      "myBookings": "Мои записи"
+      "myBookings": "Мои записи",
+      "Admin": "Админ"
     },
     "home": {
       "hero": {

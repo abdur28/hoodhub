@@ -159,6 +159,33 @@
       font-family: monospace;
     }
     
+    .referral-section {
+      background: linear-gradient(135deg, #e8f5e8 0%, #f0f8ff 100%);
+      border-left: 4px solid #4caf50;
+      padding: 20px;
+      margin: 25px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .referral-section h3 {
+      margin: 0 0 15px 0;
+      color: #2e7d32;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .referral-code-badge {
+      background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 12px;
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      margin: 5px 0;
+      font-family: monospace;
+    }
+    
     .cta-button {
       display: inline-block;
       background: linear-gradient(135deg, #d4a853 0%, #c19a4a 100%);
@@ -380,6 +407,24 @@
       </div>
       {{/if}}
       
+      <!-- Referral Information Section -->
+      {{#if referralDetails}}
+      <div class="referral-section">
+        <h3>🎁 Referral Information</h3>
+        <div class="booking-detail-item">
+          <span class="detail-label">Referral Code:</span>
+          <span class="referral-code-badge">{{referralDetails.code}}</span>
+        </div>
+        <div class="booking-detail-item">
+          <span class="detail-label">Referred by:</span>
+          <span class="detail-value">{{referralDetails.userEmail}}</span>
+        </div>
+        <p style="margin-top: 10px; font-size: 14px; color: #2e7d32;">
+          This customer was referred by an existing user. Consider following up with both the referrer and the new customer.
+        </p>
+      </div>
+      {{/if}}
+      
       <!-- Reminder Highlight -->
       {{#if isReminder}}
       <div class="reminder-highlight">
@@ -431,6 +476,7 @@
           • Review all bookings in the admin dashboard<br>
           • Contact the customer if needed<br>
           • Prepare for the upcoming appointment
+          {{#if referralDetails}}<br>• Consider rewarding the referrer{{/if}}
         </p>
       </div>
       {{/if}}

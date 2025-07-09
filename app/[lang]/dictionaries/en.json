@@ -12,7 +12,8 @@
       "contact": "Contact",
       "bookAppointment": "Book Appointment",
       "language": "Language",
-      "myBookings": "My Bookings"
+      "myBookings": "My Bookings",
+      "admin": "Admin"
     },
     "home": {
       "hero": {
