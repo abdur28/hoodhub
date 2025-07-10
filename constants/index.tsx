@@ -56,25 +56,26 @@ export const aboutData = [
   },
   {
     id: 2,
+    src: "/AAA02778.jpg",
+    titleKey: "about.hairArtistry",
+    categoryKey: "about.braids&locks",
+    link: "/braids-locs",
+  },
+  {
+    id: 3,
     src: "/AAA02932.jpg",
     titleKey: "about.artisticExcellence",
     categoryKey: "about.tattoo",
     link: "/tattoo",
   },
   {
-    id: 3,
+    id: 4,
     src: "/AAA03009.jpg",
     titleKey: "about.premiumExperience",
     categoryKey: "about.lifestyle",
     link: "/lifestyle",
   },
-  {
-    id: 4,
-    src: "/AAA02778.jpg",
-    titleKey: "about.hairArtistry",
-    categoryKey: "about.braids&locks",
-    link: "/braids-locs",
-  },
+
   {
     id: 5,
     src: "/AAA02963.jpg",
@@ -394,8 +395,8 @@ export const tattooStyles = [
 // Tattoo artists with dictionary keys
 export const tattooArtists = [
   {
-    nameKey: "tattooArtists.isabella.name",
-    specialtyKey: "tattooArtists.isabella.specialty",
+    nameKey: "team.antonio.name",
+    specialtyKey: "team.antonio.role",
     image: "/AAA03178.jpg"
   },
 ];

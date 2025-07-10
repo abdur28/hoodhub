@@ -105,7 +105,7 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
 
   // Validate referral code when it changes
   useEffect(() => {
-    if (referralCode.trim() && referralCode.length >= 8) {
+    if (referralCode.trim() && referralCode.length >= 5) {
       validateReferralCode();
     } else {
       setReferralStatus('not-checked');
@@ -567,7 +567,7 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
                       type="text"
                       value={referralCode}
                       onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
-                      placeholder="Enter 12-character referral code (optional)"
+                      placeholder="Enter 7-character referral code (optional)"
                       className="w-full h-12 text-lg font-franklin font-mono tracking-wider"
                       maxLength={12}
                     />
@@ -595,7 +595,7 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
                   <div className="flex items-start gap-2 text-sm text-gray-600 font-franklin">
                     <Info className="w-4 h-4 mt-0.5 flex-shrink-0" />
                     <span>
-                      Have a 12-character referral code? Enter it above to connect with the person who referred you.
+                      Have a referral code? Enter it above to connect with the person who referred you.
                     </span>
                   </div>
                 </div>

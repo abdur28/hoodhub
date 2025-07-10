@@ -10,9 +10,9 @@ function generateReferralCode(firstName: string, lastName: string): string {
   const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
   const initials = (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
   
-  // Generate 10 more characters to make a total of 12 characters
+  // Generate 5 more characters to make a total of 7 characters
   let randomPart = '';
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 5; i++) {
     randomPart += chars.charAt(Math.floor(Math.random() * chars.length));
   }
   

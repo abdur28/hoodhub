@@ -93,6 +93,16 @@ const Navbar = ({ variant = "transparent", className = "", lang, dictionary }: N
               >
                 {dictionary.nav.barbing}
               </Link>
+                            <Link
+                href={`/${lang}/braids-locs`}
+                className={`${
+                  isTransparent 
+                    ? "text-white/90 hover:text-white" 
+                    : "text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                } font-franklin text-sm font-medium transition-colors duration-200`}
+              >
+                {dictionary.nav.braidslocks}
+              </Link>
               <Link
                 href={`/${lang}/tattoo`}
                 className={`${
@@ -102,16 +112,6 @@ const Navbar = ({ variant = "transparent", className = "", lang, dictionary }: N
                 } font-franklin text-sm font-medium transition-colors duration-200`}
               >
                 {dictionary.nav.tattoo}
-              </Link>
-              <Link
-                href={`/${lang}/braids-locs`}
-                className={`${
-                  isTransparent 
-                    ? "text-white/90 hover:text-white" 
-                    : "text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
-                } font-franklin text-sm font-medium transition-colors duration-200`}
-              >
-                {dictionary.nav.braidslocks}
               </Link>
               
               {/* About with Dropdown Menu */}
@@ -290,6 +290,12 @@ const Navbar = ({ variant = "transparent", className = "", lang, dictionary }: N
                       {dictionary.nav.barbing}
                     </Link>
                     <Link
+                      href={`/${lang}/braids-locs`}
+                      className="block px-6 py-4 font-franklin text-base hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                    >
+                      {dictionary.nav.braidslocks}
+                    </Link>
+                    <Link
                       href={`/${lang}/tattoo`}
                       className="block px-6 py-4 font-franklin text-base hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                     >
@@ -300,12 +306,6 @@ const Navbar = ({ variant = "transparent", className = "", lang, dictionary }: N
                       className="block px-6 py-4 font-franklin text-base hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                     >
                       {dictionary.nav.lifestyle}
-                    </Link>
-                    <Link
-                      href={`/${lang}/braids-locs`}
-                      className="block px-6 py-4 font-franklin text-base hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                    >
-                      {dictionary.nav.braidslocks}
                     </Link>
                     <Link
                       href="https://hoodskool.com/"
