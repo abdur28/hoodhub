@@ -1,9 +1,37 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import client from "@/lib/mongodb";
 
-// GET: Fetch all bookings for the current user
-export async function GET() {
+// Helper function to check if a booking is in the past
+function isPastBooking(booking: any): boolean {
+  let bookingDate: Date;
+  
+  // Handle both new format (separate date/time) and old format (dateTime)
+  if (booking.date && booking.time) {
+    const [year, month, day] = booking.date.split('-').map(Number);
+    const [hours, minutes] = booking.time.split(':').map(Number);
+    bookingDate = new Date(year, month - 1, day, hours, minutes);
+  } else if (booking.dateTime) {
+    // Handle legacy dateTime format
+    if (typeof booking.dateTime === 'string') {
+      // String format: "2024-03-20T14:30:00"
+      const [datePart, timePart] = booking.dateTime.split('T');
+      const [year, month, day] = datePart.split('-').map(Number);
+      const [hours, minutes] = timePart.split(':').map(Number);
+      bookingDate = new Date(year, month - 1, day, hours, minutes);
+    } else {
+      // Date object
+      bookingDate = new Date(booking.dateTime);
+    }
+  } else {
+    return false;
+  }
+  
+  const now = new Date();
+  return bookingDate < now;
+}
+
+export async function GET(request: NextRequest) {
   try {
     const { userId } = await auth();
     if (!userId) {
@@ -17,7 +45,7 @@ export async function GET() {
     const mongoClient = await client;
     const db = mongoClient.db("hoodhub");
 
-    // Get user from database
+    // Get user's bookings
     const user = await db.collection("users").findOne({ clerkId: userId });
     if (!user) {
       return NextResponse.json(
@@ -26,24 +54,51 @@ export async function GET() {
       );
     }
 
-    // Fetch all bookings for this user
-    const bookings = await db.collection("bookings")
-      .find({ userId: user._id })
-      .sort({ dateTime: -1 }) // Sort by date, newest first
-      .toArray();
+    // Fetch all bookings for the user
+    const bookings = await db.collection("bookings").find({
+      clerkId: userId
+    }).toArray();
 
-    // Format bookings for response
-    const formattedBookings = bookings.map(booking => ({
-      id: booking._id.toString(),
-      service: booking.service,
-      dateTime: booking.dateTime,
-      createdAt: booking.createdAt,
-      isPast: new Date(booking.dateTime) < new Date()
-    }));
+    // Format bookings and separate into upcoming and past
+    const formattedBookings = bookings.map(booking => {
+      const isPast = isPastBooking(booking);
+      
+      // Ensure dateTime is always present for backward compatibility
+      let dateTimeString: string;
+      if (booking.date && booking.time) {
+        dateTimeString = `${booking.date}T${booking.time}:00`;
+      } else if (booking.dateTime) {
+        if (typeof booking.dateTime === 'string') {
+          dateTimeString = booking.dateTime;
+        } else {
+          // Convert Date object to ISO string
+          dateTimeString = new Date(booking.dateTime).toISOString();
+        }
+      } else {
+        dateTimeString = new Date().toISOString();
+      }
 
-    // Separate upcoming and past bookings
-    const upcomingBookings = formattedBookings.filter(b => !b.isPast);
-    const pastBookings = formattedBookings.filter(b => b.isPast);
+      return {
+        id: booking._id.toString(),
+        service: booking.service,
+        date: booking.date,
+        time: booking.time,
+        dateTime: dateTimeString,
+        createdAt: booking.createdAt,
+        isPast: isPast
+      };
+    });
+
+    // Sort bookings by date/time
+    formattedBookings.sort((a, b) => {
+      const dateA = new Date(a.dateTime);
+      const dateB = new Date(b.dateTime);
+      return dateB.getTime() - dateA.getTime(); // Newest first
+    });
+
+    // Separate into upcoming and past
+    const upcomingBookings = formattedBookings.filter(booking => !booking.isPast);
+    const pastBookings = formattedBookings.filter(booking => booking.isPast);
 
     return NextResponse.json({
       success: true,

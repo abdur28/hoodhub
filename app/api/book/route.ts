@@ -9,25 +9,42 @@ import {
   sendAdminCancellationNotification
 } from "@/lib/email";
 
-// Helper function to create date from date string and time components
-function createDateFromComponents(dateString: string, timeString: string): Date {
+// Helper function to check if a booking date/time is in the past
+function isPastBooking(dateString: string, timeString: string): boolean {
   const [year, month, day] = dateString.split('-').map(Number);
   const [hours, minutes] = timeString.split(':').map(Number);
   
-  // Create date explicitly with local timezone components
-  // Month is 0-indexed in JavaScript Date constructor
-  return new Date(year, month - 1, day, hours, minutes, 0, 0);
+  // Create date for comparison
+  const bookingDate = new Date(year, month - 1, day, hours, minutes);
+  const now = new Date();
+  
+  return bookingDate < now;
 }
 
-// Helper function to create date range for a specific day
-function createDateRange(dateString: string): { startOfDay: Date; endOfDay: Date } {
+// Helper function to format date for display
+function formatDateForDisplay(dateString: string, timeString: string, locale: string = 'en-US') {
   const [year, month, day] = dateString.split('-').map(Number);
+  const [hours, minutes] = timeString.split(':').map(Number);
   
-  // Create start and end of day in local timezone
-  const startOfDay = new Date(year, month - 1, day, 0, 0, 0, 0);
-  const endOfDay = new Date(year, month - 1, day, 23, 59, 59, 999);
+  const date = new Date(year, month - 1, day, hours, minutes);
   
-  return { startOfDay, endOfDay };
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  };
+  
+  const timeOptions: Intl.DateTimeFormatOptions = {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  };
+  
+  const formattedDate = date.toLocaleDateString(locale, dateOptions);
+  const formattedTime = date.toLocaleTimeString(locale, timeOptions);
+  
+  return { formattedDate, formattedTime };
 }
 
 // GET: Fetch available time slots for a specific date
@@ -54,22 +71,13 @@ export async function GET(request: NextRequest) {
     const mongoClient = await client;
     const db = mongoClient.db("hoodhub");
 
-    // Create date range for the day using local timezone
-    const { startOfDay, endOfDay } = createDateRange(date);
-
     // Fetch existing bookings for the selected date
     const existingBookings = await db.collection("bookings").find({
-      dateTime: {
-        $gte: startOfDay,
-        $lte: endOfDay
-      }
+      date: date
     }).toArray();
 
     // Extract booked times
-    const bookedTimes = existingBookings.map(booking => {
-      const bookingDate = new Date(booking.dateTime);
-      return `${bookingDate.getHours().toString().padStart(2, '0')}:${bookingDate.getMinutes().toString().padStart(2, '0')}`;
-    });
+    const bookedTimes = existingBookings.map(booking => booking.time);
 
     // Create available slots array
     const availableSlots = allTimeSlots.map(time => ({
@@ -90,27 +98,6 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
-}
-
-// Helper function to format date and time for emails
-function formatDateTimeForEmail(dateTime: Date) {
-  const options: Intl.DateTimeFormatOptions = {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  };
-  
-  const timeOptions: Intl.DateTimeFormatOptions = {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true
-  };
-  
-  const formattedDate = dateTime.toLocaleDateString('en-US', options);
-  const formattedTime = dateTime.toLocaleTimeString('en-US', timeOptions);
-  
-  return { formattedDate, formattedTime };
 }
 
 // POST: Create a new booking
@@ -148,12 +135,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create dateTime using local timezone components
-    const dateTime = createDateFromComponents(date, time);
-
     // Check if the slot is already booked
     const existingBooking = await db.collection("bookings").findOne({
-      dateTime: dateTime
+      date: date,
+      time: time
     });
 
     if (existingBooking) {
@@ -180,12 +165,15 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Create booking document
+    // Create booking document with separate date and time fields
     const bookingData = {
       userId: user._id,
       clerkId: userId,
       service: service,
-      dateTime: dateTime,
+      date: date,
+      time: time,
+      // Keep dateTime for backward compatibility but as a simple string
+      dateTime: `${date}T${time}:00`,
       referral: referralData,
       createdAt: new Date()
     };
@@ -197,7 +185,9 @@ export async function POST(request: NextRequest) {
     // Add booking reference to user document
     const bookingRef = {
       id: bookingId,
-      dateTime: dateTime,
+      date: date,
+      time: time,
+      dateTime: `${date}T${time}:00`,
       service: service,
       referral: referralData,
       createdAt: new Date()
@@ -223,7 +213,9 @@ export async function POST(request: NextRequest) {
               referredUserEmail: user.email,
               referredUserName: `${user.firstName} ${user.lastName}`,
               service: service,
-              dateTime: dateTime,
+              date: date,
+              time: time,
+              dateTime: `${date}T${time}:00`,
               createdAt: new Date()
             }
           } as PushOperator<Document>
@@ -232,7 +224,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Format date and time for emails
-    const { formattedDate, formattedTime } = formatDateTimeForEmail(dateTime);
+    const { formattedDate, formattedTime } = formatDateForDisplay(date, time);
 
     // Send booking confirmation email to customer
     try {
@@ -362,7 +354,9 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Format date and time for emails
-    const { formattedDate, formattedTime } = formatDateTimeForEmail(new Date(booking.dateTime));
+    const bookingDate = booking.date || booking.dateTime.split('T')[0];
+    const bookingTime = booking.time || booking.dateTime.split('T')[1].substring(0, 5);
+    const { formattedDate, formattedTime } = formatDateForDisplay(bookingDate, bookingTime);
 
     // Send booking cancellation email to customer
     try {

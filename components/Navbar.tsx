@@ -173,10 +173,10 @@ const Navbar = ({ variant = "transparent", className = "", lang, dictionary }: N
                 <Link 
                   href={`/${lang}/admin`}
                   className={`${
-                    isTransparent 
-                      ? "text-white/80 hover:text-white" 
-                      : "text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-                  } transition-colors duration-200`}
+                        isTransparent 
+                          ? "text-white/90 hover:text-white" 
+                          : "text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                      } font-franklin text-sm font-medium transition-colors duration-200`}
                   title={dictionary.nav.admin || "Admin"}
                 >
                   {dictionary.nav.admin || "Admin"}

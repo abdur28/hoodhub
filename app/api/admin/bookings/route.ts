@@ -4,6 +4,47 @@ import client from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 import { sendBookingCancellationEmail } from "@/lib/email";
 
+// Helper function to format date for display
+function formatDateForDisplay(booking: any, locale: string = 'en-US') {
+  let date: Date;
+  
+  // Handle both new format (separate date/time) and old format (dateTime)
+  if (booking.date && booking.time) {
+    const [year, month, day] = booking.date.split('-').map(Number);
+    const [hours, minutes] = booking.time.split(':').map(Number);
+    date = new Date(year, month - 1, day, hours, minutes);
+  } else if (booking.dateTime) {
+    if (typeof booking.dateTime === 'string') {
+      const [datePart, timePart] = booking.dateTime.split('T');
+      const [year, month, day] = datePart.split('-').map(Number);
+      const [hours, minutes] = timePart.split(':').map(Number);
+      date = new Date(year, month - 1, day, hours, minutes);
+    } else {
+      date = new Date(booking.dateTime);
+    }
+  } else {
+    date = new Date();
+  }
+  
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  };
+  
+  const timeOptions: Intl.DateTimeFormatOptions = {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  };
+  
+  const formattedDate = date.toLocaleDateString(locale, dateOptions);
+  const formattedTime = date.toLocaleTimeString(locale, timeOptions);
+  
+  return { formattedDate, formattedTime };
+}
+
 // GET: Fetch all bookings for admin management
 export async function GET(request: NextRequest) {
   try {
@@ -51,9 +92,11 @@ export async function GET(request: NextRequest) {
           userId: 1,
           clerkId: 1,
           service: 1,
+          date: 1,
+          time: 1,
           dateTime: 1,
           createdAt: 1,
-          referral: 1, // Include referral information
+          referral: 1,
           user: {
             firstName: "$user.firstName",
             lastName: "$user.lastName",
@@ -61,23 +104,45 @@ export async function GET(request: NextRequest) {
             profilePicture: "$user.profilePicture"
           }
         }
-      },
-      {
-        $sort: { dateTime: -1 } // Sort by date, newest first
       }
     ]).toArray();
 
     // Format bookings for response
-    const formattedBookings = bookings.map(booking => ({
-      _id: booking._id.toString(),
-      userId: booking.userId.toString(),
-      clerkId: booking.clerkId,
-      service: booking.service,
-      dateTime: booking.dateTime,
-      createdAt: booking.createdAt,
-      referral: booking.referral || null, // Include referral data
-      user: booking.user
-    }));
+    const formattedBookings = bookings.map(booking => {
+      // Ensure dateTime is always present for backward compatibility
+      let dateTimeString: string;
+      if (booking.date && booking.time) {
+        dateTimeString = `${booking.date}T${booking.time}:00`;
+      } else if (booking.dateTime) {
+        if (typeof booking.dateTime === 'string') {
+          dateTimeString = booking.dateTime;
+        } else {
+          dateTimeString = new Date(booking.dateTime).toISOString();
+        }
+      } else {
+        dateTimeString = new Date().toISOString();
+      }
+
+      return {
+        _id: booking._id.toString(),
+        userId: booking.userId.toString(),
+        clerkId: booking.clerkId,
+        service: booking.service,
+        date: booking.date,
+        time: booking.time,
+        dateTime: dateTimeString,
+        createdAt: booking.createdAt,
+        referral: booking.referral || null,
+        user: booking.user
+      };
+    });
+
+    // Sort by dateTime, newest first
+    formattedBookings.sort((a, b) => {
+      const dateA = new Date(a.dateTime);
+      const dateB = new Date(b.dateTime);
+      return dateB.getTime() - dateA.getTime();
+    });
 
     return NextResponse.json({
       success: true,
@@ -184,27 +249,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Format date and time for emails
-    function formatDateTimeForEmail(dateTime: Date) {
-      const options: Intl.DateTimeFormatOptions = {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      };
-      
-      const timeOptions: Intl.DateTimeFormatOptions = {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
-      };
-      
-      const formattedDate = dateTime.toLocaleDateString('en-US', options);
-      const formattedTime = dateTime.toLocaleTimeString('en-US', timeOptions);
-      
-      return { formattedDate, formattedTime };
-    }
-
-    const { formattedDate, formattedTime } = formatDateTimeForEmail(new Date(booking.dateTime));
+    const { formattedDate, formattedTime } = formatDateForDisplay(booking);
 
     // Send booking cancellation email to customer
     try {
