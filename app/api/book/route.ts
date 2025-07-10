@@ -9,12 +9,32 @@ import {
   sendAdminCancellationNotification
 } from "@/lib/email";
 
+// Helper function to create date from date string and time components
+function createDateFromComponents(dateString: string, timeString: string): Date {
+  const [year, month, day] = dateString.split('-').map(Number);
+  const [hours, minutes] = timeString.split(':').map(Number);
+  
+  // Create date explicitly with local timezone components
+  // Month is 0-indexed in JavaScript Date constructor
+  return new Date(year, month - 1, day, hours, minutes, 0, 0);
+}
+
+// Helper function to create date range for a specific day
+function createDateRange(dateString: string): { startOfDay: Date; endOfDay: Date } {
+  const [year, month, day] = dateString.split('-').map(Number);
+  
+  // Create start and end of day in local timezone
+  const startOfDay = new Date(year, month - 1, day, 0, 0, 0, 0);
+  const endOfDay = new Date(year, month - 1, day, 23, 59, 59, 999);
+  
+  return { startOfDay, endOfDay };
+}
+
 // GET: Fetch available time slots for a specific date
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const date = searchParams.get("date");
-    // const service = searchParams.get("service");
 
     if (!date) {
       return NextResponse.json(
@@ -34,12 +54,8 @@ export async function GET(request: NextRequest) {
     const mongoClient = await client;
     const db = mongoClient.db("hoodhub");
 
-    // Parse date and create range for the day
-    const selectedDate = new Date(date);
-    const startOfDay = new Date(selectedDate);
-    startOfDay.setHours(0, 0, 0, 0);
-    const endOfDay = new Date(selectedDate);
-    endOfDay.setHours(23, 59, 59, 999);
+    // Create date range for the day using local timezone
+    const { startOfDay, endOfDay } = createDateRange(date);
 
     // Fetch existing bookings for the selected date
     const existingBookings = await db.collection("bookings").find({
@@ -132,10 +148,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create dateTime from date and time
-    const [hours, minutes] = time.split(':');
-    const dateTime = new Date(date);
-    dateTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+    // Create dateTime using local timezone components
+    const dateTime = createDateFromComponents(date, time);
 
     // Check if the slot is already booked
     const existingBooking = await db.collection("bookings").findOne({

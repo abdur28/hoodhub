@@ -175,7 +175,11 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
   };
 
   const isUpcoming = (dateTime: string) => {
-    return new Date(dateTime) > new Date();
+    const bookingDate = new Date(dateTime); // UTC stored date from database
+    const now = new Date(); // Current local time
+    
+    // Compare using UTC timestamps to ensure accuracy
+    return new Date(bookingDate) > now;
   };
 
   const filteredBookings = bookings.filter(booking => {

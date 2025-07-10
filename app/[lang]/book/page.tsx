@@ -19,7 +19,7 @@ export default async function Book({
   const { lang } = await params;
   const dictionary = await getDictionary(lang as 'en' | 'ru');
   const user = await getUser();
-  const { service: selectedService } = await searchParams;
+  const { service: selectedService, referralCode: referralCode } = await searchParams;
 
   return (
     <BookPage 
@@ -27,6 +27,7 @@ export default async function Book({
       dictionary={dictionary}
       userAsString={user ? JSON.stringify(user) : ""}
       selectedService={selectedService}
+      referral={referralCode}
     />
   );
 }

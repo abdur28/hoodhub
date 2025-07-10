@@ -261,17 +261,16 @@ const BraidsLocsPage = ({ lang, dictionary }: BraidsLocsPageProps) => {
                 {dictionary.braidsLocs.cta.subtitle}
               </p>
               
-              <div className="flex flex-col sm:flex-row justify-center gap-6 mb-8">
-                <div className="flex items-center justify-center text-white/80">
+                <div className="flex items-center justify-center text-white/80 mb-4">
                   <Calendar className="w-5 h-5 mr-2 text-yellow-500" />
-                  <span>{dictionary.braidsLocs.cta.hours}</span>
+                  <span>{dictionary.barbing.cta.hours}</span>
                 </div>
                 
                 <div className="flex items-center justify-center text-white/80">
                   <MapPin className="w-5 h-5 mr-2 text-yellow-500" />
-                  <span>{dictionary.braidsLocs.cta.address}</span>
+                  <span>{dictionary.barbing.cta.address}</span>
                 </div>
-              </div>
+       
             </motion.div>
             
             <motion.div
@@ -280,7 +279,7 @@ const BraidsLocsPage = ({ lang, dictionary }: BraidsLocsPageProps) => {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <Link href={`/${lang}/book?service=braids-locs`}>
+              <Link href={`/${lang}/book?service=braidslocks`}>
                 <motion.button
                   whileHover={{ 
                     scale: 1.05,

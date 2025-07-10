@@ -1,13 +1,13 @@
 "use client";
-import React from "react";
-import { ShoppingBag, User, Menu, Calendar } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { ShoppingBag, User, Menu, Calendar, Shield } from "lucide-react";
 import {
   Sheet,
   SheetContent,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -28,6 +28,27 @@ interface NavbarProps {
 
 const Navbar = ({ variant = "transparent", className = "", lang, dictionary }: NavbarProps) => {
   const isTransparent = variant === "transparent";
+  const { user } = useUser();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      if (user) {
+        try {
+          const response = await fetch('/api/admin/check');
+          const data = await response.json();
+          setIsAdmin(data.isAdmin);
+        } catch (error) {
+          console.error('Error checking admin status:', error);
+          setIsAdmin(false);
+        }
+      } else {
+        setIsAdmin(false);
+      }
+    };
+
+    checkAdminStatus();
+  }, [user]);
   
   return (
     <nav className={`${isTransparent ? "bg-transparent" : "bg-white shadow-lg"} ${className}`}>
@@ -52,7 +73,7 @@ const Navbar = ({ variant = "transparent", className = "", lang, dictionary }: N
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
             <div className="flex items-center space-x-6">
-            <Link
+              <Link
                 href={`https://hoodskool.com/`}
                 className={`${
                   isTransparent 
@@ -147,6 +168,20 @@ const Navbar = ({ variant = "transparent", className = "", lang, dictionary }: N
             
             {/* Icons and Language Switcher */}
             <div className="flex items-center space-x-4">
+              {/* Admin Link */}
+              {isAdmin && (
+                <Link 
+                  href={`/${lang}/admin`}
+                  className={`${
+                    isTransparent 
+                      ? "text-white/80 hover:text-white" 
+                      : "text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                  } transition-colors duration-200`}
+                  title={dictionary.nav.admin || "Admin"}
+                >
+                  {dictionary.nav.admin || "Admin"}
+                </Link>
+              )}
 
               <SignedIn>
                 <Link 
@@ -229,6 +264,17 @@ const Navbar = ({ variant = "transparent", className = "", lang, dictionary }: N
                 
                 <div className="flex-1 pt-10">
                   <nav className="space-y-1">
+                    {/* Admin Link for Mobile */}
+                    {isAdmin && (
+                      <Link
+                        href={`/${lang}/admin`}
+                        className="block px-6 py-4 font-franklin text-base hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                      >
+                        <div className="flex items-center space-x-2">
+                          <span>{dictionary.nav.admin || "Admin Dashboard"}</span>
+                        </div>
+                      </Link>
+                    )}
                     <SignedIn>
                       <Link
                         href={`/${lang}/bookings`}

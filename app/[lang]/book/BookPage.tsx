@@ -44,13 +44,14 @@ interface BookPageProps {
   dictionary: Dictionary;
   userAsString: string;
   selectedService?: string;
+  referral?: string;
 }
 
-const BookPage = ({ lang, dictionary, userAsString, selectedService }: BookPageProps) => {
+const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }: BookPageProps) => {
   const [selectedServiceId, setSelectedServiceId] = useState(selectedService || "");
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
-  const [referralCode, setReferralCode] = useState("");
+  const [referralCode, setReferralCode] = useState(referral || "");
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [calendarDays, setCalendarDays] = useState<Date[]>([]);
   const [availableSlots, setAvailableSlots] = useState<{time: string, available: boolean}[]>([]);
@@ -65,9 +66,9 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService }: BookPageP
   // Services with translated names
   const services = [
     { id: "barbing", name: dictionary.book.services.barbing, category: dictionary.book.services.barbingCategory },
+    { id: "braidslocks", name: dictionary.book.services.braidslocks, category: dictionary.book.services.lifestyleCategory },
     { id: "tattoo", name: dictionary.book.services.tattoo, category: dictionary.book.services.tattooCategory },
     { id: "nails", name: dictionary.book.services.nails, category: dictionary.book.services.lifestyleCategory },
-    { id: "spa", name: dictionary.book.services.spa, category: dictionary.book.services.lifestyleCategory },
   ];
 
   const timeSlots = [

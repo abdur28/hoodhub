@@ -25,7 +25,7 @@ const customIcon = new L.Icon({
 
 const Map: React.FC = () => {
   // HoodHub location coordinates (Moscow, Leninsky Avenue, 146)
-  const position: [number, number] = [55.6853, 37.5348]; // Approximate coordinates for Leninsky Avenue, Moscow
+  const position: [number, number] = [55.656751, 37.496641]; // Approximate coordinates for Leninsky Avenue, Moscow
 
   return (
     <div className="h-96 w-full rounded-xl overflow-hidden">

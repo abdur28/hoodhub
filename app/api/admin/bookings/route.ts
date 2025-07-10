@@ -184,7 +184,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Format date and time for emails
-    const formatDateTimeForEmail = (dateTime: Date) => {
+    function formatDateTimeForEmail(dateTime: Date) {
       const options: Intl.DateTimeFormatOptions = {
         weekday: 'long',
         year: 'numeric',
@@ -202,7 +202,7 @@ export async function DELETE(request: NextRequest) {
       const formattedTime = dateTime.toLocaleTimeString('en-US', timeOptions);
       
       return { formattedDate, formattedTime };
-    };
+    }
 
     const { formattedDate, formattedTime } = formatDateTimeForEmail(new Date(booking.dateTime));
 
