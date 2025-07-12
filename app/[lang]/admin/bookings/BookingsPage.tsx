@@ -44,6 +44,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { Dictionary } from "../../dictionaries";
+import Image from "next/image";
 
 interface Booking {
   _id: string;
@@ -52,7 +53,6 @@ interface Booking {
   service: {
     id: string;
     name: string;
-    category?: string;
   };
   dateTime: string;
   createdAt: string;
@@ -398,10 +398,12 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                         <div className="flex items-center">
                           <div className="flex-shrink-0 h-10 w-10">
                             {booking.user?.profilePicture ? (
-                              <img 
+                              <Image 
                                 className="h-10 w-10 rounded-full object-cover" 
                                 src={booking.user.profilePicture} 
                                 alt={`${booking.user.firstName} ${booking.user.lastName}`}
+                                width={100}
+                                height={100}
                               />
                             ) : (
                               <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
@@ -423,11 +425,6 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                         <div className="text-sm font-medium text-gray-900">
                           {booking.service.name}
                         </div>
-                        {booking.service.category && (
-                          <div className="text-xs text-gray-500">
-                            {booking.service.category}
-                          </div>
-                        )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">{date}</div>
@@ -518,10 +515,12 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                   <div className="flex items-center space-x-3">
                     <div className="flex-shrink-0">
                       {selectedBooking.user?.profilePicture ? (
-                        <img 
+                        <Image 
                           className="h-12 w-12 rounded-full object-cover" 
                           src={selectedBooking.user.profilePicture} 
                           alt={`${selectedBooking.user.firstName} ${selectedBooking.user.lastName}`}
+                          width={100}
+                          height={100}
                         />
                       ) : (
                         <div className="h-12 w-12 rounded-full bg-gray-300 flex items-center justify-center">
@@ -561,9 +560,6 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                 </h4>
                 <div className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-sm font-medium text-gray-900">{selectedBooking.service.name}</p>
-                  {selectedBooking.service.category && (
-                    <p className="text-xs text-gray-500 mt-1">{selectedBooking.service.category}</p>
-                  )}
                 </div>
               </div>
 

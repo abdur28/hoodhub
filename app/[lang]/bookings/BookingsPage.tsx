@@ -52,7 +52,6 @@ interface Booking {
   service: {
     id: string;
     name: string;
-    category: string;
   };
   dateTime: string;
   createdAt: string;
@@ -250,19 +249,6 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
 
   const handleNextMonth = () => {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1));
-  };
-
-  const getServiceIcon = (category: string) => {
-    switch (category) {
-      case 'Barbing':
-        return <Scissors className="w-4 h-4" />;
-      case 'Tattoo':
-        return <PaintBucket className="w-4 h-4" />;
-      case 'Lifestyle':
-        return <Diamond className="w-4 h-4" />;
-      default:
-        return <Heart className="w-4 h-4" />;
-    }
   };
 
   const displayedBookings = activeTab === "upcoming" ? bookings?.upcoming : bookings?.past;
@@ -545,15 +531,12 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
                           <div className="flex-1">
                             <div className="flex items-center gap-3 mb-2">
                               <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-                                {getServiceIcon(booking.service.category)}
+                                  <Scissors className="w-4 h-4" />
                               </div>
                               <div>
                                 <h4 className="font-franklin font-semibold text-gray-900">
                                   {booking.service.name}
                                 </h4>
-                                <p className="text-sm text-gray-500 font-franklin">
-                                  {booking.service.category}
-                                </p>
                               </div>
                             </div>
                             

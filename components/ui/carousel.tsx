@@ -282,7 +282,7 @@ function ImageCard({
   return (
     <Link href={link}
       className={cn(
-        "relative h-84 w-64 md:h-[30rem] md:w-[24rem] flex-shrink-0 overflow-hidden rounded-4xl bg-gray-900 group cursor-pointer",
+        "relative h-[28rem] w-64 md:h-[28rem] md:w-[24rem] flex-shrink-0 overflow-hidden rounded-4xl bg-gray-900 group cursor-pointer",
         className
       )}
     >

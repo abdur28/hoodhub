@@ -396,7 +396,7 @@ const LifestylePage = ({ lang, dictionary }: LifestylePageProps) => {
                 
                 <div className="flex items-center justify-center text-white/80">
                   <MapPin className="w-5 h-5 mr-2 text-yellow-500" />
-                  <span>{dictionary.lifestyle.cta.address}</span>
+                  <span>{dictionary.barbing.cta.address}</span>
                 </div>
               </div>
             </motion.div>

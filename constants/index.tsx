@@ -63,19 +63,18 @@ export const aboutData = [
   },
   {
     id: 3,
+    src: "/AAA03009.jpg",
+    titleKey: "about.manicurePedicure",
+    categoryKey: "about.lifestyle",
+    link: "/lifestyle",
+  },
+  {
+    id: 4,
     src: "/AAA02932.jpg",
     titleKey: "about.artisticExcellence",
     categoryKey: "about.tattoo",
     link: "/tattoo",
   },
-  {
-    id: 4,
-    src: "/AAA03009.jpg",
-    titleKey: "about.premiumExperience",
-    categoryKey: "about.lifestyle",
-    link: "/lifestyle",
-  },
-
   {
     id: 5,
     src: "/AAA02963.jpg",
@@ -154,8 +153,8 @@ export const maleServices = [
   },
   {
     id: 2,
-    titleKey: "services.male.spaWellness.title",
-    descriptionKey: "services.male.spaWellness.description",
+    titleKey: "services.male.manicurePedicure.title",
+    descriptionKey: "services.male.manicurePedicure.description",
     image: "/AAA02647.jpg",
   },
   {
@@ -181,8 +180,8 @@ export const femaleServices = [
   },
   {
     id: 3,
-    titleKey: "services.female.nailArtistry.title",
-    descriptionKey: "services.female.nailArtistry.description",
+    titleKey: "services.female.manicurePedicure.title",
+    descriptionKey: "services.female.manicurePedicure.description",
     image: "https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=2340&auto=format&fit=crop",
   },
 ];

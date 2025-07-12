@@ -308,6 +308,7 @@
       "clothingStore": "Магазин одежды",
       "hoodskoolStore": "Магазин HoodSkool",
       "creativeVision": "Творческое видение",
+      "manicurePedicure": "Маникюр & Педикюр",
       "barbing": "Барбершоп",
       "tattoo": "Тату",
       "lifestyle": "Образ жизни",
@@ -328,6 +329,10 @@
         "styleConsultation": {
           "title": "Консультации по стилю",
           "description": "Персональные советы по стилю и консультации по гардеробу"
+        },
+        "manicurePedicure": {
+          "title": "Маникюр и педикюр",
+          "description": "Профессиональные услуги маникюра и педикюра для всех типов кожи"
         }
       },
       "female": {
@@ -342,6 +347,10 @@
         "nailArtistry": {
           "title": "Ногтевое искусство",
           "description": "Роскошный маникюр, педикюр и индивидуальный дизайн ногтей"
+        },
+        "manicurePedicure": {
+          "title": "Маникюр и педикюр",
+          "description": "Профессиональные услуги маникюра и педикюра для всех типов кожи"
         }
       }
     },
@@ -943,6 +952,7 @@
         "braidslocks": "Брейды и заклепки",
         "tattoo": "Тату искусство",
         "nails": "Ногтевые услуги",
+        "manicurePedicure": "Маникюр и педикюр",
         "spa": "Спа и велнес",
         "barbingCategory": "Барбершоп",
         "tattooCategory": "Тату",

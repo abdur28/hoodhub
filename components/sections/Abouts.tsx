@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { motion } from "motion/react";
-import { EdgeCarousel, ImageCard } from "@/components/ui/carousel";
+import { ImageCard } from "@/components/ui/carousel";
 import { aboutData, getLocalizedData } from "@/constants";
 import type { Dictionary } from "@/app/[lang]/dictionaries";
 
@@ -11,7 +11,6 @@ interface AboutProps {
 }
 
 const About = ({ lang, dictionary }: AboutProps) => {
-
   const localizedAboutData = getLocalizedData(aboutData, dictionary, 'titleKey', 'categoryKey');
 
   return (
@@ -42,25 +41,39 @@ const About = ({ lang, dictionary }: AboutProps) => {
         </motion.p>
       </div>
 
-      {/* Edge-to-Edge Carousel */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.4 }}
-        viewport={{ once: true }}
-      >
-        <EdgeCarousel>
-          {localizedAboutData.map((item) => (
-            <ImageCard
+      {/* Responsive Grid */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          viewport={{ once: true }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
+        >
+          {localizedAboutData.map((item, index) => (
+            <motion.div
               key={item.id}
-              src={item.src}
-              title={item.title}
-              category={item.category}
-              link={item.link}
-            />
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ 
+                duration: 0.6, 
+                delay: 0.1 * index,
+                ease: "easeOut"
+              }}
+              viewport={{ once: true }}
+              className="flex justify-center"
+            >
+              <ImageCard
+                src={item.src}
+                title={item.title}
+                category={item.category}
+                link={item.link}
+                className="w-full max-w-sm"
+              />
+            </motion.div>
           ))}
-        </EdgeCarousel>
-      </motion.div>
+        </motion.div>
+      </div>
     </section>
   );
 };

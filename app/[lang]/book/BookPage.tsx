@@ -63,12 +63,12 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
 
   const user: User | null = userAsString ? JSON.parse(userAsString) : null;
 
-  // Services with translated names
+  // Services with translated names (categories removed)
   const services = [
-    { id: "barbing", name: dictionary.book.services.barbing, category: dictionary.book.services.barbingCategory },
-    { id: "braidslocks", name: dictionary.book.services.braidslocks, category: dictionary.book.services.lifestyleCategory },
-    { id: "tattoo", name: dictionary.book.services.tattoo, category: dictionary.book.services.tattooCategory },
-    { id: "nails", name: dictionary.book.services.nails, category: dictionary.book.services.lifestyleCategory },
+    { id: "barbing", name: dictionary.book.services.barbing },
+    { id: "braidslocks", name: dictionary.book.services.braidslocks },
+    { id: "manicurePedicure", name: dictionary.book.services.manicurePedicure },
+    { id: "tattoo", name: dictionary.book.services.tattoo },
   ];
 
   const timeSlots = [
@@ -230,8 +230,7 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
         body: JSON.stringify({
           service: {
             id: selectedServiceId,
-            name: selectedServiceData?.name || '',
-            category: selectedServiceData?.category || ''
+            name: selectedServiceData?.name || ''
           },
           date: selectedDate,
           time: selectedTime,
@@ -371,11 +370,7 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
                   <SelectContent>
                     {services.map((service) => (
                       <SelectItem key={service.id} value={service.id} className="font-franklin">
-                        <div className="flex items-center gap-2">
-                          <div className="font-medium">{service.name}</div>
-                          <div className="text-sm text-gray-500">•</div>
-                          <div className="text-sm text-gray-500">{service.category}</div>
-                        </div>
+                        {service.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -568,7 +563,7 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
                       value={referralCode}
                       onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
                       placeholder="Enter 7-character referral code (optional)"
-                      className="w-full h-12 text-lg font-franklin font-mono tracking-wider"
+                      className="w-full h-12 text-lg font-franklin  tracking-wider"
                       maxLength={12}
                     />
                     {isValidatingReferral && (

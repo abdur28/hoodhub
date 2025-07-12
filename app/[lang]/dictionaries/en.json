@@ -308,6 +308,7 @@
       "clothingStore": "Clothing Store",
       "hoodskoolStore": "HoodSkool Store",
       "creativeVision": "Creative Vision",
+      "manicurePedicure": "Manicure & Pedicure",
       "barbing": "Barbing",
       "tattoo": "Tattoo",
       "lifestyle": "Lifestyle",
@@ -328,6 +329,10 @@
         "styleConsultation": {
           "title": "Style Consultation",
           "description": "Personal styling advice and wardrobe consultation services"
+        },
+        "manicurePedicure": {
+          "title": "Manicure & Pedicure",
+          "description": "Professional manicure and pedicure services for all skin types"
         }
       },
       "female": {
@@ -342,6 +347,10 @@
         "nailArtistry": {
           "title": "Nail Artistry",
           "description": "Luxury manicures, pedicures, and custom nail art designs"
+        },
+        "manicurePedicure": {
+          "title": "Manicure & Pedicure",
+          "description": "Professional manicure and pedicure services for all skin types"
         }
       }
     },
@@ -943,6 +952,7 @@
         "tattoo": "Tattoo Artistry", 
         "nails": "Nail Services",
         "spa": "Spa & Wellness",
+        "manicurePedicure": "Manicure & Pedicure",
         "barbingCategory": "Barbing",
         "tattooCategory": "Tattoo",
         "lifestyleCategory": "Lifestyle"
