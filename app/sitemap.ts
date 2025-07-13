@@ -50,12 +50,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly' as const,
     },
     {
+      url: '/our-story',
+      priority: 0.6,
+      changeFrequency: 'monthly' as const,
+    },
+    {
+      url: '/our-team',
+      priority: 0.6,
+      changeFrequency: 'monthly' as const,
+    },
+    {
       url: '/terms',
       priority: 0.5,
       changeFrequency: 'yearly' as const,
     },
     {
-      url: '/privacy',
+      url: '/privacy-policy',
       priority: 0.5,
       changeFrequency: 'yearly' as const,
     },

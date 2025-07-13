@@ -4,6 +4,11 @@ import { getDictionary } from '../dictionaries';
 import Navbar from "@/components/Navbar";
 import { FloatingNav } from "@/components/ui/floating-navbar";
 import { checkAdminAccess } from "@/lib/admin";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  robots: 'noindex, nofollow', // This is correct for admin pages
+}
 
 export default async function AdminLayout({
   children,
