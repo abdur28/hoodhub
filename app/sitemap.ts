@@ -39,6 +39,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
       changeFrequency: 'daily' as const,
     },
+        {
+      url: '/bookings',
+      priority: 0.8,
+      changeFrequency: 'daily' as const,
+    },
     {
       url: '/contact',
       priority: 0.7,
