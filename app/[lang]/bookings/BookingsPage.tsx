@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { FloatingNav } from "@/components/ui/floating-navbar";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -30,7 +31,11 @@ import {
   X,
   AlertTriangle,
   Gift,
-  Copy
+  Copy,
+  Edit,
+  Save,
+  Phone,
+  Check
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -43,6 +48,7 @@ interface User {
   firstName: string;
   lastName: string;
   email: string;
+  phoneNumber?: string;
   profilePicture?: string;
   referralCode?: string;
 }
@@ -84,8 +90,102 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [bookingToDelete, setBookingToDelete] = useState<{id: string, serviceName: string, dateTime: string} | null>(null);
   const [copiedCode, setCopiedCode] = useState(false);
+  
+  // Phone editing states
+  const [isEditingPhone, setIsEditingPhone] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [originalPhoneNumber, setOriginalPhoneNumber] = useState("");
+  const [isUpdatingPhone, setIsUpdatingPhone] = useState(false);
 
-  const user: User = JSON.parse(userAsString);
+  const [user, setUser] = useState<User>(JSON.parse(userAsString));
+
+  // Initialize phone number state
+  useEffect(() => {
+    if (user.phoneNumber) {
+      setPhoneNumber(user.phoneNumber);
+      setOriginalPhoneNumber(user.phoneNumber);
+    }
+  }, [user.phoneNumber]);
+
+  // Phone number validation and formatting
+  const validatePhoneNumber = (phone: string): boolean => {
+    if (!phone.startsWith('+')) return false;
+    const digits = phone.replace(/\D/g, '');
+    return digits.length >= 10 && digits.length <= 15;
+  };
+
+  const formatPhoneNumber = (value: string): string => {
+    if (!value.startsWith('+')) {
+      value = '+' + value.replace(/^\+*/, '');
+    }
+    
+    const cleaned = value.slice(1).replace(/\D/g, '');
+    
+    if (cleaned.length > 15) {
+      return phoneNumber;
+    }
+
+    return '+' + cleaned;
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatPhoneNumber(e.target.value);
+    setPhoneNumber(formatted);
+  };
+
+  const handleEditPhone = () => {
+    setIsEditingPhone(true);
+    setPhoneNumber(user.phoneNumber || "+7");
+    setOriginalPhoneNumber(user.phoneNumber || "");
+  };
+
+  const handleCancelPhoneEdit = () => {
+    setIsEditingPhone(false);
+    setPhoneNumber(originalPhoneNumber);
+  };
+
+  const handleSavePhone = async () => {
+    if (!phoneNumber.trim() || phoneNumber === '+') {
+      toast.error("Please enter your phone number");
+      return;
+    }
+
+    if (!validatePhoneNumber(phoneNumber)) {
+      toast.error("Please enter a valid phone number");
+      return;
+    }
+
+    setIsUpdatingPhone(true);
+
+    try {
+      const response = await fetch('/api/user/update-phone', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          phoneNumber: phoneNumber,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Update local user state
+        setUser(prev => ({ ...prev, phoneNumber: phoneNumber }));
+        setOriginalPhoneNumber(phoneNumber);
+        setIsEditingPhone(false);
+        toast.success("Phone number updated successfully!");
+      } else {
+        toast.error(data.error || "Failed to update phone number");
+      }
+    } catch (error) {
+      console.error("Error updating phone number:", error);
+      toast.error("Failed to update phone number. Please try again.");
+    } finally {
+      setIsUpdatingPhone(false);
+    }
+  };
 
   // Fetch bookings on mount
   useEffect(() => {
@@ -441,11 +541,64 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
                       <User className="w-8 h-8 text-black" />
                     )}
                   </div>
-                  <div>
+                  <div className="flex-1">
                     <h3 className="text-xl font-franklin font-semibold text-gray-900">
                       {user.firstName} {user.lastName}
                     </h3>
                     <p className="text-gray-600 font-franklin">{user.email}</p>
+                    
+                    {/* Phone Number Section */}
+                    <div className="mt-2">
+                      {isEditingPhone ? (
+                        <div className="flex items-center gap-2">
+                          <div className="relative flex-1">
+                            <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                            <Input
+                              type="tel"
+                              value={phoneNumber}
+                              onChange={handlePhoneChange}
+                              placeholder="+71234567890"
+                              className="h-9 pl-9 font-franklin text-sm border-2 border-gray-200 rounded-lg focus:border-yellow-500 focus:ring-0"
+                            />
+                          </div>
+                          <Button
+                            size="sm"
+                            onClick={handleSavePhone}
+                            disabled={isUpdatingPhone}
+                            className="bg-green-600 hover:bg-green-700 text-white"
+                          >
+                            {isUpdatingPhone ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <Check className="w-4 h-4" />
+                            )}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={handleCancelPhoneEdit}
+                            disabled={isUpdatingPhone}
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <Phone className="w-4 h-4 text-gray-500" />
+                          <span className="text-gray-600 font-franklin text-sm">
+                            {user.phoneNumber || "No phone number"}
+                          </span>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={handleEditPhone}
+                            className="h-6 w-6 p-0"
+                          >
+                            <Edit className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

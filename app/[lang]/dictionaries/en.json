@@ -1152,6 +1152,23 @@
           "recipientsRequired": "Please select recipients or choose to send to all users"
         }
       }
+    },
+    "completeProfile": {
+      "title": "Complete Your Profile",
+      "description": "Hi {name}! We need your phone number to complete your booking experience.",
+      "phoneLabel": "Phone Number",
+      "phonePlaceholder": "+7 123 456 7890",
+      "phoneHelp": "We'll use this to send you booking confirmations and updates",
+      "consentText": "I agree to the processing of my personal data for booking management and service communication purposes",
+      "submit": "Complete Profile",
+      "submitting": "Completing Profile...",
+      "success": "Profile completed successfully!",
+      "errors": {
+        "phoneRequired": "Please enter your phone number",
+        "phoneInvalid": "Please enter a valid phone number",
+        "consentRequired": "Please agree to data processing",
+        "updateFailed": "Failed to update profile. Please try again."
+      }
     }
   }
   

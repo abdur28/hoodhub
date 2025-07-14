@@ -16,7 +16,9 @@ import {
   Gift,
   Copy,
   Check,
-  TrendingUp
+  TrendingUp,
+  Phone,
+  MoreHorizontal
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -43,6 +45,7 @@ interface User {
   firstName: string;
   lastName: string;
   email: string;
+  phoneNumber?: string;
   role: string;
   createdAt: string;
   bookings?: any[];
@@ -249,7 +252,8 @@ export default function UsersPage({ lang, dictionary }: UsersPageProps) {
     const matchesSearch = 
       user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase());
+      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (user.phoneNumber && user.phoneNumber.toLowerCase().includes(searchTerm.toLowerCase()));
     
     const matchesRole = 
       roleFilter === "all" ||
@@ -324,7 +328,7 @@ export default function UsersPage({ lang, dictionary }: UsersPageProps) {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <input
             type="text"
-            placeholder={dictionary.admin?.users?.searchPlaceholder || "Search users..."}
+            placeholder={dictionary.admin?.users?.searchPlaceholder || "Search users by name, email, or phone..."}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
@@ -362,6 +366,9 @@ export default function UsersPage({ lang, dictionary }: UsersPageProps) {
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     {dictionary.admin?.users?.table?.email || "Email"}
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Phone Number
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     {dictionary.admin?.users?.table?.role || "Role"}
@@ -413,6 +420,16 @@ export default function UsersPage({ lang, dictionary }: UsersPageProps) {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {user.email}
                     </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {user.phoneNumber ? (
+                        <div className="flex items-center">
+                          <Phone className="w-4 h-4 text-gray-400 mr-2" />
+                          {user.phoneNumber}
+                        </div>
+                      ) : (
+                        <span className="text-gray-400 italic">No phone</span>
+                      )}
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         {user.role === 'admin' ? (
@@ -437,7 +454,7 @@ export default function UsersPage({ lang, dictionary }: UsersPageProps) {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium" onClick={(e) => e.stopPropagation()}>
                       <Button
-                        variant="outline"
+                        variant="ghost"
                         size="sm"
                         onClick={(e) => {
                           e.stopPropagation();
@@ -445,8 +462,7 @@ export default function UsersPage({ lang, dictionary }: UsersPageProps) {
                         }}
                         className="inline-flex items-center"
                       >
-                        <Eye className="w-3 h-3 mr-1" />
-                        View Details
+                        <MoreHorizontal className="w-3 h-3 mr-1" />
                       </Button>
                     </td>
                   </motion.tr>
@@ -498,6 +514,12 @@ export default function UsersPage({ lang, dictionary }: UsersPageProps) {
                       {selectedUser.firstName} {selectedUser.lastName}
                     </p>
                     <p className="text-sm text-gray-500">{selectedUser.email}</p>
+                    {selectedUser.phoneNumber && (
+                      <div className="flex items-center mt-1">
+                        <Phone className="w-3 h-3 text-gray-400 mr-1" />
+                        <p className="text-sm text-gray-500">{selectedUser.phoneNumber}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -520,6 +542,12 @@ export default function UsersPage({ lang, dictionary }: UsersPageProps) {
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-600">Join Date:</span>
                     <span className="font-medium">{formatDate(selectedUser.createdAt)}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">Phone Number:</span>
+                    <span className="font-medium">
+                      {selectedUser.phoneNumber || "Not provided"}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-600">Total Bookings:</span>

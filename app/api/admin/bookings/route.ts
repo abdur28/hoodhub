@@ -101,6 +101,7 @@ export async function GET(request: NextRequest) {
             firstName: "$user.firstName",
             lastName: "$user.lastName",
             email: "$user.email",
+            phoneNumber: "$user.phoneNumber",
             profilePicture: "$user.profilePicture"
           }
         }

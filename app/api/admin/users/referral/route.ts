@@ -207,6 +207,7 @@ export async function GET(request: NextRequest) {
         firstName: targetUser.firstName,
         lastName: targetUser.lastName,
         email: targetUser.email,
+        phoneNumber: targetUser.phoneNumber,
         role: targetUser.role,
         createdAt: targetUser.createdAt,
         profilePicture: targetUser.profilePicture,

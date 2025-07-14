@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import BookPage from "./BookPage";
 import { getUser } from "@/lib/data";
 import { getDictionary } from '../dictionaries';
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Book Appointment - HoodHub | Schedule Your Service",
@@ -19,6 +20,12 @@ export default async function Book({
   const { lang } = await params;
   const dictionary = await getDictionary(lang as 'en' | 'ru');
   const user = await getUser();
+    
+  // Check if user needs to complete profile
+  if (!user?.phoneNumber) {
+    redirect(`/${lang}/complete-profile`);
+  }
+  
   const { service: selectedService, referralCode: referralCode } = await searchParams;
 
   return (

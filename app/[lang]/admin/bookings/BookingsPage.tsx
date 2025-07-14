@@ -18,7 +18,8 @@ import {
   MoreHorizontal,
   AlertTriangle,
   Gift,
-  Badge as BadgeIcon
+  Badge as BadgeIcon,
+  Phone
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -66,6 +67,7 @@ interface Booking {
     firstName: string;
     lastName: string;
     email: string;
+    phoneNumber?: string;
     profilePicture?: string;
   };
 }
@@ -187,6 +189,7 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
       booking.user?.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.user?.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.user?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      booking.user?.phoneNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.referral?.referralCode?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.referral?.referralUserEmail?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -268,7 +271,7 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <input
             type="text"
-            placeholder={dictionary.admin?.bookings?.searchPlaceholder || "Search bookings, customers, or referral codes..."}
+            placeholder={dictionary.admin?.bookings?.searchPlaceholder || "Search bookings, customers, phone numbers, or referral codes..."}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
@@ -365,6 +368,9 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                     {dictionary.admin?.bookings?.table?.customer || "Customer"}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Contact
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     {dictionary.admin?.bookings?.table?.service || "Service"}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -415,11 +421,19 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                             <div className="text-sm font-medium text-gray-900">
                               {booking.user?.firstName} {booking.user?.lastName}
                             </div>
-                            <div className="text-sm text-gray-500">
-                              {booking.user?.email}
-                            </div>
                           </div>
                         </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">
+                          {booking.user?.email}
+                        </div>
+                        {booking.user?.phoneNumber && (
+                          <div className="text-sm text-gray-500 flex items-center mt-1">
+                            <Phone className="w-3 h-3 mr-1" />
+                            {booking.user.phoneNumber}
+                          </div>
+                        )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-gray-900">
@@ -533,6 +547,12 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                         {selectedBooking.user?.firstName} {selectedBooking.user?.lastName}
                       </p>
                       <p className="text-sm text-gray-500">{selectedBooking.user?.email}</p>
+                      {selectedBooking.user?.phoneNumber && (
+                        <div className="flex items-center mt-1">
+                          <Phone className="w-3 h-3 text-gray-400 mr-1" />
+                          <p className="text-sm text-gray-500">{selectedBooking.user.phoneNumber}</p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -560,6 +580,25 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                 </h4>
                 <div className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-sm font-medium text-gray-900">{selectedBooking.service.name}</p>
+                </div>
+              </div>
+
+              {/* Contact Information */}
+              <div>
+                <h4 className="text-sm font-medium text-gray-700 mb-2">
+                  Contact Information
+                </h4>
+                <div className="bg-gray-50 p-3 rounded-lg space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">Email:</span>
+                    <span className="font-medium">{selectedBooking.user?.email}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">Phone:</span>
+                    <span className="font-medium">
+                      {selectedBooking.user?.phoneNumber || "Not provided"}
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -650,6 +689,12 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                 <p className="text-gray-500">
                   {formatDateTime(bookingToCancel.dateTime).date} at {formatDateTime(bookingToCancel.dateTime).time}
                 </p>
+                {bookingToCancel.user?.phoneNumber && (
+                  <div className="flex items-center text-gray-500 text-xs mt-1">
+                    <Phone className="w-3 h-3 mr-1" />
+                    {bookingToCancel.user.phoneNumber}
+                  </div>
+                )}
                 {bookingToCancel.referral && (
                   <p className="text-green-600 text-xs mt-1">
                     Referred by: {bookingToCancel.referral.referralUserEmail}

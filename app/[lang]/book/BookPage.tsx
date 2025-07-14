@@ -25,7 +25,8 @@ import {
   AlertTriangle,
   X,
   Gift,
-  Info
+  Info,
+  Phone
 } from "lucide-react";
 import Image from "next/image";
 import type { Dictionary } from "../dictionaries";
@@ -36,6 +37,7 @@ interface User {
   firstName: string;
   lastName: string;
   email: string;
+  phoneNumber?: string;
   profilePicture?: string;
 }
 
@@ -526,6 +528,12 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
                         {user.firstName} {user.lastName}
                       </h3>
                       <p className="text-gray-600 font-franklin">{user.email}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <Phone className="w-4 h-4 text-gray-500" />
+                        <span className="text-gray-600 font-franklin text-sm">
+                          {user.phoneNumber || "No phone number"}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 ) : (

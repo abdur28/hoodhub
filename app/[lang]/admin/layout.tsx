@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import { FloatingNav } from "@/components/ui/floating-navbar";
 import { checkAdminAccess } from "@/lib/admin";
 import { Metadata } from "next";
+import { getUser } from "@/lib/data";
 
 export const metadata: Metadata = {
   robots: 'noindex, nofollow', // This is correct for admin pages
@@ -25,6 +26,14 @@ export default async function AdminLayout({
   if (!isAdmin) {
     redirect(`/${lang}/`);
   }
+
+  const user = await getUser();
+  
+    // Check if user needs to complete profile
+  if (!user?.phoneNumber) {
+    redirect(`/${lang}/complete-profile`);
+  }
+
 
   return (
     <div className="min-h-screen bg-gray-50">

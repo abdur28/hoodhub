@@ -5,7 +5,16 @@ import type { NextRequest } from 'next/server';
 const locales = ['en', 'ru'] as const;
 const defaultLocale = 'en' as const;
 
-const isProtectedRoute = createRouteMatcher(['/en/bookings(.*)', '/en/book(.*)', '/en/admin(.*)', '/ru/bookings(.*)', '/ru/book(.*)', '/ru/admin(.*)']);
+const isProtectedRoute = createRouteMatcher([
+  '/en/bookings(.*)', 
+  '/en/book(.*)', 
+  '/en/admin(.*)', 
+  '/en/complete-profile',
+  '/ru/bookings(.*)', 
+  '/ru/book(.*)', 
+  '/ru/admin(.*)',
+  '/ru/complete-profile'
+]);
 
 // SEO and static files that should NOT be redirected with locale
 const seoAndStaticFiles = [

@@ -19,6 +19,12 @@ export default async function Bookings({
   const dictionary = await getDictionary(lang as 'en' | 'ru');
   const user = await getUser();
 
+    
+  // Check if user needs to complete profile
+  if (!user?.phoneNumber) {
+    redirect(`/${lang}/complete-profile`);
+  }
+
   if (!user) {
     return redirect(`/${lang}/sign-in`);
   }
