@@ -18,7 +18,8 @@ import {
   Check,
   TrendingUp,
   Phone,
-  MoreHorizontal
+  MoreHorizontal,
+  MailOpen
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -89,6 +90,13 @@ export default function UsersPage({ lang, dictionary }: UsersPageProps) {
       icon: Calendar,
       href: `/${lang}/admin/bookings`,
       current: activeTab === "bookings"
+    },
+    {
+      id: "subscribers",
+      label: dictionary.admin?.tabs?.subscribers || "Newsletter",
+      icon: MailOpen,
+      href: `/${lang}/admin/subscribers`,
+      current: activeTab === "subscribers"
     },
     {
       id: "emails",

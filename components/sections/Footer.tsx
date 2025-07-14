@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import type { Dictionary } from "@/app/[lang]/dictionaries";
+import { toast } from "sonner";
 
 interface FooterProps {
   lang: string;
@@ -35,12 +36,55 @@ const Footer = ({ lang, dictionary }: FooterProps) => {
   const [contactOpen, setContactOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [quickLinksOpen, setQuickLinksOpen] = useState(false);
+  const [subscribing, setSubscribing] = useState(false);
 
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle newsletter subscription
-    console.log("Newsletter subscription:", email);
-    setEmail("");
+    
+    if (!email.trim()) {
+      return;
+    }
+
+    try {
+      setSubscribing(true);
+      
+      const response = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email.trim()
+        }),
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        setEmail("");
+        // Show success toast
+        toast.success(
+          data.message || 
+          dictionary.footer.newsletter.successMessage || 
+          'Successfully subscribed to newsletter!'
+        );
+      } else {
+        // Show error toast
+        toast.error(
+          data.error || 
+          dictionary.footer.newsletter.errorMessage || 
+          'Failed to subscribe. Please try again.'
+        );
+      }
+    } catch (error) {
+      console.error("Error subscribing to newsletter:", error);
+      toast.error(
+        dictionary.footer.newsletter.errorMessage || 
+        'Failed to subscribe. Please try again.'
+      );
+    } finally {
+      setSubscribing(false);
+    }
   };
 
   const socialLinks = [
@@ -122,6 +166,7 @@ const Footer = ({ lang, dictionary }: FooterProps) => {
                 />
                 <Button
                   type="submit"
+                  disabled={!email || subscribing}
                   className="h-max bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-black font-franklin font-semibold px-8 py-4 rounded-full hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 transition-all duration-300 group"
                 >
                   {dictionary.footer.newsletter.subscribe}

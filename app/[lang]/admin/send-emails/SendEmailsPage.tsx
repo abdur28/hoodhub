@@ -7,6 +7,7 @@ import {
   Users as UsersIcon,
   Calendar,
   Mail,
+  MailOpen,
   Send,
   Users,
   UserCheck,
@@ -33,9 +34,17 @@ interface User {
   joinedDate: string;
 }
 
+interface Subscriber {
+  id: string;
+  name: string;
+  email: string;
+  joinedDate: string;
+}
+
 interface EmailResult {
   email: string;
   name: string;
+  type: string;
   success: boolean;
   error?: string;
 }
@@ -47,13 +56,16 @@ interface SendEmailsPageProps {
 
 export default function SendEmailsPage({ lang, dictionary }: SendEmailsPageProps) {
   const [users, setUsers] = useState<User[]>([]);
+  const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [activeTab, setActiveTab] = useState("emails");
   
   // Email form state
   const [recipients, setRecipients] = useState<string[]>([]);
+  const [subscriberRecipients, setSubscriberRecipients] = useState<string[]>([]);
   const [sendToAll, setSendToAll] = useState(false);
+  const [sendToAllSubscribers, setSendToAllSubscribers] = useState(false);
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   
@@ -80,6 +92,13 @@ export default function SendEmailsPage({ lang, dictionary }: SendEmailsPageProps
       current: activeTab === "bookings"
     },
     {
+      id: "subscribers",
+      label: dictionary.admin?.tabs?.subscribers || "Newsletter",
+      icon: MailOpen,
+      href: `/${lang}/admin/subscribers`,
+      current: activeTab === "subscribers"
+    },
+    {
       id: "emails",
       label: dictionary.admin?.tabs?.emails || "Send Emails",
       icon: Mail,
@@ -100,6 +119,7 @@ export default function SendEmailsPage({ lang, dictionary }: SendEmailsPageProps
       
       if (data.success) {
         setUsers(data.users);
+        setSubscribers(data.subscribers || []);
       } else {
         toast.error(data.error || "Failed to fetch users");
       }
@@ -119,11 +139,27 @@ export default function SendEmailsPage({ lang, dictionary }: SendEmailsPageProps
     }
   };
 
+  const handleSubscriberSelection = (subscriberId: string) => {
+    if (subscriberRecipients.includes(subscriberId)) {
+      setSubscriberRecipients(subscriberRecipients.filter(id => id !== subscriberId));
+    } else {
+      setSubscriberRecipients([...subscriberRecipients, subscriberId]);
+    }
+  };
+
   const handleSelectAll = () => {
     if (recipients.length === users.length) {
       setRecipients([]);
     } else {
       setRecipients(users.map(user => user.id));
+    }
+  };
+
+  const handleSelectAllSubscribers = () => {
+    if (subscriberRecipients.length === subscribers.length) {
+      setSubscriberRecipients([]);
+    } else {
+      setSubscriberRecipients(subscribers.map(subscriber => subscriber.id));
     }
   };
 
@@ -139,8 +175,8 @@ export default function SendEmailsPage({ lang, dictionary }: SendEmailsPageProps
       return;
     }
     
-    if (!sendToAll && recipients.length === 0) {
-      toast.error(dictionary.admin?.emails?.errors?.recipientsRequired || "Please select recipients or choose to send to all users");
+    if (!sendToAll && !sendToAllSubscribers && recipients.length === 0 && subscriberRecipients.length === 0) {
+      toast.error(dictionary.admin?.emails?.errors?.recipientsRequired || "Please select recipients or choose to send to all users/subscribers");
       return;
     }
 
@@ -154,9 +190,11 @@ export default function SendEmailsPage({ lang, dictionary }: SendEmailsPageProps
         },
         body: JSON.stringify({
           recipients: sendToAll ? null : recipients,
+          subscriberRecipients: sendToAllSubscribers ? null : subscriberRecipients,
           subject: subject.trim(),
           message: message.trim(),
-          sendToAll
+          sendToAll,
+          sendToAllSubscribers
         }),
       });
 
@@ -172,7 +210,9 @@ export default function SendEmailsPage({ lang, dictionary }: SendEmailsPageProps
         setSubject("");
         setMessage("");
         setRecipients([]);
+        setSubscriberRecipients([]);
         setSendToAll(false);
+        setSendToAllSubscribers(false);
         
         toast.success(data.message);
       } else {
@@ -232,7 +272,7 @@ export default function SendEmailsPage({ lang, dictionary }: SendEmailsPageProps
             {dictionary.admin?.emails?.title || "Email Management"}
           </h2>
           <p className="text-sm text-gray-600">
-            {dictionary.admin?.emails?.subtitle || "Send custom emails to your users"}
+            {dictionary.admin?.emails?.subtitle || "Send custom emails to your users and subscribers"}
           </p>
         </div>
       </div>
@@ -251,22 +291,37 @@ export default function SendEmailsPage({ lang, dictionary }: SendEmailsPageProps
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   {dictionary.admin?.emails?.compose?.recipients || "Recipients"}
                 </label>
-                <div className="space-y-2">
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={sendToAll}
-                      onChange={(e) => setSendToAll(e.target.checked)}
-                      className="rounded border-gray-300 text-yellow-600 focus:ring-yellow-500"
-                    />
-                    <span className="ml-2 text-sm text-gray-700">
-                      {dictionary.admin?.emails?.compose?.sendToAll || "Send to all users"} ({users.length})
-                    </span>
-                  </label>
+                <div className="space-y-3">
+                  <div className="space-y-2">
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={sendToAll}
+                        onChange={(e) => setSendToAll(e.target.checked)}
+                        className="rounded border-gray-300 text-yellow-600 focus:ring-yellow-500"
+                      />
+                      <span className="ml-2 text-sm text-gray-700">
+                        {dictionary.admin?.emails?.compose?.sendToAllUsers || "Send to all users"} ({users.length})
+                      </span>
+                    </label>
+                    
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={sendToAllSubscribers}
+                        onChange={(e) => setSendToAllSubscribers(e.target.checked)}
+                        className="rounded border-gray-300 text-yellow-600 focus:ring-yellow-500"
+                      />
+                      <span className="ml-2 text-sm text-gray-700">
+                        {dictionary.admin?.emails?.compose?.sendToAllSubscribers || "Send to all newsletter subscribers"} ({subscribers.length})
+                      </span>
+                    </label>
+                  </div>
                   
-                  {!sendToAll && (
+                  {(!sendToAll || !sendToAllSubscribers) && (
                     <div className="text-sm text-gray-600">
-                      {dictionary.admin?.emails?.compose?.selectedUsers || "Selected users"}: {recipients.length}/{users.length}
+                      {dictionary.admin?.emails?.compose?.selectedCount || "Selected"}: {recipients.length + subscriberRecipients.length} total
+                      ({recipients.length} users, {subscriberRecipients.length} subscribers)
                     </div>
                   )}
                 </div>
@@ -304,7 +359,7 @@ export default function SendEmailsPage({ lang, dictionary }: SendEmailsPageProps
               <div className="flex justify-end">
                 <Button
                   onClick={handleSendEmail}
-                  disabled={sending || (!sendToAll && recipients.length === 0) || !subject.trim() || !message.trim()}
+                  disabled={sending || (!sendToAll && !sendToAllSubscribers && recipients.length === 0 && subscriberRecipients.length === 0) || !subject.trim() || !message.trim()}
                   className="bg-yellow-600 hover:bg-yellow-700 text-white"
                 >
                   {sending ? (
@@ -324,55 +379,114 @@ export default function SendEmailsPage({ lang, dictionary }: SendEmailsPageProps
           </div>
         </div>
 
-        {/* User Selection Panel */}
+        {/* User and Subscriber Selection Panel */}
         <div className="space-y-6">
-          {!sendToAll && (
+          {(!sendToAll || !sendToAllSubscribers) && (
             <div className="bg-white p-6 rounded-lg border border-gray-200">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium text-gray-900">
-                  {dictionary.admin?.emails?.users?.title || "Select Users"}
-                </h3>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleSelectAll}
-                >
-                  {recipients.length === users.length 
-                    ? (dictionary.admin?.emails?.users?.deselectAll || "Deselect All")
-                    : (dictionary.admin?.emails?.users?.selectAll || "Select All")
-                  }
-                </Button>
-              </div>
-              
-              {loading ? (
-                <div className="flex items-center justify-center py-4">
-                  <Loader2 className="w-5 h-5 animate-spin text-gray-500" />
-                </div>
-              ) : (
-                <div className="space-y-2 max-h-96 overflow-y-auto">
-                  {users.map((user) => (
-                    <label
-                      key={user.id}
-                      className="flex items-center p-2 hover:bg-gray-50 rounded cursor-pointer"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={recipients.includes(user.id)}
-                        onChange={() => handleUserSelection(user.id)}
-                        className="rounded border-gray-300 text-yellow-600 focus:ring-yellow-500"
-                      />
-                      <div className="ml-3 flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 truncate">
-                          {user.name}
-                        </p>
-                        <p className="text-xs text-gray-500 truncate">
-                          {user.email}
-                        </p>
+              <div className="space-y-6">
+                
+                {/* Users Section */}
+                {!sendToAll && (
+                  <div>
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="text-lg font-medium text-gray-900">
+                        {dictionary.admin?.emails?.users?.title || "Select Users"}
+                      </h3>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleSelectAll}
+                      >
+                        {recipients.length === users.length 
+                          ? (dictionary.admin?.emails?.users?.deselectAll || "Deselect All")
+                          : (dictionary.admin?.emails?.users?.selectAll || "Select All")
+                        }
+                      </Button>
+                    </div>
+                    
+                    {loading ? (
+                      <div className="flex items-center justify-center py-4">
+                        <Loader2 className="w-5 h-5 animate-spin text-gray-500" />
                       </div>
-                    </label>
-                  ))}
-                </div>
-              )}
+                    ) : (
+                      <div className="space-y-2 max-h-48 overflow-y-auto">
+                        {users.map((user) => (
+                          <label
+                            key={user.id}
+                            className="flex items-center p-2 hover:bg-gray-50 rounded cursor-pointer"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={recipients.includes(user.id)}
+                              onChange={() => handleUserSelection(user.id)}
+                              className="rounded border-gray-300 text-yellow-600 focus:ring-yellow-500"
+                            />
+                            <div className="ml-3 flex-1 min-w-0">
+                              <p className="text-sm font-medium text-gray-900 truncate">
+                                {user.name}
+                              </p>
+                              <p className="text-xs text-gray-500 truncate">
+                                {user.email}
+                              </p>
+                            </div>
+                          </label>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Subscribers Section */}
+                {!sendToAllSubscribers && (
+                  <div>
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="text-lg font-medium text-gray-900">
+                        {dictionary.admin?.emails?.subscribers?.title || "Select Subscribers"}
+                      </h3>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleSelectAllSubscribers}
+                      >
+                        {subscriberRecipients.length === subscribers.length 
+                          ? (dictionary.admin?.emails?.subscribers?.deselectAll || "Deselect All")
+                          : (dictionary.admin?.emails?.subscribers?.selectAll || "Select All")
+                        }
+                      </Button>
+                    </div>
+                    
+                    {loading ? (
+                      <div className="flex items-center justify-center py-4">
+                        <Loader2 className="w-5 h-5 animate-spin text-gray-500" />
+                      </div>
+                    ) : (
+                      <div className="space-y-2 max-h-48 overflow-y-auto">
+                        {subscribers.map((subscriber) => (
+                          <label
+                            key={subscriber.id}
+                            className="flex items-center p-2 hover:bg-gray-50 rounded cursor-pointer"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={subscriberRecipients.includes(subscriber.id)}
+                              onChange={() => handleSubscriberSelection(subscriber.id)}
+                              className="rounded border-gray-300 text-yellow-600 focus:ring-yellow-500"
+                            />
+                            <div className="ml-3 flex-1 min-w-0">
+                              <p className="text-sm font-medium text-gray-900 truncate">
+                                {subscriber.email}
+                              </p>
+                              <p className="text-xs text-gray-500 truncate">
+                                Newsletter subscriber
+                              </p>
+                            </div>
+                          </label>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
@@ -392,10 +506,20 @@ export default function SendEmailsPage({ lang, dictionary }: SendEmailsPageProps
               
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-600">
+                  {dictionary.admin?.emails?.stats?.totalSubscribers || "Total Subscribers"}
+                </span>
+                <span className="text-sm font-medium text-gray-900">{subscribers.length}</span>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">
                   {dictionary.admin?.emails?.stats?.selectedUsers || "Selected"}
                 </span>
                 <span className="text-sm font-medium text-gray-900">
-                  {sendToAll ? users.length : recipients.length}
+                  {sendToAll && sendToAllSubscribers 
+                    ? users.length + subscribers.length 
+                    : (sendToAll ? users.length : recipients.length) + (sendToAllSubscribers ? subscribers.length : subscriberRecipients.length)
+                  }
                 </span>
               </div>
             </div>
@@ -444,11 +568,18 @@ export default function SendEmailsPage({ lang, dictionary }: SendEmailsPageProps
                     ) : (
                       <XCircle className="w-4 h-4 text-red-500 mr-2" />
                     )}
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">
-                        {result.name}
-                      </p>
-                      <p className="text-xs text-gray-500">{result.email}</p>
+                    <div className="flex items-center">
+                      {result.type === 'subscriber' && (
+                        <MailOpen className="w-3 h-3 text-blue-500 mr-1" />
+                      )}
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">
+                          {result.name}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {result.email} • {result.type === 'user' ? 'User' : 'Subscriber'}
+                        </p>
+                      </div>
                     </div>
                   </div>
                   <span className={`text-xs font-medium ${

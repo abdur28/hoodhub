@@ -71,6 +71,7 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
     { id: "braidslocks", name: dictionary.book.services.braidslocks },
     { id: "manicurePedicure", name: dictionary.book.services.manicurePedicure },
     { id: "tattoo", name: dictionary.book.services.tattoo },
+    { id: "beautyMakeup", name: dictionary.book.services.beautyMakeup },
   ];
 
   const timeSlots = [

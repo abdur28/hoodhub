@@ -617,7 +617,10 @@
         "titleHighlight": "HoodHub",
         "subtitle": "Get exclusive updates, style tips, and special offers delivered to your inbox.",
         "placeholder": "Enter your email",
-        "subscribe": "Subscribe"
+        "subscribe": "Subscribe",
+        "subscribing": "Subscribing...",
+        "successMessage": "Successfully subscribed to newsletter! Check your email for a welcome message.",
+        "errorMessage": "Failed to subscribe. Please try again."
       },
       "company": {
         "description": "Where artistry meets precision. Experience premium barbering, custom tattoo work, and luxury lifestyle services in the heart of the city."
@@ -951,6 +954,7 @@
         "braidslocks": "Braids & Locks",
         "tattoo": "Tattoo Artistry", 
         "nails": "Nail Services",
+        "beautyMakeup": "Beauty & Makeup",
         "spa": "Spa & Wellness",
         "manicurePedicure": "Manicure & Pedicure",
         "barbingCategory": "Barbing",
@@ -1034,7 +1038,8 @@
       "updating": "Updating...",
       "tabs": {
         "users": "Users",
-        "bookings": "Bookings", 
+        "bookings": "Bookings",
+        "subscribers": "Newsletter",
         "emails": "Send Emails"
       },
       "actions": {
@@ -1047,7 +1052,10 @@
         "filter": "Filter",
         "save": "Save",
         "send": "Send",
-        "changeRole": "Change Role"
+        "changeRole": "Change Role",
+        "title": "Actions",
+        "remove": "Remove",
+        "removing": "Removing..."
       },
       "filters": {
         "all": "All",
@@ -1113,14 +1121,51 @@
           "status": "Status"
         }
       },
+      "subscribers": {
+        "title": "Newsletter Subscribers",
+        "subtitle": "Manage your newsletter subscribers",
+        "export": "Export CSV",
+        "stats": {
+          "total": "Total Subscribers",
+          "active": "Active",
+          "thisWeek": "This Week",
+          "thisMonth": "This Month"
+        },
+        "search": {
+          "placeholder": "Search subscribers..."
+        },
+        "list": {
+          "title": "Subscribers"
+        },
+        "table": {
+          "email": "Email",
+          "subscribed": "Subscribed",
+          "status": "Status"
+        },
+        "status": {
+          "active": "Active",
+          "inactive": "Inactive"
+        },
+        "empty": {
+          "search": "No subscribers found",
+          "searchDesc": "Try adjusting your search terms",
+          "noSubscribers": "No subscribers yet",
+          "noSubscribersDesc": "Newsletter subscribers will appear here"
+        },
+        "delete": {
+          "title": "Remove Subscriber",
+          "description": "Are you sure you want to remove this subscriber? This action cannot be undone."
+        }
+      },
       "emails": {
         "title": "Email Management",
         "subtitle": "Send custom emails to your users",
         "compose": {
           "title": "Compose Email",
           "recipients": "Recipients",
-          "sendToAll": "Send to all users",
-          "selectedUsers": "Selected users",
+          "sendToAllUsers": "Send to all users",
+          "sendToAllSubscribers": "Send to all newsletter subscribers",
+          "selectedCount": "Selected",
           "subject": "Subject",
           "subjectPlaceholder": "Enter email subject...",
           "message": "Message",
@@ -1133,10 +1178,21 @@
           "selectAll": "Select All",
           "deselectAll": "Deselect All"
         },
+        "subscribers": {
+          "title": "Select Subscribers",
+          "selectAll": "Select All",
+          "deselectAll": "Deselect All"
+        },
         "stats": {
           "title": "Email Statistics",
           "totalUsers": "Total Users",
+          "totalSubscribers": "Total Subscribers",
           "selectedUsers": "Selected"
+        },
+        "errors": {
+          "subjectRequired": "Subject is required",
+          "messageRequired": "Message is required",
+          "recipientsRequired": "Please select recipients or choose to send to all users/subscribers"
         },
         "results": {
           "title": "Email Campaign Results",
@@ -1145,11 +1201,6 @@
           "successRate": "success rate",
           "sent": "Sent",
           "failed": "Failed"
-        },
-        "errors": {
-          "subjectRequired": "Subject is required",
-          "messageRequired": "Message is required",
-          "recipientsRequired": "Please select recipients or choose to send to all users"
         }
       }
     },
