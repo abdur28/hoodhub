@@ -68,8 +68,12 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
   // Services with translated names (categories removed)
   const services = [
     { id: "barbing", name: dictionary.book.services.barbing },
-    { id: "braidslocks", name: dictionary.book.services.braidslocks },
-    { id: "manicurePedicure", name: dictionary.book.services.manicurePedicure },
+    { id: "braids", name: dictionary.book.services.braids },  
+    { id: "locs", name: dictionary.book.services.locs },
+    { id: "detox-hairCare", name: dictionary.book.services.detoxHairCare },
+    { id: "manicure", name: dictionary.book.services.manicure },
+    { id: "pedicure", name: dictionary.book.services.pedicure },
+    { id: "hairStraightening", name: dictionary.book.services.hairStraightening },
     { id: "tattoo", name: dictionary.book.services.tattoo },
     { id: "beautyMakeup", name: dictionary.book.services.beautyMakeup },
   ];

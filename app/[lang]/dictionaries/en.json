@@ -951,12 +951,16 @@
       },
       "services": {
         "barbing": "Professional Barbing",
-        "braidslocks": "Braids & Locks",
+        "braids": "Braids",
+        "locs": "Locs",
+        "detoxHairCare": "Detox / Hair Care",
         "tattoo": "Tattoo Artistry", 
         "nails": "Nail Services",
         "beautyMakeup": "Beauty & Makeup",
         "spa": "Spa & Wellness",
-        "manicurePedicure": "Manicure & Pedicure",
+        "manicure": "Manicure",
+        "pedicure": "Pedicure",
+        "hairStraightening": "Hair Straightening",
         "barbingCategory": "Barbing",
         "tattooCategory": "Tattoo",
         "lifestyleCategory": "Lifestyle"
