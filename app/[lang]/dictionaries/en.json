@@ -936,11 +936,13 @@
         "titleHighlight": "Experience"
       },
       "form": {
-        "selectService": "Select Service",
-        "chooseService": "Choose your service",
+        "selectService": "Select Services",
+        "chooseService": "Choose your services",
         "selectDate": "Select Date",
         "selectTime": "Select Time",
-        "loadingSlots": "Loading available slots..."
+        "loadingSlots": "Loading available slots...",
+        "comment": "Comment (optional)",
+        "commentPlaceholder": "Add any special requests or comments about your booking..."
       },
       "calendar": {
         "months": [
@@ -972,9 +974,10 @@
       },
       "summary": {
         "title": "Booking Summary",
-        "service": "Service",
+        "service": "Services",
         "date": "Date", 
         "time": "Time",
+        "comment": "Comment",
         "notSelected": "Not selected",
         "processing": "Processing...",
         "bookButton": "Book Appointment"
@@ -988,7 +991,9 @@
         "selectAll": "Please select all required fields",
         "confirmed": "Booking confirmed! We will contact you soon.",
         "failed": "Failed to create booking",
-        "error": "Something went wrong. Please try again."
+        "error": "Something went wrong. Please try again.",
+        "serviceConflict": "Some of your selected services are already booked at this time. Please choose a different time or remove conflicting services.",
+        "multipleServicesSuccess": "Multiple services booked successfully!"
       }
     },
     "bookings": {

@@ -45,6 +45,7 @@
       max-width: 600px;
       margin: 0 auto;
       background-color: #ffffff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     
     .email-header {
@@ -109,101 +110,158 @@
     .detail-label {
       font-weight: 600;
       color: #666666;
+      min-width: 100px;
     }
     
     .detail-value {
       color: #1a1a1a;
       font-weight: 500;
+      text-align: right;
+      flex: 1;
     }
-    
-    /* Admin notification styles */
-    .admin-notification {
-      background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
-      border-left: 4px solid #2196f3;
-      padding: 20px;
-      margin: 25px 0;
-      border-radius: 0 8px 8px 0;
-    }
-    
-    .admin-notification h3 {
-      margin: 0 0 15px 0;
-      color: #1565c0;
-      font-size: 18px;
-      font-weight: 600;
-    }
-    
-    .customer-details {
-      background-color: #f0f4f8;
-      border-left: 4px solid #4fc3f7;
-      padding: 15px;
-      margin: 20px 0;
-      border-radius: 0 6px 6px 0;
-    }
-    
-    .customer-details h4 {
-      margin: 0 0 10px 0;
-      color: #0277bd;
-      font-size: 16px;
-      font-weight: 600;
-    }
-    
-    .booking-id-badge {
-      background: linear-gradient(135deg, #673ab7 0%, #9c27b0 100%);
-      color: white;
-      padding: 6px 12px;
-      border-radius: 12px;
-      display: inline-block;
-      font-size: 12px;
-      font-weight: 600;
-      margin: 10px 0;
-      font-family: monospace;
-    }
-    
-    .referral-section {
-      background: linear-gradient(135deg, #e8f5e8 0%, #f0f8ff 100%);
+
+    /* New styles for multiple services */
+    .services-container {
+      background-color: #f8f9fa;
       border-left: 4px solid #4caf50;
       padding: 20px;
       margin: 25px 0;
       border-radius: 0 8px 8px 0;
     }
-    
-    .referral-section h3 {
-      margin: 0 0 15px 0;
-      color: #2e7d32;
-      font-size: 18px;
+
+    .services-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .service-count-badge {
+      background: linear-gradient(135deg, #4caf50, #45a049);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
       font-weight: 600;
+      margin-left: 10px;
+      text-transform: uppercase;
+    }
+
+    .services-list {
+      margin: 15px 0;
+    }
+
+    .service-item {
+      background-color: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 12px 15px;
+      margin: 8px 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .service-icon {
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(135deg, #d4a853, #c19925);
+      border-radius: 50%;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+
+    .service-name {
+      font-weight: 500;
+      color: #1a1a1a;
+    }
+
+    /* Comment section styles */
+    .comment-section {
+      background-color: #fff3e0;
+      border-left: 4px solid #ff9800;
+      padding: 20px;
+      margin: 25px 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .comment-icon {
+      color: #ff9800;
+      font-size: 18px;
+      margin-right: 8px;
+    }
+
+    .comment-text {
+      font-style: italic;
+      color: #5d4037;
+      margin: 10px 0 0 0;
+      padding: 10px;
+      background-color: #ffffff;
+      border-radius: 6px;
+      border: 1px solid #ffcc02;
+    }
+    
+    .admin-notification {
+      background-color: #e3f2fd;
+      border: 1px solid #2196f3;
+      padding: 20px;
+      margin: 25px 0;
+      border-radius: 8px;
+    }
+    
+    .booking-id-badge {
+      background-color: #2196f3;
+      color: white;
+      padding: 5px 12px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-block;
+      margin: 10px 0;
+    }
+    
+    .customer-details {
+      background-color: #ffffff;
+      padding: 15px;
+      border-radius: 6px;
+      margin: 15px 0;
+    }
+    
+    .referral-section {
+      background-color: #e8f5e8;
+      border: 1px solid #4caf50;
+      padding: 20px;
+      margin: 25px 0;
+      border-radius: 8px;
     }
     
     .referral-code-badge {
-      background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+      background: linear-gradient(135deg, #4caf50, #45a049);
       color: white;
       padding: 6px 12px;
-      border-radius: 12px;
-      display: inline-block;
-      font-size: 12px;
+      border-radius: 6px;
+      font-family: 'Courier New', monospace;
       font-weight: 600;
-      margin: 5px 0;
-      font-family: monospace;
+      font-size: 14px;
+      display: inline-block;
     }
     
-    .cta-button {
-      display: inline-block;
-      background: linear-gradient(135deg, #d4a853 0%, #c19a4a 100%);
-      color: #ffffff !important;
-      text-decoration: none;
-      padding: 15px 30px;
+    .reminder-highlight {
+      background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+      border: 1px solid #ff9800;
+      padding: 20px;
+      margin: 25px 0;
       border-radius: 8px;
-      font-weight: 600;
-      font-size: 16px;
       text-align: center;
-      margin: 20px 0;
-      box-shadow: 0 4px 15px rgba(212, 168, 83, 0.3);
-      transition: all 0.3s ease;
+      color: #e65100;
+      font-weight: 600;
     }
     
-    .cta-button:hover {
-      background: linear-gradient(135deg, #c19a4a 0%, #d4a853 100%);
-      box-shadow: 0 6px 20px rgba(212, 168, 83, 0.4);
+    .cancellation-note {
+      background: linear-gradient(135deg, #ffebee, #ffcdd2);
+      border: 1px solid #f44336;
+      padding: 20px;
+      margin: 25px 0;
+      border-radius: 8px;
+      color: #c62828;
     }
     
     .button-container {
@@ -211,16 +269,39 @@
       margin: 30px 0;
     }
     
+    .cta-button {
+      background: linear-gradient(135deg, #d4a853, #c19925);
+      color: #ffffff !important;
+      text-decoration: none;
+      padding: 15px 30px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 16px;
+      display: inline-block;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .cta-button:hover {
+      background: linear-gradient(135deg, #c19925, #a67c00);
+      transform: translateY(-2px);
+    }
+    
     .email-footer {
       background-color: #1a1a1a;
       color: #ffffff;
-      padding: 30px;
+      padding: 40px 30px;
       text-align: center;
     }
     
-    .footer-content {
-      font-size: 14px;
-      line-height: 1.5;
+    .footer-content h3 {
+      background: linear-gradient(135deg, #d4a853, #c19925);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: 24px;
+      font-weight: 700;
     }
     
     .footer-links {
@@ -235,19 +316,7 @@
     }
     
     .footer-links a:hover {
-      text-decoration: underline;
-    }
-    
-    .social-links {
-      margin: 20px 0;
-    }
-    
-    .social-links a {
-      display: inline-block;
-      margin: 0 10px;
-      color: #d4a853;
-      font-size: 18px;
-      text-decoration: none;
+      color: #ffffff;
     }
     
     .copyright {
@@ -255,45 +324,15 @@
       color: #999999;
       margin-top: 20px;
     }
-    
-    .welcome-badge {
-      background: linear-gradient(135deg, #d4a853 0%, #c19a4a 100%);
-      color: white;
-      padding: 8px 20px;
-      border-radius: 20px;
-      display: inline-block;
-      font-size: 14px;
-      font-weight: 600;
-      margin: 0 0 20px 0;
-    }
-    
-    .reminder-highlight {
-      background-color: #fff3cd;
-      border: 1px solid #ffeaa7;
-      border-radius: 8px;
-      padding: 15px;
-      margin: 20px 0;
-      text-align: center;
-    }
-    
-    .cancellation-note {
-      background-color: #f8d7da;
-      border: 1px solid #f5c6cb;
-      border-radius: 8px;
-      padding: 15px;
-      margin: 20px 0;
-      color: #721c24;
-    }
-    
+
     /* Responsive design */
     @media only screen and (max-width: 600px) {
       .email-container {
         width: 100% !important;
+        margin: 0 !important;
       }
       
-      .email-header,
-      .email-body,
-      .email-footer {
+      .email-body, .email-header, .email-footer {
         padding: 20px !important;
       }
       
@@ -309,10 +348,28 @@
       .detail-label {
         margin-bottom: 5px;
       }
+
+      .detail-value {
+        text-align: left;
+      }
       
       .footer-links a {
         display: block;
         margin: 10px 0;
+      }
+
+      .service-item {
+        padding: 10px;
+      }
+
+      .services-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .service-count-badge {
+        margin-left: 0;
+        margin-top: 5px;
       }
     }
   </style>
@@ -357,8 +414,25 @@
         {{/if}}
       </div>
       {{/if}}
-      
-      <!-- Booking Details -->
+
+      <!-- Services Section (New: Multiple Services Support) -->
+      {{#if bookingDetails.services}}
+      <div class="services-container">
+        <div class="services-header">
+          <h3>🎯 Selected Services</h3>
+        </div>
+        
+        <div class="services-list">
+          {{#each bookingDetails.services}}
+          <div class="service-item">
+            <div class="service-icon"></div>
+            <span class="service-name">{{this.name}}</span>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+      {{else}}
+      <!-- Booking Details (Legacy: Single Service Support) -->
       {{#if bookingDetails}}
       <div class="booking-details">
         <h3>📅 Appointment Details</h3>
@@ -406,6 +480,60 @@
         {{/if}}
       </div>
       {{/if}}
+      {{/if}}
+
+      <!-- Appointment Details (Date/Time for multiple services) -->
+      {{#if bookingDetails.services}}
+      {{#if bookingDetails.date}}
+      <div class="booking-details">
+        <h3>📅 Appointment Details</h3>
+        <div class="booking-detail-item">
+          <span class="detail-label">Date:</span>
+          <span class="detail-value">{{bookingDetails.date}}</span>
+        </div>
+        {{#if bookingDetails.time}}
+        <div class="booking-detail-item">
+          <span class="detail-label">Time:</span>
+          <span class="detail-value">{{bookingDetails.time}}</span>
+        </div>
+        {{/if}}
+        {{#if bookingDetails.artist}}
+        <div class="booking-detail-item">
+          <span class="detail-label">Artist:</span>
+          <span class="detail-value">{{bookingDetails.artist}}</span>
+        </div>
+        {{/if}}
+        {{#if bookingDetails.location}}
+        <div class="booking-detail-item">
+          <span class="detail-label">Location:</span>
+          <span class="detail-value">{{bookingDetails.location}}</span>
+        </div>
+        {{/if}}
+        {{#if bookingDetails.customer}}
+        <div class="booking-detail-item">
+          <span class="detail-label">Customer:</span>
+          <span class="detail-value">{{bookingDetails.customer}}</span>
+        </div>
+        {{/if}}
+        {{#if bookingDetails.email}}
+        <div class="booking-detail-item">
+          <span class="detail-label">Email:</span>
+          <span class="detail-value">{{bookingDetails.email}}</span>
+        </div>
+        {{/if}}
+      </div>
+      {{/if}}
+      {{/if}}
+
+      <!-- Comment Section (New: Special Requests) -->
+      {{#if bookingDetails.comment}}
+      <div class="comment-section">
+        <h3><span class="comment-icon">💬</span>Special Requests</h3>
+        <div class="comment-text">
+          "{{bookingDetails.comment}}"
+        </div>
+      </div>
+      {{/if}}
       
       <!-- Referral Information Section -->
       {{#if referralDetails}}
@@ -419,7 +547,7 @@
           <span class="detail-label">Referred by:</span>
           <span class="detail-value">{{referralDetails.userEmail}}</span>
         </div>
-        <p style="margin-top: 10px; font-size: 14px; color: #2e7d32;">
+        <p style="margin-top: 15px; font-size: 14px; color: #2e7d32;">
           This customer was referred by an existing user. Consider following up with both the referrer and the new customer.
         </p>
       </div>
@@ -428,16 +556,16 @@
       <!-- Reminder Highlight -->
       {{#if isReminder}}
       <div class="reminder-highlight">
-        <strong>⏰ Don't forget!</strong> Your appointment is tomorrow. We recommend arriving 10 minutes early.
+        <strong>⏰ Don't forget!</strong> Your appointment{{#if bookingDetails.multipleServices}}s{{/if}} {{#if bookingDetails.multipleServices}}are{{else}}is{{/if}} tomorrow. We recommend arriving 10 minutes early.
       </div>
       {{/if}}
       
       <!-- Cancellation Note -->
       {{#if isCancellation}}
       <div class="cancellation-note">
-        <strong>{{#if isAdminNotification}}Booking Cancelled by Customer{{else}}Appointment Cancelled{{/if}}</strong><br>
+        <strong>{{#if isAdminNotification}}Booking Cancelled by Customer{{else}}Appointment{{#if bookingDetails.multipleServices}}s{{/if}} Cancelled{{/if}}</strong><br>
         {{#if isAdminNotification}}
-          The customer has cancelled their appointment. The time slot is now available for new bookings.
+          The customer has cancelled their appointment{{#if bookingDetails.multipleServices}}s{{/if}}. The time slot is now available for new bookings.
         {{else}}
           We're sorry to see you go! If you need to reschedule, we're here to help you find a new time that works.
         {{/if}}
@@ -475,8 +603,9 @@
         <p style="margin: 0; color: #0277bd; font-size: 14px;">
           • Review all bookings in the admin dashboard<br>
           • Contact the customer if needed<br>
-          • Prepare for the upcoming appointment
+          • Prepare for the upcoming appointment{{#if bookingDetails.multipleServices}}s{{/if}}
           {{#if referralDetails}}<br>• Consider rewarding the referrer{{/if}}
+          {{#if bookingDetails.comment}}<br>• Note the special requests: "{{bookingDetails.comment}}"{{/if}}
         </p>
       </div>
       {{/if}}

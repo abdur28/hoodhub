@@ -35,7 +35,9 @@ import {
   Edit,
   Save,
   Phone,
-  Check
+  Check,
+  MessageSquare,
+  Package
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -53,15 +55,23 @@ interface User {
   referralCode?: string;
 }
 
+interface Service {
+  id: string;
+  name: string;
+}
+
 interface Booking {
   id: string;
-  service: {
-    id: string;
-    name: string;
-  };
+  services?: Service[]; // New: multiple services
+  service?: Service; // Legacy: single service
   dateTime: string;
   createdAt: string;
   isPast: boolean;
+  comment?: string; // New: comment field
+  referral?: {
+    referralCode: string;
+    referralUserEmail: string;
+  };
 }
 
 interface BookingsResponse {
@@ -88,94 +98,100 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
   const [calendarDays, setCalendarDays] = useState<Date[]>([]);
   const [activeTab, setActiveTab] = useState<"upcoming" | "past">("upcoming");
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [bookingToDelete, setBookingToDelete] = useState<{id: string, serviceName: string, dateTime: string} | null>(null);
+  const [bookingToDelete, setBookingToDelete] = useState<{id: string, serviceNames: string, dateTime: string} | null>(null);
   const [copiedCode, setCopiedCode] = useState(false);
   
   // Phone editing states
   const [isEditingPhone, setIsEditingPhone] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [originalPhoneNumber, setOriginalPhoneNumber] = useState("");
   const [isUpdatingPhone, setIsUpdatingPhone] = useState(false);
 
-  const [user, setUser] = useState<User>(JSON.parse(userAsString));
+  const user: User = JSON.parse(userAsString);
 
-  // Initialize phone number state
-  useEffect(() => {
-    if (user.phoneNumber) {
-      setPhoneNumber(user.phoneNumber);
-      setOriginalPhoneNumber(user.phoneNumber);
+  // Get service icon based on service ID
+  const getServiceIcon = (serviceId: string) => {
+    switch (serviceId) {
+      case 'braids':
+      case 'locs':  
+      case 'barbing':
+        return <Scissors className="w-4 h-4" />;
+      case 'tattoo':
+        return <PaintBucket className="w-4 h-4" />;
+      case 'manicure':
+      case 'pedicure':
+        return <Diamond className="w-4 h-4" />;
+      case 'beautyMakeup':
+        return <Heart className="w-4 h-4" />;
+      default:
+        return <Package className="w-4 h-4" />;
     }
-  }, [user.phoneNumber]);
-
-  // Phone number validation and formatting
-  const validatePhoneNumber = (phone: string): boolean => {
-    if (!phone.startsWith('+')) return false;
-    const digits = phone.replace(/\D/g, '');
-    return digits.length >= 10 && digits.length <= 15;
   };
 
-  const formatPhoneNumber = (value: string): string => {
-    if (!value.startsWith('+')) {
-      value = '+' + value.replace(/^\+*/, '');
+  // Get service names from booking (handles both legacy and new formats)
+  const getServiceNames = (booking: Booking): string => {
+    if (booking.services && booking.services.length > 0) {
+      // New format: multiple services
+      return booking.services.map(s => s.name).join(', ');
+    } else if (booking.service) {
+      // Legacy format: single service
+      return booking.service.name;
     }
-    
-    const cleaned = value.slice(1).replace(/\D/g, '');
-    
-    if (cleaned.length > 15) {
-      return phoneNumber;
+    return 'Unknown Service';
+  };
+
+  // Get all services from booking as array (handles both formats)
+  const getServicesArray = (booking: Booking): Service[] => {
+    if (booking.services && booking.services.length > 0) {
+      return booking.services;
+    } else if (booking.service) {
+      return [booking.service];
     }
-
-    return '+' + cleaned;
+    return [{ id: 'unknown', name: 'Unknown Service' }];
   };
 
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatPhoneNumber(e.target.value);
-    setPhoneNumber(formatted);
-  };
-
-  const handleEditPhone = () => {
-    setIsEditingPhone(true);
-    setPhoneNumber(user.phoneNumber || "+7");
-    setOriginalPhoneNumber(user.phoneNumber || "");
-  };
-
-  const handleCancelPhoneEdit = () => {
-    setIsEditingPhone(false);
-    setPhoneNumber(originalPhoneNumber);
-  };
-
-  const handleSavePhone = async () => {
-    if (!phoneNumber.trim() || phoneNumber === '+') {
-      toast.error("Please enter your phone number");
-      return;
+  // Get service count
+  const getServiceCount = (booking: Booking): number => {
+    if (booking.services) {
+      return booking.services.length;
+    } else if (booking.service) {
+      return 1;
     }
+    return 0;
+  };
 
-    if (!validatePhoneNumber(phoneNumber)) {
+  const copyReferralCode = async (code: string) => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopiedCode(true);
+      toast.success("Referral code copied to clipboard!");
+      setTimeout(() => setCopiedCode(false), 2000);
+    } catch (err) {
+      toast.error("Failed to copy referral code");
+    }
+  };
+
+  const updatePhoneNumber = async () => {
+    if (!phoneNumber.trim()) {
       toast.error("Please enter a valid phone number");
       return;
     }
 
     setIsUpdatingPhone(true);
-
     try {
       const response = await fetch('/api/user/update-phone', {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          phoneNumber: phoneNumber,
-        }),
+        body: JSON.stringify({ phoneNumber: phoneNumber.trim() }),
       });
 
       const data = await response.json();
-
-      if (data.success) {
-        // Update local user state
-        setUser(prev => ({ ...prev, phoneNumber: phoneNumber }));
-        setOriginalPhoneNumber(phoneNumber);
-        setIsEditingPhone(false);
+      
+      if (response.ok && data.success) {
         toast.success("Phone number updated successfully!");
+        setIsEditingPhone(false);
+        user.phoneNumber = phoneNumber.trim();
       } else {
         toast.error(data.error || "Failed to update phone number");
       }
@@ -191,6 +207,12 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
   useEffect(() => {
     fetchBookings();
   }, []);
+
+  useEffect(() => {
+    if (user.phoneNumber) {
+      setPhoneNumber(user.phoneNumber);
+    }
+  }, [user.phoneNumber]);
 
   // Generate calendar days
   useEffect(() => {
@@ -237,8 +259,10 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
     }
   };
 
-  const handleDeleteBooking = async (bookingId: string, serviceName: string, dateTime: string) => {
-    setBookingToDelete({ id: bookingId, serviceName, dateTime });
+  const handleDeleteBooking = async (bookingId: string, booking: Booking) => {
+    const serviceNames = getServiceNames(booking);
+    const dateTime = new Date(booking.dateTime).toLocaleDateString();
+    setBookingToDelete({ id: bookingId, serviceNames, dateTime });
     setConfirmDialogOpen(true);
   };
 
@@ -260,7 +284,7 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
       if (response.ok) {
         toast.dismiss(toastId);
         toast.success("Booking cancelled", {
-          description: `Your ${bookingToDelete.serviceName} appointment has been cancelled successfully.`,
+          description: `Your ${bookingToDelete.serviceNames} appointment has been cancelled successfully.`,
           icon: <CheckCircle className="w-4 h-4" />,
           duration: 5000
         });
@@ -278,7 +302,7 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
       console.error('Error deleting booking:', error);
       toast.dismiss(toastId);
       toast.error("Something went wrong", {
-        description: "Please check your connection and try again.",
+        description: "Please try again later.",
         icon: <X className="w-4 h-4" />,
         duration: 5000
       });
@@ -288,50 +312,11 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
     }
   };
 
-  const handleCopyReferralCode = async () => {
-    if (!user.referralCode) return;
-    
-    try {
-      await navigator.clipboard.writeText(user.referralCode);
-      setCopiedCode(true);
-      toast.success("Referral code copied!", {
-        description: "Share this code with friends to refer them to HoodHub.",
-        icon: <CheckCircle className="w-4 h-4" />
-      });
-      setTimeout(() => setCopiedCode(false), 2000);
-    } catch (error) {
-      console.error("Error copying referral code:", error);
-      toast.error("Failed to copy code", {
-        description: "Please try selecting and copying the code manually.",
-        icon: <X className="w-4 h-4" />
-      });
-    }
-  };
-
   const formatDate = (date: Date) => {
-    // Use local timezone instead of UTC to avoid date shifting
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
-  };
-
-  const isBookedDate = (date: Date) => {
-    if (!bookings) return false;
-    const dateStr = formatDate(date);
-    return bookings.all.some(booking => {
-      const bookingDate = new Date(booking.dateTime);
-      return formatDate(bookingDate) === dateStr;
-    });
-  };
-
-  const getBookingsForDate = (date: Date) => {
-    if (!bookings) return [];
-    const dateStr = formatDate(date);
-    return bookings.all.filter(booking => {
-      const bookingDate = new Date(booking.dateTime);
-      return formatDate(bookingDate) === dateStr;
-    });
   };
 
   const isToday = (date: Date) => {
@@ -351,7 +336,15 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1));
   };
 
-  const displayedBookings = activeTab === "upcoming" ? bookings?.upcoming : bookings?.past;
+  // Get bookings for a specific date
+  const getBookingsForDate = (date: Date) => {
+    if (!bookings) return [];
+    const dateStr = formatDate(date);
+    return bookings.all.filter(booking => {
+      const bookingDate = new Date(booking.dateTime);
+      return formatDate(bookingDate) === dateStr;
+    });
+  };
 
   return (
     <div className="min-h-screen bg-black">
@@ -360,7 +353,6 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
       
       {/* Hero Section */}
       <section className="relative h-[50vh] w-full overflow-hidden">
-        {/* Animated Gradient Background */}
         <div className="absolute inset-0 overflow-hidden">
           <motion.div 
             className="absolute top-1/4 left-1/4 w-[200%] h-[200%]"
@@ -377,30 +369,12 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
               background: `radial-gradient(circle, rgba(180,83,9,0.15) 0%, rgba(0,0,0,0) 70%)`
             }}
           />
-          
-          <motion.div 
-            className="absolute top-3/4 left-3/4 w-[150%] h-[150%]"
-            animate={{
-              x: ["-50%", "-90%", "-50%"],
-              rotate: [360, 0],
-            }}
-            transition={{
-              duration: 40,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-            style={{
-              background: `radial-gradient(circle, rgba(120,53,15,0.1) 0%, rgba(0,0,0,0) 70%)`
-            }}
-          />
         </div>
 
-        {/* Transparent Navbar */}
         <div className="absolute top-0 left-0 right-0 z-40">
           <Navbar variant="transparent" lang={lang} dictionary={dictionary} />
         </div>
 
-        {/* Hero Content */}
         <div className="relative z-10 h-full flex items-center justify-center">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <motion.div
@@ -420,11 +394,11 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
         </div>
       </section>
 
-      {/* Main Content */}
-      <section className="relative rounded-t-4xl bg-white py-16 lg:py-20 -mt-16">
+      {/* Bookings Section */}
+      <section className="relative rounded-t-4xl bg-white py-20 lg:py-32 -mt-16 z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row gap-8">
-            
+          <div className="flex flex-col lg:flex-row gap-12">
+
             {/* Left Side - Calendar */}
             <motion.div
               className="w-full lg:w-1/2"
@@ -433,11 +407,12 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <div className="bg-gray-50 rounded-2xl p-6 sticky top-24">
-                <h2 className="text-2xl font-franklin font-semibold mb-6">
+              {/* Calendar */}
+              <div className="bg-gray-50 rounded-2xl p-8">
+                <h2 className="text-2xl font-franklin font-semibold text-gray-900 mb-6">
                   {dictionary.bookings.calendar.title}
                 </h2>
-                
+
                 {/* Calendar Header */}
                 <div className="flex items-center justify-between mb-6">
                   <button
@@ -447,7 +422,7 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
                     <ChevronLeft className="w-5 h-5" />
                   </button>
                   <h3 className="text-xl font-franklin font-semibold">
-                    {dictionary.book.calendar.months[currentMonth.getMonth()]} {currentMonth.getFullYear()}
+                    {dictionary.book?.calendar?.months?.[currentMonth.getMonth()] || currentMonth.toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-US', { month: 'long' })} {currentMonth.getFullYear()}
                   </h3>
                   <button
                     onClick={handleNextMonth}
@@ -459,7 +434,7 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
 
                 {/* Day Headers */}
                 <div className="grid grid-cols-7 gap-1 mb-2">
-                  {dictionary.book.calendar.days.map((day) => (
+                  {(dictionary.book?.calendar?.days || ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']).map((day) => (
                     <div key={day} className="text-center text-sm font-franklin font-medium text-gray-600 py-2">
                       {day}
                     </div>
@@ -469,16 +444,16 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
                 {/* Calendar Days */}
                 <div className="grid grid-cols-7 gap-1">
                   {calendarDays.map((date, index) => {
-                    const hasBooking = isBookedDate(date);
-                    const bookingsOnDate = getBookingsForDate(date);
                     const isCurrent = isCurrentMonth(date);
                     const todayDate = isToday(date);
+                    const bookingsOnDate = getBookingsForDate(date);
+                    const hasBooking = bookingsOnDate.length > 0;
 
                     return (
                       <div
                         key={index}
                         className={`
-                          relative h-12 w-full rounded-lg text-sm font-franklin 
+                          relative h-12 w-full rounded-lg text-sm font-franklin transition-all duration-200
                           ${!isCurrent ? 'text-gray-400' : 'text-gray-900'}
                           ${todayDate ? 'bg-blue-100 text-blue-600 font-medium' : ''}
                           ${hasBooking ? 'bg-yellow-100' : ''}
@@ -488,13 +463,16 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
                           <span>{date.getDate()}</span>
                           {hasBooking && (
                             <div className="flex gap-0.5 mt-1">
-                              {bookingsOnDate.slice(0, 3).map((booking, i) => (
-                                <div
-                                  key={i}
-                                  className="w-1 h-1 bg-yellow-500 rounded-full"
-                                  title={`${booking.service.name} at ${new Date(booking.dateTime).toLocaleTimeString()}`}
-                                />
-                              ))}
+                              {bookingsOnDate.slice(0, 3).map((booking, i) => {
+                                const serviceCount = getServiceCount(booking);
+                                return (
+                                  <div
+                                    key={i}
+                                    className={`w-1 h-1 rounded-full ${serviceCount > 1 ? 'bg-green-500' : 'bg-yellow-500'}`}
+                                    title={`${getServiceNames(booking)} at ${new Date(booking.dateTime).toLocaleTimeString()}`}
+                                  />
+                                );
+                              })}
                             </div>
                           )}
                         </div>
@@ -512,6 +490,10 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
                   <div className="flex items-center gap-2">
                     <div className="w-4 h-4 bg-blue-100 rounded"></div>
                     <span className="font-franklin text-gray-600">{dictionary.bookings.calendar.today}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-1 h-1 bg-green-500 rounded-full"></div>
+                    <span className="font-franklin text-gray-600">Multiple Services</span>
                   </div>
                 </div>
               </div>
@@ -548,186 +530,208 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
                     <p className="text-gray-600 font-franklin">{user.email}</p>
                     
                     {/* Phone Number Section */}
-                    <div className="mt-2">
+                    <div className="flex items-center gap-2 mt-1">
+                      <Phone className="w-4 h-4 text-gray-500" />
                       {isEditingPhone ? (
                         <div className="flex items-center gap-2">
-                          <div className="relative flex-1">
-                            <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                            <Input
-                              type="tel"
-                              value={phoneNumber}
-                              onChange={handlePhoneChange}
-                              placeholder="+71234567890"
-                              className="h-9 pl-9 font-franklin text-sm border-2 border-gray-200 rounded-lg focus:border-yellow-500 focus:ring-0"
-                            />
-                          </div>
+                          <Input
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            placeholder="+7 123 456 7890"
+                            className="h-8 text-sm w-40"
+                          />
                           <Button
                             size="sm"
-                            onClick={handleSavePhone}
+                            onClick={updatePhoneNumber}
                             disabled={isUpdatingPhone}
-                            className="bg-green-600 hover:bg-green-700 text-white"
+                            className="h-8 px-2"
                           >
                             {isUpdatingPhone ? (
                               <Loader2 className="w-4 h-4 animate-spin" />
                             ) : (
-                              <Check className="w-4 h-4" />
+                              <Save className="w-4 h-4" />
                             )}
                           </Button>
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={handleCancelPhoneEdit}
-                            disabled={isUpdatingPhone}
+                            onClick={() => {
+                              setIsEditingPhone(false);
+                              setPhoneNumber(user.phoneNumber || "");
+                            }}
+                            className="h-8 px-2"
                           >
                             <X className="w-4 h-4" />
                           </Button>
                         </div>
                       ) : (
                         <div className="flex items-center gap-2">
-                          <Phone className="w-4 h-4 text-gray-500" />
                           <span className="text-gray-600 font-franklin text-sm">
                             {user.phoneNumber || "No phone number"}
                           </span>
                           <Button
                             size="sm"
                             variant="ghost"
-                            onClick={handleEditPhone}
-                            className="h-6 w-6 p-0"
+                            onClick={() => setIsEditingPhone(true)}
+                            className="h-6 px-1"
                           >
                             <Edit className="w-3 h-3" />
                           </Button>
                         </div>
                       )}
                     </div>
+
+                    {/* Referral Code */}
+                    {user.referralCode && (
+                      <div className="flex items-center gap-2 mt-2">
+                        <Gift className="w-4 h-4 text-green-600" />
+                        <span className="text-sm font-franklin text-gray-600">Your referral code:</span>
+                        <code className="bg-green-100 px-2 py-1 rounded text-sm font-mono text-green-700">
+                          {user.referralCode}
+                        </code>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => copyReferralCode(user.referralCode!)}
+                          className="h-6 px-1"
+                        >
+                          {copiedCode ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
 
-              {/* Referral Code Section */}
-              {user.referralCode && (
-                <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-6 mb-6 border border-green-200">
-                  <div className="flex items-center gap-3 mb-3">
-                    <Gift className="w-5 h-5 text-green-600" />
-                    <h3 className="text-lg font-franklin font-semibold text-gray-900">
-                      Your Referral Code
-                    </h3>
-                  </div>
-                  
-                  <div className="flex items-center gap-3">
-                    <Badge variant="secondary" className="bg-white text-gray-900 font-mono text-base px-3 py-2 border border-gray-200">
-                      {user.referralCode}
-                    </Badge>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleCopyReferralCode}
-                      className="flex items-center gap-2"
-                    >
-                      {copiedCode ? (
-                        <CheckCircle className="w-4 h-4 text-green-600" />
-                      ) : (
-                        <Copy className="w-4 h-4" />
-                      )}
-                      {copiedCode ? "Copied!" : "Copy"}
-                    </Button>
-                  </div>
-                  
-                  <p className="text-sm text-gray-600 font-franklin mt-3">
-                    Share this code with friends to refer them to HoodHub and earn rewards!
-                  </p>
-                </div>
-              )}
-
-              {/* Tabs */}
-              <div className="flex gap-2 mb-6">
+              {/* Booking Tabs */}
+              <div className="flex bg-gray-100 rounded-xl p-1 mb-6">
                 <button
                   onClick={() => setActiveTab("upcoming")}
-                  className={`flex-1 py-3 px-4 rounded-lg font-franklin font-medium transition-all ${
+                  className={`flex-1 py-2 px-4 rounded-lg font-franklin font-medium transition-all duration-200 ${
                     activeTab === "upcoming"
-                      ? "bg-gradient-to-r from-yellow-400 to-yellow-600 text-black shadow-lg"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      ? "bg-white text-gray-900 shadow-sm"
+                      : "text-gray-600 hover:text-gray-900"
                   }`}
                 >
-                  {dictionary.bookings.tabs.upcoming} ({bookings?.upcoming.length || 0})
+                  {dictionary.bookings.tabs.upcoming}
+                  {bookings && bookings.upcoming.length > 0 && (
+                    <Badge variant="secondary" className="ml-2">
+                      {bookings.upcoming.length}
+                    </Badge>
+                  )}
                 </button>
                 <button
                   onClick={() => setActiveTab("past")}
-                  className={`flex-1 py-3 px-4 rounded-lg font-franklin font-medium transition-all ${
+                  className={`flex-1 py-2 px-4 rounded-lg font-franklin font-medium transition-all duration-200 ${
                     activeTab === "past"
-                      ? "bg-gradient-to-r from-yellow-400 to-yellow-600 text-black shadow-lg"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      ? "bg-white text-gray-900 shadow-sm"
+                      : "text-gray-600 hover:text-gray-900"
                   }`}
                 >
-                  {dictionary.bookings.tabs.past} ({bookings?.past.length || 0})
+                  {dictionary.bookings.tabs.past}
+                  {bookings && bookings.past.length > 0 && (
+                    <Badge variant="secondary" className="ml-2">
+                      {bookings.past.length}
+                    </Badge>
+                  )}
                 </button>
               </div>
 
               {/* Bookings List */}
               <div className="space-y-4">
                 {isLoading ? (
-                  <div className="flex items-center justify-center py-12">
-                    <Loader2 className="w-8 h-8 animate-spin text-yellow-500" />
+                  <div className="text-center py-8">
+                    <Loader2 className="w-8 h-8 animate-spin mx-auto text-gray-400" />
+                    <p className="text-gray-600 font-franklin mt-2">Loading your bookings...</p>
                   </div>
-                ) : displayedBookings && displayedBookings.length > 0 ? (
-                  displayedBookings.map((booking) => {
+                ) : !bookings || (activeTab === "upcoming" ? bookings.upcoming.length === 0 : bookings.past.length === 0) ? (
+                  <div className="text-center py-8">
+                    <CalendarIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                    <h3 className="text-lg font-franklin font-semibold text-gray-900 mb-2">
+                      {activeTab === "upcoming" ? dictionary.bookings.empty.noUpcoming : dictionary.bookings.empty.noPast}
+                    </h3>
+                    <p className="text-gray-600 font-franklin mb-4">
+                      {activeTab === "upcoming" ? dictionary.bookings.empty.noUpcomingDescription : dictionary.bookings.empty.noPastDescription}
+                    </p>
+                    {activeTab === "upcoming" && (
+                      <Link href={`/${lang}/book`}>
+                        <Button className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-franklin">
+                          {dictionary.bookings.empty.bookNewButton}
+                        </Button>
+                      </Link>
+                    )}
+                  </div>
+                ) : (
+                  (activeTab === "upcoming" ? bookings.upcoming : bookings.past).map((booking) => {
+                    const services = getServicesArray(booking);
+                    const serviceNames = getServiceNames(booking);
+                    const serviceCount = getServiceCount(booking);
                     const bookingDate = new Date(booking.dateTime);
-                    const isDeleting = deletingId === booking.id;
-
+                    
                     return (
                       <motion.div
                         key={booking.id}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow"
+                        className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200"
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
-                            <div className="flex items-center gap-3 mb-2">
-                              <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-                                  <Scissors className="w-4 h-4" />
-                              </div>
+                            {/* Services Display */}
+                            <div className="flex items-center gap-2 mb-3">
+                              {
+                                getServiceIcon(services[0]?.id || '')
+                              }
                               <div>
-                                <h4 className="font-franklin font-semibold text-gray-900">
-                                  {booking.service.name}
-                                </h4>
+                                <h3 className="font-franklin font-semibold text-gray-900">
+                                  {serviceNames}
+                                </h3>
+                               
                               </div>
                             </div>
                             
-                            <div className="space-y-2 mt-4">
-                              <div className="flex items-center gap-2 text-gray-600">
+                            {/* Date and Time */}
+                            <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
+                              <div className="flex items-center gap-2">
                                 <CalendarIcon className="w-4 h-4" />
-                                <span className="font-franklin">
-                                  {bookingDate.toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-US', {
-                                    weekday: 'long',
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric'
-                                  })}
-                                </span>
+                                <span>{bookingDate.toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-US')}</span>
                               </div>
-                              
-                              <div className="flex items-center gap-2 text-gray-600">
+                              <div className="flex items-center gap-2">
                                 <Clock className="w-4 h-4" />
-                                <span className="font-franklin">
-                                  {bookingDate.toLocaleTimeString(lang === 'ru' ? 'ru-RU' : 'en-US', {
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                  })}
-                                </span>
+                                <span>{bookingDate.toLocaleTimeString(lang === 'ru' ? 'ru-RU' : 'en-US', { hour: '2-digit', minute: '2-digit' })}</span>
                               </div>
                             </div>
+
+                            {/* Comment */}
+                            {booking.comment && (
+                              <div className="flex items-start gap-2 mb-3 p-3 bg-gray-50 rounded-lg">
+                                <MessageSquare className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                                <div>
+                                  <span className="text-xs font-medium text-gray-700 block">Special Requests:</span>
+                                  <span className="text-sm text-gray-600">{booking.comment}</span>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Referral Info */}
+                            {booking.referral && (
+                              <div className="flex items-center gap-2 text-xs text-green-700 bg-green-50 px-2 py-1 rounded-lg">
+                                <Gift className="w-3 h-3" />
+                                <span>Referred by {booking.referral.referralUserEmail}</span>
+                              </div>
+                            )}
                           </div>
 
-                          {/* Delete Button - Only for upcoming bookings */}
+                          {/* Actions */}
                           {!booking.isPast && (
                             <Button
-                              onClick={() => handleDeleteBooking(booking.id, booking.service.name, booking.dateTime)}
-                              disabled={isDeleting}
-                              variant="ghost"
+                              variant="outline"
                               size="sm"
-                              className="text-red-500 hover:text-red-600 hover:bg-red-50"
+                              onClick={() => handleDeleteBooking(booking.id, booking)}
+                              disabled={deletingId === booking.id}
+                              className="ml-4 text-red-600 border-red-200 hover:bg-red-50"
                             >
-                              {isDeleting ? (
+                              {deletingId === booking.id ? (
                                 <Loader2 className="w-4 h-4 animate-spin" />
                               ) : (
                                 <Trash2 className="w-4 h-4" />
@@ -735,63 +739,20 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
                             </Button>
                           )}
                         </div>
-
-                        {/* Status Badge */}
-                        <div className="mt-4">
-                          {booking.isPast ? (
-                            <span className="inline-flex items-center gap-1 text-sm text-gray-500 font-franklin">
-                              <CheckCircle className="w-4 h-4" />
-                              {dictionary.bookings.status.completed}
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1 text-sm text-green-600 font-franklin">
-                              <AlertCircle className="w-4 h-4" />
-                              {dictionary.bookings.status.confirmed}
-                            </span>
-                          )}
-                        </div>
                       </motion.div>
                     );
                   })
-                ) : (
-                  <div className="text-center py-12">
-                    <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <CalendarIcon className="w-10 h-10 text-gray-400" />
-                    </div>
-                    <h3 className="text-xl font-franklin font-semibold text-gray-900 mb-2">
-                      {activeTab === "upcoming" ? dictionary.bookings.empty.noUpcoming : dictionary.bookings.empty.noPast}
-                    </h3>
-                    <p className="text-gray-600 font-franklin mb-6">
-                      {activeTab === "upcoming" 
-                        ? dictionary.bookings.empty.noUpcomingDescription
-                        : dictionary.bookings.empty.noPastDescription
-                      }
-                    </p>
-                    {activeTab === "upcoming" && (
-                      <Button
-                        onClick={() => window.location.href = `/${lang}/book`}
-                        className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-franklin"
-                      >
-                        <Link href={`/${lang}/book`}>
-                          {dictionary.bookings.empty.bookNewButton}
-                        </Link>
-                      </Button>
-                    )}
-                  </div>
                 )}
               </div>
 
-              {/* Book New Button */}
-              {displayedBookings && displayedBookings.length > 0 && activeTab === "upcoming" && (
-                <div className="mt-8">
-                  <Button
-                    onClick={() => window.location.href = `/${lang}/book`}
-                    className="w-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-black font-franklin font-semibold py-4 text-lg hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 transition-all duration-300 shadow-lg hover:shadow-xl"
-                  >
-                    <Link href={`/${lang}/book`}>
+              {/* Book New Appointment Button */}
+              {bookings && bookings.upcoming.length > 0 && (
+                <div className="mt-6 text-center">
+                  <Link href={`/${lang}/book`}>
+                    <Button className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-franklin">
                       {dictionary.bookings.empty.bookNewButton}
-                    </Link>
-                  </Button>
+                    </Button>
+                  </Link>
                 </div>
               )}
             </motion.div>
@@ -803,57 +764,17 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
       <Dialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 font-franklin">
-              <AlertTriangle className="w-5 h-5 text-red-500" />
-              {dictionary.bookings.confirmDialog.title}
-            </DialogTitle>
+            <DialogTitle className="font-franklin">Cancel Booking</DialogTitle>
             <DialogDescription className="font-franklin">
-              {bookingToDelete && (
-                <>
-                  {dictionary.bookings.confirmDialog.description
-                    .replace("{serviceName}", bookingToDelete.serviceName)
-                    .replace("{date}", new Date(bookingToDelete.dateTime).toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-US', {
-                      weekday: 'long',
-                      year: 'numeric',
-                      month: 'long', 
-                      day: 'numeric'
-                    }))
-                    .replace("{time}", new Date(bookingToDelete.dateTime).toLocaleTimeString(lang === 'ru' ? 'ru-RU' : 'en-US', {
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    }))}
-                  <br />
-                  <br />
-                  {dictionary.bookings.confirmDialog.warning}
-                </>
-              )}
+              {`${dictionary.bookings.alerts.confirmCancel} ${bookingToDelete && bookingToDelete.serviceNames} ${bookingToDelete && bookingToDelete.dateTime}`}
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setConfirmDialogOpen(false)}
-              className="font-franklin"
-            >
-              {dictionary.bookings.confirmDialog.keepButton}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmDialogOpen(false)}>
+              Keep Booking
             </Button>
-            <Button
-              variant="destructive"
-              onClick={confirmDeleteBooking}
-              className="font-franklin"
-              disabled={deletingId === bookingToDelete?.id}
-            >
-              {deletingId === bookingToDelete?.id ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                  {dictionary.bookings.confirmDialog.cancelling}
-                </>
-              ) : (
-                <>
-                  <Trash2 className="w-4 h-4 mr-2" />
-                  {dictionary.bookings.confirmDialog.confirmButton}
-                </>
-              )}
+            <Button variant="destructive" onClick={confirmDeleteBooking}>
+              Cancel Booking
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -20,10 +20,17 @@ import {
   Gift,
   Badge as BadgeIcon,
   Phone,
-  MailOpen
+  MailOpen,
+  Package,
+  MessageSquare,
+  Scissors,
+  PaintBucket,
+  Diamond,
+  Heart
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -48,16 +55,20 @@ import {
 import type { Dictionary } from "../../dictionaries";
 import Image from "next/image";
 
+interface Service {
+  id: string;
+  name: string;
+}
+
 interface Booking {
   _id: string;
   userId: string;
   clerkId: string;
-  service: {
-    id: string;
-    name: string;
-  };
+  services?: Service[]; // New: multiple services
+  service?: Service; // Legacy: single service
   dateTime: string;
   createdAt: string;
+  comment?: string; // New: comment field
   referral?: {
     referralCode: string;
     referralUserEmail: string;
@@ -106,7 +117,7 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
       href: `/${lang}/admin/bookings`,
       current: activeTab === "bookings"
     },
-        {
+    {
       id: "subscribers",
       label: dictionary.admin?.tabs?.subscribers || "Newsletter",
       icon: MailOpen,
@@ -121,6 +132,57 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
       current: activeTab === "emails"
     }
   ];
+
+  // Get service icon based on service ID
+  const getServiceIcon = (serviceId: string) => {
+    switch (serviceId) {
+      case 'braids':
+      case 'locs':
+      case 'barbing':
+        return <Scissors className="w-4 h-4" />;
+      case 'tattoo':
+        return <PaintBucket className="w-4 h-4" />;
+      case 'manicure':
+      case 'pedicure':
+        return <Diamond className="w-4 h-4" />;
+      case 'beautyMakeup':
+        return <Heart className="w-4 h-4" />;
+      default:
+        return <Package className="w-4 h-4" />;
+    }
+  };
+
+  // Get service names from booking (handles both legacy and new formats)
+  const getServiceNames = (booking: Booking): string => {
+    if (booking.services && booking.services.length > 0) {
+      // New format: multiple services
+      return booking.services.map(s => s.name).join(', ');
+    } else if (booking.service) {
+      // Legacy format: single service
+      return booking.service.name;
+    }
+    return 'Unknown Service';
+  };
+
+  // Get all services from booking as array (handles both formats)
+  const getServicesArray = (booking: Booking): Service[] => {
+    if (booking.services && booking.services.length > 0) {
+      return booking.services;
+    } else if (booking.service) {
+      return [booking.service];
+    }
+    return [{ id: 'unknown', name: 'Unknown Service' }];
+  };
+
+  // Get service count
+  const getServiceCount = (booking: Booking): number => {
+    if (booking.services) {
+      return booking.services.length;
+    } else if (booking.service) {
+      return 1;
+    }
+    return 0;
+  };
 
   useEffect(() => {
     fetchBookings();
@@ -193,12 +255,14 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
   };
 
   const filteredBookings = bookings.filter(booking => {
+    const serviceNames = getServiceNames(booking);
     const matchesSearch = 
       booking.user?.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.user?.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.user?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.user?.phoneNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      booking.service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      serviceNames.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      booking.comment?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.referral?.referralCode?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.referral?.referralUserEmail?.toLowerCase().includes(searchTerm.toLowerCase());
 
@@ -206,7 +270,8 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
       filterStatus === "all" ||
       (filterStatus === "upcoming" && isUpcoming(booking.dateTime)) ||
       (filterStatus === "past" && !isUpcoming(booking.dateTime)) ||
-      (filterStatus === "referred" && booking.referral);
+      (filterStatus === "referred" && booking.referral) ||
+      (filterStatus === "multiple" && getServiceCount(booking) > 1);
 
     return matchesSearch && matchesFilter;
   });
@@ -229,6 +294,7 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
   const upcomingBookings = bookings.filter(booking => isUpcoming(booking.dateTime));
   const pastBookings = bookings.filter(booking => !isUpcoming(booking.dateTime));
   const referredBookings = bookings.filter(booking => booking.referral);
+  const multipleServiceBookings = bookings.filter(booking => getServiceCount(booking) > 1);
 
   return (
     <div className="space-y-6">
@@ -250,7 +316,7 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                 <Icon
                   className={`-ml-0.5 mr-2 h-5 w-5 ${
                     tab.current
-                      ? 'text-yellow-500'
+                      ? 'text-yellow-600'
                       : 'text-gray-400 group-hover:text-gray-500'
                   }`}
                 />
@@ -261,167 +327,126 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
         </nav>
       </div>
 
-      {/* Bookings Header */}
-      <div className="flex justify-between items-center">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-xl font-semibold text-gray-900">
+          <h1 className="text-2xl font-bold text-gray-900">
             {dictionary.admin?.bookings?.title || "Booking Management"}
-          </h2>
-          <p className="text-sm text-gray-600">
-            {dictionary.admin?.bookings?.subtitle || "Manage and view all appointments"}
+          </h1>
+          <p className="text-gray-600">
+            {dictionary.admin?.bookings?.subtitle || "View and manage all appointments"}
           </p>
+        </div>
+        
+        {/* Stats */}
+        <div className="flex gap-4">
+          <div className="border p-3 min-w-24 rounded-lg">
+            <div className="text-2xl font-bold ">{upcomingBookings.length}</div>
+            <div className="text-xs">Upcoming</div>
+          </div>
+          <div className="border p-3 min-w-24 rounded-lg">
+            <div className="text-2xl font-bold">{pastBookings.length}</div>
+            <div className="text-xs">Past</div>
+          </div>
+          <div className="border p-3 min-w-24 rounded-lg">
+            <div className="text-2xl font-bold">{referredBookings.length}</div>
+            <div className="text-xs">Referred</div>
+          </div>
+          <div className="border p-3 min-w-24 rounded-lg">
+            <div className="text-2xl font-bold">{multipleServiceBookings.length}</div>
+            <div className="text-xs">Multi-Service</div>
+          </div>
         </div>
       </div>
 
       {/* Search and Filter */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-          <input
-            type="text"
-            placeholder={dictionary.admin?.bookings?.searchPlaceholder || "Search bookings, customers, phone numbers, or referral codes..."}
+          <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <Input
+            placeholder="Search bookings, customers, services..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+            className="pl-10"
           />
         </div>
         
         <Select value={filterStatus} onValueChange={setFilterStatus}>
           <SelectTrigger className="w-48">
-            <SelectValue placeholder="Filter by status" />
+            <SelectValue placeholder="Filter bookings" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">{dictionary.admin?.filters?.all || "All Bookings"}</SelectItem>
-            <SelectItem value="upcoming">{dictionary.admin?.filters?.upcoming || "Upcoming"}</SelectItem>
-            <SelectItem value="past">{dictionary.admin?.filters?.past || "Past"}</SelectItem>
-            <SelectItem value="referred">Referred Bookings</SelectItem>
+            <SelectItem value="all">All Bookings</SelectItem>
+            <SelectItem value="upcoming">Upcoming</SelectItem>
+            <SelectItem value="past">Past</SelectItem>
+            <SelectItem value="referred">Referred</SelectItem>
+            <SelectItem value="multiple">Multiple Services</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
-      {/* Booking Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white p-6 rounded-lg border border-gray-200">
-          <div className="flex items-center">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <Calendar className="w-6 h-6 text-blue-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">
-                {dictionary.admin?.stats?.totalBookings || "Total Bookings"}
-              </p>
-              <p className="text-2xl font-semibold text-gray-900">{bookings.length}</p>
-            </div>
-          </div>
-        </div>
-        
-        <div className="bg-white p-6 rounded-lg border border-gray-200">
-          <div className="flex items-center">
-            <div className="p-2 bg-green-100 rounded-lg">
-              <CheckCircle className="w-6 h-6 text-green-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">
-                {dictionary.admin?.stats?.upcomingBookings || "Upcoming"}
-              </p>
-              <p className="text-2xl font-semibold text-gray-900">{upcomingBookings.length}</p>
-            </div>
-          </div>
-        </div>
-        
-        <div className="bg-white p-6 rounded-lg border border-gray-200">
-          <div className="flex items-center">
-            <div className="p-2 bg-gray-100 rounded-lg">
-              <XCircle className="w-6 h-6 text-gray-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">
-                {dictionary.admin?.stats?.pastBookings || "Past"}
-              </p>
-              <p className="text-2xl font-semibold text-gray-900">{pastBookings.length}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg border border-gray-200">
-          <div className="flex items-center">
-            <div className="p-2 bg-purple-100 rounded-lg">
-              <Gift className="w-6 h-6 text-purple-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">
-                Referred Bookings
-              </p>
-              <p className="text-2xl font-semibold text-gray-900">{referredBookings.length}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Bookings Table */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-        {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="w-6 h-6 animate-spin text-gray-500" />
-            <span className="ml-2 text-gray-500">
-              {dictionary.admin?.loading || "Loading..."}
-            </span>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Customer
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Services
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Date & Time
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {loading ? (
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {dictionary.admin?.bookings?.table?.customer || "Customer"}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Contact
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {dictionary.admin?.bookings?.table?.service || "Service"}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {dictionary.admin?.bookings?.table?.datetime || "Date & Time"}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Referral
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {dictionary.admin?.bookings?.table?.status || "Status"}
-                  </th>
-                  <th className="relative px-6 py-3">
-                    <span className="sr-only">Actions</span>
-                  </th>
+                  <td colSpan={6} className="px-6 py-12 text-center">
+                    <Loader2 className="w-8 h-8 animate-spin mx-auto text-gray-400" />
+                    <p className="text-gray-500 mt-2">Loading bookings...</p>
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {filteredBookings.map((booking) => {
-                  const { date, time } = formatDateTime(booking.dateTime);
+              ) : filteredBookings.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-6 py-12 text-center">
+                    <Calendar className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                    <p className="text-gray-500">No bookings found</p>
+                  </td>
+                </tr>
+              ) : (
+                filteredBookings.map((booking) => {
+                  const services = getServicesArray(booking);
+                  const serviceNames = getServiceNames(booking);
+                  const serviceCount = getServiceCount(booking);
                   const upcoming = isUpcoming(booking.dateTime);
                   
                   return (
-                    <motion.tr
-                      key={booking._id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="hover:bg-gray-50 cursor-pointer"
-                      onClick={() => handleBookingClick(booking)}
-                    >
+                    <tr key={booking._id} className="hover:bg-gray-50">
+                      {/* Customer */}
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="flex-shrink-0 h-10 w-10">
                             {booking.user?.profilePicture ? (
-                              <Image 
-                                className="h-10 w-10 rounded-full object-cover" 
-                                src={booking.user.profilePicture} 
+                              <Image
+                                width={40}
+                                height={40}
+                                className="h-10 w-10 rounded-full object-cover"
+                                src={booking.user.profilePicture}
                                 alt={`${booking.user.firstName} ${booking.user.lastName}`}
-                                width={100}
-                                height={100}
                               />
                             ) : (
                               <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
-                                <User className="w-5 h-5 text-gray-600" />
+                                <User className="h-5 w-5 text-gray-500" />
                               </div>
                             )}
                           </div>
@@ -429,147 +454,162 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                             <div className="text-sm font-medium text-gray-900">
                               {booking.user?.firstName} {booking.user?.lastName}
                             </div>
+                            <div className="text-sm text-gray-500">
+                              {booking.user?.email}
+                            </div>
+                            {booking.user?.phoneNumber && (
+                              <div className="text-xs text-gray-400 flex items-center mt-1">
+                                <Phone className="w-3 h-3 mr-1" />
+                                {booking.user.phoneNumber}
+                              </div>
+                            )}
                           </div>
                         </div>
                       </td>
+
+                      {/* Services */}
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center gap-2">
+                          
+                            <div className="flex items-center gap-2">
+                              {getServiceIcon(services[0]?.id || '')}
+                              <div className="text-sm text-gray-900">
+                                {serviceNames}
+                              </div>
+                            </div>
+                          
+                        </div>
+                      </td>
+
+                      {/* Date & Time */}
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">
-                          {booking.user?.email}
+                          {formatDateTime(booking.dateTime).date}
                         </div>
-                        {booking.user?.phoneNumber && (
-                          <div className="text-sm text-gray-500 flex items-center mt-1">
-                            <Phone className="w-3 h-3 mr-1" />
-                            {booking.user.phoneNumber}
-                          </div>
-                        )}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">
-                          {booking.service.name}
+                        <div className="text-sm text-gray-500">
+                          {formatDateTime(booking.dateTime).time}
                         </div>
                       </td>
+
+                      {/* Status */}
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">{date}</div>
-                        <div className="text-sm text-gray-500">{time}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {booking.referral ? (
-                          <div className="space-y-1">
-                            <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs">
+                        <div className="flex flex-col gap-1">
+                          <Badge className={upcoming ? "bg-blue-600" : ""} variant={upcoming ? "default" : "outline"}>
+                            {upcoming ? "Upcoming" : "Past"}
+                          </Badge>
+                          {booking.referral && (
+                            <Badge variant="outline" className="text-xs">
                               <Gift className="w-3 h-3 mr-1" />
-                              {booking.referral.referralCode}
+                              Referred
                             </Badge>
-                            <div className="text-xs text-gray-500">
-                              by {booking.referral.referralUserEmail}
-                            </div>
-                          </div>
-                        ) : (
-                          <span className="text-gray-400 text-sm">No referral</span>
-                        )}
+                          )}
+                        </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          upcoming 
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-gray-100 text-gray-800'
-                        }`}>
-                          {upcoming 
-                            ? (dictionary.admin?.status?.upcoming || "Upcoming")
-                            : (dictionary.admin?.status?.completed || "Past")
-                          }
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium" onClick={(e) => e.stopPropagation()}>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                              <MoreHorizontal className="h-4 w-4" />
+
+                      {/* Actions */}
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <div className="flex items-center justify-end gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleBookingClick(booking)}
+                          >
+                            <Eye className="w-4 h-4" />
+                          </Button>
+                          
+                          {upcoming && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleCancelClick(booking)}
+                              className="text-red-600 border-red-200 hover:bg-red-50"
+                            >
+                              <Trash2 className="w-4 h-4" />
                             </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={(e) => {
-                              e.stopPropagation();
-                              handleBookingClick(booking);
-                            }}>
-                              <Eye className="mr-2 h-4 w-4" />
-                              {dictionary.admin?.actions?.view || "View"}
-                            </DropdownMenuItem>
-                            <DropdownMenuItem 
-                              className="text-red-600"
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                handleCancelClick(booking)
-                              }}>
-                              <Trash2 className="mr-2 h-4 w-4" />
-                              {dictionary.admin?.actions?.cancel || "Cancel"}
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                          )}
+                        </div>
                       </td>
-                    </motion.tr>
+                    </tr>
                   );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      {/* Booking Details Modal */}
+      {/* Booking Details Dialog */}
       <Dialog open={showBookingDetails} onOpenChange={setShowBookingDetails}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-h-[90vh] overflow-y-auto ">
           <DialogHeader>
-            <DialogTitle>
-              {dictionary.admin?.bookings?.bookingDetails || "Booking Details"}
-            </DialogTitle>
-            <DialogDescription>
-              {dictionary.admin?.bookings?.bookingDetailsDescription || "View detailed information about this booking"}
-            </DialogDescription>
+            <DialogTitle>Booking Details</DialogTitle>
           </DialogHeader>
           
           {selectedBooking && (
             <div className="space-y-6">
-              <div className="grid gap-6">
-                <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">
-                    {dictionary.admin?.bookings?.customer || "Customer"}
-                  </h4>
-                  <div className="flex items-center space-x-3">
-                    <div className="flex-shrink-0">
+              {/* Customer Info */}
+              <div>
+                <h4 className="text-sm font-medium text-gray-700 mb-2">Customer Information</h4>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
                       {selectedBooking.user?.profilePicture ? (
-                        <Image 
-                          className="h-12 w-12 rounded-full object-cover" 
-                          src={selectedBooking.user.profilePicture} 
-                          alt={`${selectedBooking.user.firstName} ${selectedBooking.user.lastName}`}
-                          width={100}
-                          height={100}
+                        <Image
+                          width={48}
+                          height={48}
+                          src={selectedBooking.user.profilePicture}
+                          alt="Profile"
+                          className="w-full h-full rounded-full object-cover"
                         />
                       ) : (
-                        <div className="h-12 w-12 rounded-full bg-gray-300 flex items-center justify-center">
-                          <User className="w-6 h-6 text-gray-600" />
-                        </div>
+                        <User className="w-6 h-6 text-gray-500" />
                       )}
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-900">
+                      <div className="font-medium text-gray-900">
                         {selectedBooking.user?.firstName} {selectedBooking.user?.lastName}
-                      </p>
-                      <p className="text-sm text-gray-500">{selectedBooking.user?.email}</p>
+                      </div>
+                      <div className="text-sm text-gray-600">{selectedBooking.user?.email}</div>
                       {selectedBooking.user?.phoneNumber && (
-                        <div className="flex items-center mt-1">
-                          <Phone className="w-3 h-3 text-gray-400 mr-1" />
-                          <p className="text-sm text-gray-500">{selectedBooking.user.phoneNumber}</p>
+                        <div className="text-sm text-gray-600 flex items-center gap-1 mt-1">
+                          <Phone className="w-3 h-3" />
+                          {selectedBooking.user.phoneNumber}
                         </div>
                       )}
                     </div>
                   </div>
                 </div>
-                
-                <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">
-                    {dictionary.admin?.bookings?.appointment || "Appointment"}
-                  </h4>
-                  <div className="space-y-2">
+              </div>
+
+              {/* Services */}
+              <div>
+                <h4 className="text-sm font-medium text-gray-700 mb-2">
+                  Service{getServiceCount(selectedBooking) > 1 ? 's' : ''} ({getServiceCount(selectedBooking)})
+                </h4>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  {getServiceCount(selectedBooking) > 1 ? (
+                    <div className="space-y-2">
+                      {getServicesArray(selectedBooking).map((service, index) => (
+                        <div key={index} className="flex items-center gap-2 p-2 bg-white rounded border">
+                          {getServiceIcon(service.id)}
+                          <span className="font-medium">{service.name}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      {getServiceIcon(getServicesArray(selectedBooking)[0]?.id || '')}
+                      <span className="font-medium">{getServiceNames(selectedBooking)}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Date & Time */}
+              <div>
+                <h4 className="text-sm font-medium text-gray-700 mb-2">Appointment Details</h4>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <div className="grid grid-cols-2 gap-4">
                     <div className="flex items-center text-sm text-gray-900">
                       <Calendar className="w-4 h-4 mr-2 text-gray-400" />
                       {formatDateTime(selectedBooking.dateTime).date}
@@ -581,164 +621,110 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                   </div>
                 </div>
               </div>
-              
-              <div>
-                <h4 className="text-sm font-medium text-gray-700 mb-2">
-                  {dictionary.admin?.bookings?.service || "Service"}
-                </h4>
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-sm font-medium text-gray-900">{selectedBooking.service.name}</p>
-                </div>
-              </div>
 
-              {/* Contact Information */}
-              <div>
-                <h4 className="text-sm font-medium text-gray-700 mb-2">
-                  Contact Information
-                </h4>
-                <div className="bg-gray-50 p-3 rounded-lg space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Email:</span>
-                    <span className="font-medium">{selectedBooking.user?.email}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Phone:</span>
-                    <span className="font-medium">
-                      {selectedBooking.user?.phoneNumber || "Not provided"}
-                    </span>
+              {/* Comment */}
+              {selectedBooking.comment && (
+                <div>
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">Special Requests</h4>
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <div className="flex items-start gap-2">
+                      <MessageSquare className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                      <p className="text-sm text-gray-900">{selectedBooking.comment}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               {/* Referral Information */}
               {selectedBooking.referral && (
                 <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">
-                    <Gift className="w-4 h-4 inline mr-1" />
-                    Referral Information
-                  </h4>
-                  <div className="bg-gradient-to-r from-green-50 to-blue-50 p-4 rounded-lg border border-green-200">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Referral Code</label>
-                        <div className="mt-1">
-                          <Badge variant="secondary" className="bg-green-100 text-green-800">
-                            {selectedBooking.referral.referralCode}
-                          </Badge>
-                        </div>
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">Referral Information</h4>
+                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-green-700">Referral Code:</span>
+                        <code className="bg-green-100 px-2 py-1 rounded text-green-800 font-mono">
+                          {selectedBooking.referral.referralCode}
+                        </code>
                       </div>
-                      <div>
-                        <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Referred By</label>
-                        <p className="text-sm text-gray-900 mt-1">{selectedBooking.referral.referralUserName}</p>
-                        <p className="text-xs text-gray-600">{selectedBooking.referral.referralUserEmail}</p>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-green-700">Referred By:</span>
+                        <span className="font-medium text-green-800">
+                          {selectedBooking.referral.referralUserEmail}
+                        </span>
                       </div>
                     </div>
                   </div>
                 </div>
               )}
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">
-                    {dictionary.admin?.bookings?.status || "Status"}
-                  </h4>
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                    isUpcoming(selectedBooking.dateTime)
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-gray-100 text-gray-800'
-                  }`}>
-                    {isUpcoming(selectedBooking.dateTime)
-                      ? (dictionary.admin?.status?.upcoming || "Upcoming")
-                      : (dictionary.admin?.status?.completed || "Past")
-                    }
-                  </span>
-                </div>
-                
-                <div>
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">
-                    {dictionary.admin?.bookings?.bookedOn || "Booked On"}
-                  </h4>
-                  <p className="text-sm text-gray-900">
-                    {formatDateTime(selectedBooking.createdAt).date}
-                  </p>
+
+              {/* Booking Metadata */}
+              <div>
+                <h4 className="text-sm font-medium text-gray-700 mb-2">Booking Information</h4>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <span className="text-gray-600">Booking ID:</span>
+                      <div className="font-mono text-gray-900">{selectedBooking._id}</div>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Created:</span>
+                      <div className="text-gray-900">
+                        {new Date(selectedBooking.createdAt).toLocaleDateString()}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           )}
-          
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowBookingDetails(false)}>
-              {dictionary.admin?.actions?.close || "Close"}
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
 
       {/* Cancel Confirmation Dialog */}
       <Dialog open={showCancelConfirm} onOpenChange={setShowCancelConfirm}>
-        <DialogContent className="max-w-md">
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle className="flex items-center">
-              <AlertTriangle className="w-5 h-5 text-red-500 mr-2" />
-              {dictionary.admin?.bookings?.cancelConfirm?.title || "Cancel Booking"}
+            <DialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-red-500" />
+              Cancel Booking
             </DialogTitle>
             <DialogDescription>
-              {dictionary.admin?.bookings?.cancelConfirm?.description || "Are you sure you want to cancel this booking? This action cannot be undone."}
+              Are you sure you want to cancel this booking? This action cannot be undone.
+              {bookingToCancel && (
+                <>
+                  <br />
+                  <span className="text-sm font-medium text-gray-900">
+                    {bookingToCancel.user?.firstName} {bookingToCancel.user?.lastName}
+                  </span>
+                  <br />
+                  <span className="text-sm text-gray-600">
+                    {getServiceNames(bookingToCancel)}
+                  </span>
+                  <br />
+                  <span className="text-sm text-gray-600">
+                    {formatDateTime(bookingToCancel.dateTime).date} at {formatDateTime(bookingToCancel.dateTime).time}
+                  </span>
+                </>
+              )}
             </DialogDescription>
           </DialogHeader>
-          
-          {bookingToCancel && (
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <div className="text-sm">
-                <p className="font-medium text-gray-900">
-                  {bookingToCancel.user?.firstName} {bookingToCancel.user?.lastName}
-                </p>
-                <p className="text-gray-600">{bookingToCancel.service.name}</p>
-                <p className="text-gray-500">
-                  {formatDateTime(bookingToCancel.dateTime).date} at {formatDateTime(bookingToCancel.dateTime).time}
-                </p>
-                {bookingToCancel.user?.phoneNumber && (
-                  <div className="flex items-center text-gray-500 text-xs mt-1">
-                    <Phone className="w-3 h-3 mr-1" />
-                    {bookingToCancel.user.phoneNumber}
-                  </div>
-                )}
-                {bookingToCancel.referral && (
-                  <p className="text-green-600 text-xs mt-1">
-                    Referred by: {bookingToCancel.referral.referralUserEmail}
-                  </p>
-                )}
-              </div>
-            </div>
-          )}
-          
           <DialogFooter>
-            <Button 
-              variant="outline" 
-              onClick={() => {
-                setShowCancelConfirm(false);
-                setBookingToCancel(null);
-              }}
-              disabled={cancellingBooking}
-            >
-              {dictionary.admin?.actions?.close || "Close"}
+            <Button variant="outline" onClick={() => setShowCancelConfirm(false)}>
+              Keep Booking
             </Button>
             <Button 
-              variant="destructive"
+              variant="destructive" 
               onClick={handleCancelConfirm}
               disabled={cancellingBooking}
-              className="bg-red-600 hover:bg-red-700"
             >
               {cancellingBooking ? (
                 <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  {dictionary.admin?.bookings?.cancelConfirm?.cancelling || "Cancelling..."}
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  Cancelling...
                 </>
               ) : (
-                <>
-                  <Trash2 className="w-4 h-4 mr-2" />
-                  {dictionary.admin?.bookings?.cancelConfirm?.confirm || "Cancel Booking"}
-                </>
+                "Cancel Booking"
               )}
             </Button>
           </DialogFooter>

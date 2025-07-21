@@ -2,35 +2,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import client from "@/lib/mongodb";
 
-// Helper function to check if a booking is in the past
-function isPastBooking(booking: any): boolean {
-  let bookingDate: Date;
+// Helper function to check if a booking date/time is in the past
+function isPastBooking(dateString: string, timeString: string): boolean {
+  const [year, month, day] = dateString.split('-').map(Number);
+  const [hours, minutes] = timeString.split(':').map(Number);
   
-  // Handle both new format (separate date/time) and old format (dateTime)
-  if (booking.date && booking.time) {
-    const [year, month, day] = booking.date.split('-').map(Number);
-    const [hours, minutes] = booking.time.split(':').map(Number);
-    bookingDate = new Date(year, month - 1, day, hours, minutes);
-  } else if (booking.dateTime) {
-    // Handle legacy dateTime format
-    if (typeof booking.dateTime === 'string') {
-      // String format: "2024-03-20T14:30:00"
-      const [datePart, timePart] = booking.dateTime.split('T');
-      const [year, month, day] = datePart.split('-').map(Number);
-      const [hours, minutes] = timePart.split(':').map(Number);
-      bookingDate = new Date(year, month - 1, day, hours, minutes);
-    } else {
-      // Date object
-      bookingDate = new Date(booking.dateTime);
-    }
-  } else {
-    return false;
-  }
-  
+  // Create date for comparison
+  const bookingDate = new Date(year, month - 1, day, hours, minutes);
   const now = new Date();
+  
   return bookingDate < now;
 }
 
+// GET: Fetch user's bookings
 export async function GET(request: NextRequest) {
   try {
     const { userId } = await auth();
@@ -45,7 +29,7 @@ export async function GET(request: NextRequest) {
     const mongoClient = await client;
     const db = mongoClient.db("hoodhub");
 
-    // Get user's bookings
+    // Get user from database
     const user = await db.collection("users").findOne({ clerkId: userId });
     if (!user) {
       return NextResponse.json(
@@ -54,24 +38,41 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Fetch all bookings for the user
+    // Fetch user's bookings from the bookings collection
     const bookings = await db.collection("bookings").find({
       clerkId: userId
     }).toArray();
 
-    // Format bookings and separate into upcoming and past
+    // Format bookings for frontend consumption
     const formattedBookings = bookings.map(booking => {
-      const isPast = isPastBooking(booking);
+      const isPast = isPastBooking(booking.date, booking.time);
       
-      // Ensure dateTime is always present for backward compatibility
+      // Handle both legacy (single service) and new (multiple services) formats
+      let services;
+      if (booking.services) {
+        // New format: multiple services
+        services = booking.services;
+      } else if (booking.service) {
+        // Legacy format: single service - convert to array format
+        services = [booking.service];
+      } else {
+        // Fallback
+        services = [{ id: 'unknown', name: 'Unknown Service' }];
+      }
+
+      // Handle dateTime construction
       let dateTimeString: string;
       if (booking.date && booking.time) {
-        dateTimeString = `${booking.date}T${booking.time}:00`;
+        // Construct from separate date and time fields
+        const [year, month, day] = booking.date.split('-').map(Number);
+        const [hours, minutes] = booking.time.split(':').map(Number);
+        const constructedDate = new Date(year, month - 1, day, hours, minutes);
+        dateTimeString = constructedDate.toISOString();
       } else if (booking.dateTime) {
+        // Use existing dateTime field
         if (typeof booking.dateTime === 'string') {
-          dateTimeString = booking.dateTime;
+          dateTimeString = new Date(booking.dateTime).toISOString();
         } else {
-          // Convert Date object to ISO string
           dateTimeString = new Date(booking.dateTime).toISOString();
         }
       } else {
@@ -80,10 +81,13 @@ export async function GET(request: NextRequest) {
 
       return {
         id: booking._id.toString(),
-        service: booking.service,
+        services: services, // Always return as array
+        service: services[0], // Keep legacy compatibility with first service
         date: booking.date,
         time: booking.time,
+        comment: booking.comment || null, // Include comment
         dateTime: dateTimeString,
+        referral: booking.referral || null,
         createdAt: booking.createdAt,
         isPast: isPast
       };

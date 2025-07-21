@@ -15,6 +15,27 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+// Register Handlebars helpers
+handlebars.registerHelper('gt', function(a: number, b: number) {
+  return a > b;
+});
+
+handlebars.registerHelper('eq', function(a: any, b: any) {
+  return a === b;
+});
+
+handlebars.registerHelper('or', function(...args: any[]) {
+  // Remove the last argument which is the options object
+  const values = args.slice(0, -1);
+  return values.some(val => !!val);
+});
+
+handlebars.registerHelper('and', function(...args: any[]) {
+  // Remove the last argument which is the options object
+  const values = args.slice(0, -1);
+  return values.every(val => !!val);
+});
+
 // Email types
 export enum EmailType {
   REGISTRATION = 'registration',
@@ -125,32 +146,62 @@ export async function sendRegistrationEmail(
 }
 
 /**
- * Send booking confirmation email
+ * Send booking confirmation email - Updated for multiple services
  */
 export async function sendBookingConfirmationEmail(
   to: string,
   bookingDetails: {
     firstName: string;
-    service: string;
+    service: string; // This can now be comma-separated services
+    services?: Array<{id: string, name: string}>; // Optional: structured services array
     date: string;
     time: string;
     artist?: string;
     location?: string;
+    comment?: string | null;
   }
 ): Promise<boolean> {
+  // Handle both service string and services array
+  let serviceText = '';
+  let serviceCount = 1;
+  
+  if (bookingDetails.services && Array.isArray(bookingDetails.services)) {
+    serviceText = bookingDetails.services.map(s => s.name).join(', ');
+    serviceCount = bookingDetails.services.length;
+  } else {
+    serviceText = bookingDetails.service;
+    serviceCount = bookingDetails.service.split(',').length;
+  }
+
+  // Create service display text
+  const serviceDisplay = serviceCount > 1 
+    ? `<strong>Services:</strong> ${serviceText}`
+    : `<strong>Service:</strong> ${serviceText}`;
+
+  // Add comment if provided
+  const commentDisplay = bookingDetails.comment 
+    ? `<br><br><strong>Special Requests:</strong> ${bookingDetails.comment}`
+    : '';
+
   return sendEmail({
     to,
-    subject: 'Booking Confirmed - HoodHub',
+    subject: `Booking Confirmed - ${serviceCount > 1 ? 'Multiple Services' : serviceText} - HoodHub`,
     emailType: EmailType.BOOKING_CONFIRMATION,
     templateData: {
       title: 'Booking Confirmed!',
-      message: `Hi ${bookingDetails.firstName}!<br><br>Your appointment has been confirmed. Here are the details:`,
+      message: `Hi ${bookingDetails.firstName}!<br><br>Your appointment${serviceCount > 1 ? 's' : ''} ${serviceCount > 1 ? 'have' : 'has'} been confirmed. Here are the details:`,
       bookingDetails: {
-        service: bookingDetails.service,
+        service: serviceText,
+        services: bookingDetails.services || null,
         date: bookingDetails.date,
         time: bookingDetails.time,
         artist: bookingDetails.artist || 'Our skilled team',
-        location: bookingDetails.location || 'HoodHub Studio'
+        location: bookingDetails.location || 'HoodHub Studio',
+        serviceDisplay: serviceDisplay,
+        comment: bookingDetails.comment,
+        commentDisplay: commentDisplay,
+        serviceCount: serviceCount,
+        multipleServices: serviceCount > 1
       },
       buttonText: 'View My Bookings',
       buttonUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/bookings`,
@@ -160,26 +211,43 @@ export async function sendBookingConfirmationEmail(
 }
 
 /**
- * Send booking reminder email
+ * Send booking reminder email - Updated for multiple services
  */
 export async function sendBookingReminderEmail(
   to: string,
   reminderDetails: {
     firstName: string;
-    service: string;
+    service: string; // Can be comma-separated
+    services?: Array<{id: string, name: string}>;
     date: string;
     time: string;
     artist?: string;
   }
 ): Promise<boolean> {
+  let serviceText = '';
+  let serviceCount = 1;
+  
+  if (reminderDetails.services && Array.isArray(reminderDetails.services)) {
+    serviceText = reminderDetails.services.map(s => s.name).join(', ');
+    serviceCount = reminderDetails.services.length;
+  } else {
+    serviceText = reminderDetails.service;
+    serviceCount = reminderDetails.service.split(',').length;
+  }
+
   return sendEmail({
     to,
-    subject: 'Appointment Reminder - Tomorrow at HoodHub',
+    subject: `Appointment Reminder - Tomorrow at HoodHub`,
     emailType: EmailType.BOOKING_REMINDER,
     templateData: {
       title: 'Appointment Reminder',
-      message: `Hi ${reminderDetails.firstName}!<br><br>This is a friendly reminder about your upcoming appointment tomorrow:`,
-      bookingDetails: reminderDetails,
+      message: `Hi ${reminderDetails.firstName}!<br><br>This is a friendly reminder about your upcoming appointment${serviceCount > 1 ? 's' : ''} tomorrow:`,
+      bookingDetails: {
+        ...reminderDetails,
+        service: serviceText,
+        serviceCount: serviceCount,
+        multipleServices: serviceCount > 1
+      },
       buttonText: 'Get Directions',
       buttonUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/contact`,
       isReminder: true
@@ -188,25 +256,42 @@ export async function sendBookingReminderEmail(
 }
 
 /**
- * Send booking cancellation email
+ * Send booking cancellation email - Updated for multiple services
  */
 export async function sendBookingCancellationEmail(
   to: string,
   cancellationDetails: {
     firstName: string;
-    service: string;
+    service: string; // Can be comma-separated
+    services?: Array<{id: string, name: string}>;
     date: string;
     time: string;
   }
 ): Promise<boolean> {
+  let serviceText = '';
+  let serviceCount = 1;
+  
+  if (cancellationDetails.services && Array.isArray(cancellationDetails.services)) {
+    serviceText = cancellationDetails.services.map(s => s.name).join(', ');
+    serviceCount = cancellationDetails.services.length;
+  } else {
+    serviceText = cancellationDetails.service;
+    serviceCount = cancellationDetails.service.split(',').length;
+  }
+
   return sendEmail({
     to,
-    subject: 'Booking Cancelled - HoodHub',
+    subject: `Booking Cancelled - ${serviceCount > 1 ? 'Multiple Services' : serviceText} - HoodHub`,
     emailType: EmailType.BOOKING_CANCELLATION,
     templateData: {
       title: 'Booking Cancelled',
-      message: `Hi ${cancellationDetails.firstName}!<br><br>Your appointment has been cancelled as requested:`,
-      bookingDetails: cancellationDetails,
+      message: `Hi ${cancellationDetails.firstName}!<br><br>Your appointment${serviceCount > 1 ? 's' : ''} ${serviceCount > 1 ? 'have' : 'has'} been cancelled as requested:`,
+      bookingDetails: {
+        ...cancellationDetails,
+        service: serviceText,
+        serviceCount: serviceCount,
+        multipleServices: serviceCount > 1
+      },
       buttonText: 'Book New Appointment',
       buttonUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/book`,
       isCancellation: true
@@ -215,20 +300,34 @@ export async function sendBookingCancellationEmail(
 }
 
 /**
- * Send admin notification for new booking
+ * Send admin notification for new booking - Updated for multiple services
  */
 export async function sendAdminBookingNotification(
   bookingDetails: {
     customerName: string;
     customerEmail: string;
-    service: string;
+    service: string; // Can be comma-separated
+    services?: Array<{id: string, name: string}>;
     date: string;
     time: string;
     bookingId: string;
+    comment?: string | null;
     referralCode?: string | null;
     referralUserEmail?: string | null;
   }
 ): Promise<boolean> {
+  // Handle both service string and services array
+  let serviceText = '';
+  let serviceCount = 1;
+  
+  if (bookingDetails.services && Array.isArray(bookingDetails.services)) {
+    serviceText = bookingDetails.services.map(s => s.name).join(', ');
+    serviceCount = bookingDetails.services.length;
+  } else {
+    serviceText = bookingDetails.service;
+    serviceCount = bookingDetails.service.split(',').length;
+  }
+
   // Build referral message if referral exists
   let referralMessage = '';
   if (bookingDetails.referralCode && bookingDetails.referralUserEmail) {
@@ -237,22 +336,32 @@ export async function sendAdminBookingNotification(
     • Referred by: ${bookingDetails.referralUserEmail}`;
   }
 
+  // Add comment if provided
+  let commentMessage = '';
+  if (bookingDetails.comment) {
+    commentMessage = `<br><br><strong>💬 Special Requests:</strong><br>${bookingDetails.comment}`;
+  }
+
   return sendEmail({
     to: 'contact@hoodhub.ru',
-    subject: `New Booking Alert - ${bookingDetails.service}`,
+    subject: `New Booking Alert - ${serviceCount > 1 ? `${serviceCount} Services` : serviceText}`,
     emailType: EmailType.ADMIN_BOOKING_NOTIFICATION,
     templateData: {
       title: '🎯 New Booking Alert!',
-      message: `A new appointment has been booked on the platform. Here are the details:${referralMessage}`,
+      message: `A new appointment with ${serviceCount > 1 ? 'multiple services' : 'service'} has been booked on the platform. Here are the details:`,
       bookingDetails: {
-        service: bookingDetails.service,
+        service: serviceText,
+        services: bookingDetails.services || null,
         date: bookingDetails.date,
         time: bookingDetails.time,
         customer: bookingDetails.customerName,
         email: bookingDetails.customerEmail,
         bookingId: bookingDetails.bookingId,
         referralCode: bookingDetails.referralCode,
-        referralUserEmail: bookingDetails.referralUserEmail
+        referralUserEmail: bookingDetails.referralUserEmail,
+        comment: bookingDetails.comment,
+        serviceCount: serviceCount,
+        multipleServices: serviceCount > 1
       },
       buttonText: 'View All Bookings',
       buttonUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/bookings`,
@@ -270,32 +379,47 @@ export async function sendAdminBookingNotification(
 }
 
 /**
- * Send admin notification for booking cancellation
+ * Send admin notification for booking cancellation - Updated for multiple services
  */
 export async function sendAdminCancellationNotification(
   cancellationDetails: {
     customerName: string;
     customerEmail: string;
-    service: string;
+    service: string; // Can be comma-separated
+    services?: Array<{id: string, name: string}>;
     date: string;
     time: string;
     bookingId: string;
   }
 ): Promise<boolean> {
+  let serviceText = '';
+  let serviceCount = 1;
+  
+  if (cancellationDetails.services && Array.isArray(cancellationDetails.services)) {
+    serviceText = cancellationDetails.services.map(s => s.name).join(', ');
+    serviceCount = cancellationDetails.services.length;
+  } else {
+    serviceText = cancellationDetails.service;
+    serviceCount = cancellationDetails.service.split(',').length;
+  }
+
   return sendEmail({
     to: 'contact@hoodhub.ru',
-    subject: `Booking Cancelled - ${cancellationDetails.service}`,
+    subject: `Booking Cancelled - ${serviceCount > 1 ? `${serviceCount} Services` : serviceText}`,
     emailType: EmailType.ADMIN_CANCELLATION_NOTIFICATION,
     templateData: {
       title: '❌ Booking Cancellation Alert',
-      message: `An appointment has been cancelled. Here are the details:`,
+      message: `An appointment with ${serviceCount > 1 ? 'multiple services' : 'service'} has been cancelled. Here are the details:`,
       bookingDetails: {
-        service: cancellationDetails.service,
+        service: serviceText,
+        services: cancellationDetails.services || null,
         date: cancellationDetails.date,
         time: cancellationDetails.time,
         customer: cancellationDetails.customerName,
         email: cancellationDetails.customerEmail,
-        bookingId: cancellationDetails.bookingId
+        bookingId: cancellationDetails.bookingId,
+        serviceCount: serviceCount,
+        multipleServices: serviceCount > 1
       },
       buttonText: 'View All Bookings',
       buttonUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/bookings`,
@@ -326,33 +450,8 @@ export async function sendAdminCustomEmail(
       title: subject,
       message: firstName ? `Hi ${firstName}!<br><br>${message}` : message,
       buttonText: 'Visit HoodHub',
-      buttonUrl: process.env.NEXT_PUBLIC_BASE_URL,
+      buttonUrl: process.env.NEXT_PUBLIC_BASE_URL || 'https://hoodhub.ru',
       isCustom: true
-    }
-  });
-}
-
-/**
- * Send password reset email
- */
-export async function sendPasswordResetEmail(
-  to: string,
-  resetUrl: string,
-  firstName?: string
-): Promise<boolean> {
-  return sendEmail({
-    to,
-    subject: 'Reset Your HoodHub Password',
-    emailType: EmailType.PASSWORD_RESET,
-    templateData: {
-      title: 'Password Reset Request',
-      message: firstName 
-        ? `Hi ${firstName}!<br><br>We received a request to reset your password. Click the button below to create a new password:`
-        : 'We received a request to reset your password. Click the button below to create a new password:',
-      buttonText: 'Reset Password',
-      buttonUrl: resetUrl,
-      isPasswordReset: true,
-      resetNote: 'If you didn\'t request this, you can safely ignore this email. The link will expire in 24 hours.'
     }
   });
 }

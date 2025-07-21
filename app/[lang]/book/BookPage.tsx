@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { FloatingNav } from "@/components/ui/floating-navbar";
@@ -7,6 +7,7 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -21,12 +22,14 @@ import {
   CheckCircle,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   Loader2,
   AlertTriangle,
   X,
   Gift,
   Info,
-  Phone
+  Phone,
+  Check
 } from "lucide-react";
 import Image from "next/image";
 import type { Dictionary } from "../dictionaries";
@@ -50,9 +53,10 @@ interface BookPageProps {
 }
 
 const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }: BookPageProps) => {
-  const [selectedServiceId, setSelectedServiceId] = useState(selectedService || "");
+  const [selectedServiceIds, setSelectedServiceIds] = useState<string[]>(selectedService ? [selectedService] : []);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
+  const [comment, setComment] = useState("");
   const [referralCode, setReferralCode] = useState(referral || "");
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [calendarDays, setCalendarDays] = useState<Date[]>([]);
@@ -62,6 +66,9 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
   const [isValidatingReferral, setIsValidatingReferral] = useState(false);
   const [referralStatus, setReferralStatus] = useState<'valid' | 'invalid' | 'not-checked'>('not-checked');
   const [referralUserEmail, setReferralUserEmail] = useState("");
+  const [isServiceDropdownOpen, setIsServiceDropdownOpen] = useState(false);
+  
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const user: User | null = userAsString ? JSON.parse(userAsString) : null;
 
@@ -84,6 +91,20 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
     "20:00", "21:00"
   ];
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsServiceDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   // Generate calendar days
   useEffect(() => {
     const year = currentMonth.getFullYear();
@@ -103,12 +124,12 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
     setCalendarDays(days);
   }, [currentMonth]);
 
-  // Fetch available slots when date changes
+  // Fetch available slots when date or selected services change
   useEffect(() => {
-    if (selectedDate) {
+    if (selectedDate && selectedServiceIds.length > 0) {
       fetchAvailableSlots();
     }
-  }, [selectedDate]);
+  }, [selectedDate, selectedServiceIds]);
 
   // Validate referral code when it changes
   useEffect(() => {
@@ -123,21 +144,35 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
   const fetchAvailableSlots = async () => {
     setIsFetchingSlots(true);
     try {
-      const response = await fetch(`/api/book?date=${selectedDate}`);
+      // Pass selected services to check availability for specific services
+      const serviceParams = selectedServiceIds.join(',');
+      const response = await fetch(`/api/book?date=${selectedDate}&services=${serviceParams}`);
       const data = await response.json();
       
-      if (response.ok && data.slots) {
+      if (response.ok && data.success && data.slots) {
         setAvailableSlots(data.slots);
       } else {
-        console.error('Failed to fetch slots:', data.error);
-        setAvailableSlots(timeSlots.map(time => ({ time, available: true })));
+        console.error('Failed to fetch slots:', {
+          status: response.status,
+          error: data.error,
+          details: data.details
+        });
+        
+        // Use fallback slots
+        const fallbackSlots = timeSlots.map(time => ({ time, available: true }));
+        setAvailableSlots(fallbackSlots);
+        
         toast.error("Failed to load available slots", {
-          description: "Showing all slots as available. Please refresh if needed."
+          description: data.error || "Showing all slots as available. Please refresh if needed."
         });
       }
     } catch (error) {
       console.error('Error fetching slots:', error);
-      setAvailableSlots(timeSlots.map(time => ({ time, available: true })));
+      
+      // Use fallback slots
+      const fallbackSlots = timeSlots.map(time => ({ time, available: true }));
+      setAvailableSlots(fallbackSlots);
+      
       toast.error("Failed to load available slots", {
         description: "Please check your connection and try again."
       });
@@ -168,6 +203,31 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
     } finally {
       setIsValidatingReferral(false);
     }
+  };
+
+  const handleServiceToggle = (serviceId: string) => {
+    setSelectedServiceIds(prev => {
+      const isSelected = prev.includes(serviceId);
+      if (isSelected) {
+        return prev.filter(id => id !== serviceId);
+      } else {
+        return [...prev, serviceId];
+      }
+    });
+    // Reset time selection when services change
+    setSelectedTime("");
+  };
+
+  const getSelectedServicesText = () => {
+    if (selectedServiceIds.length === 0) {
+      return dictionary.book.form.chooseService;
+    }
+    
+    const selectedNames = selectedServiceIds.map(id => 
+      services.find(service => service.id === id)?.name
+    ).filter(Boolean);
+    
+    return selectedNames.join(', ');
   };
 
   const formatDate = (date: Date) => {
@@ -213,7 +273,7 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
       return;
     }
 
-    if (!selectedServiceId || !selectedDate || !selectedTime) {
+    if (selectedServiceIds.length === 0 || !selectedDate || !selectedTime) {
       toast.warning("Please complete your selection", {
         description: dictionary.book.alerts.selectAll,
         icon: <AlertTriangle className="w-4 h-4" />,
@@ -227,7 +287,13 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
     });
 
     try {
-      const selectedServiceData = services.find(s => s.id === selectedServiceId);
+      const selectedServicesData = selectedServiceIds.map(id => {
+        const service = services.find(s => s.id === id);
+        return {
+          id,
+          name: service?.name || ''
+        };
+      });
       
       const response = await fetch('/api/book', {
         method: 'POST',
@@ -235,12 +301,10 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          service: {
-            id: selectedServiceId,
-            name: selectedServiceData?.name || ''
-          },
+          services: selectedServicesData,
           date: selectedDate,
           time: selectedTime,
+          comment: comment.trim() || null,
           referralCode: referralCode.trim() || null,
           referralUserEmail: referralUserEmail || null
         }),
@@ -257,9 +321,10 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
         });
         
         // Reset form
-        setSelectedServiceId('');
+        setSelectedServiceIds([]);
         setSelectedDate('');
         setSelectedTime('');
+        setComment('');
         setReferralCode('');
         setReferralStatus('not-checked');
         setReferralUserEmail('');
@@ -370,18 +435,56 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
                 <Label className="text-lg font-franklin font-semibold text-gray-900 mb-4 block">
                   {dictionary.book.form.selectService}
                 </Label>
-                <Select value={selectedServiceId} onValueChange={setSelectedServiceId}>
-                  <SelectTrigger className="w-full h-14 text-lg font-franklin">
-                    <SelectValue placeholder={dictionary.book.form.chooseService} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {services.map((service) => (
-                      <SelectItem key={service.id} value={service.id} className="font-franklin">
-                        {service.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    onClick={() => setIsServiceDropdownOpen(!isServiceDropdownOpen)}
+                    className="w-full h-14 px-3 py-2 text-lg font-franklin border border-gray-300 rounded-md bg-white text-left flex items-center justify-between hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <span className={selectedServiceIds.length === 0 ? "text-gray-500" : "text-gray-900"}>
+                      {getSelectedServicesText()}
+                    </span>
+                    <ChevronDown className={`w-4 h-4 transition-transform ${isServiceDropdownOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  
+                  {isServiceDropdownOpen && (
+                    <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-md shadow-lg z-10 max-h-60 overflow-y-auto">
+                      {services.map((service) => (
+                        <label
+                          key={service.id}
+                          className="flex items-center px-3 py-2 hover:bg-gray-50 cursor-pointer"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={selectedServiceIds.includes(service.id)}
+                            onChange={() => handleServiceToggle(service.id)}
+                            className="mr-3 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                          />
+                          <span className="font-franklin text-gray-900">{service.name}</span>
+                          {selectedServiceIds.includes(service.id) && (
+                            <Check className="w-4 h-4 ml-auto text-blue-600" />
+                          )}
+                        </label>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Comment Section */}
+              <div>
+                <Label className="text-lg font-franklin font-semibold text-gray-900 mb-4 block">
+                  {dictionary.book.form.comment}
+                </Label>
+                <Textarea
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  placeholder={dictionary.book.form.commentPlaceholder}
+                  className="w-full min-h-[100px] text-base font-franklin resize-none"
+                  maxLength={500}
+                />
+                <div className="text-sm text-gray-500 mt-2 text-right">
+                  {comment.length}/500
+                </div>
               </div>
 
               {/* Calendar */}
@@ -467,7 +570,7 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
                   )}
                 </Label>
                 <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
-                  {selectedDate && availableSlots.length > 0 ? (
+                  {selectedDate && selectedServiceIds.length > 0 && availableSlots.length > 0 ? (
                     availableSlots.map((slot) => (
                       <button
                         key={slot.time}
@@ -491,7 +594,7 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
                     timeSlots.map((time) => (
                       <button
                         key={time}
-                        disabled={!selectedDate}
+                        disabled={!selectedDate || selectedServiceIds.length === 0}
                         className="h-12 rounded-lg text-sm font-franklin font-medium bg-gray-100 text-gray-400 cursor-not-allowed"
                       >
                         <Clock className="w-4 h-4 inline mr-1" />
@@ -616,10 +719,10 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
                 </h3>
                 
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-start justify-between">
                     <span className="font-franklin text-gray-600">{dictionary.book.summary.service}:</span>
-                    <span className="font-franklin font-medium">
-                      {selectedServiceId ? services.find(s => s.id === selectedServiceId)?.name : dictionary.book.summary.notSelected}
+                    <span className="font-franklin font-medium text-right max-w-[60%]">
+                      {selectedServiceIds.length > 0 ? getSelectedServicesText() : dictionary.book.summary.notSelected}
                     </span>
                   </div>
                   
@@ -637,6 +740,15 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
                     </span>
                   </div>
                   
+                  {comment.trim() && (
+                    <div className="flex items-start justify-between">
+                      <span className="font-franklin text-gray-600">{dictionary.book.summary.comment}:</span>
+                      <span className="font-franklin font-medium text-right max-w-[60%] text-sm">
+                        {comment.trim()}
+                      </span>
+                    </div>
+                  )}
+                  
                   {referralStatus === 'valid' && (
                     <div className="flex items-center justify-between">
                       <span className="font-franklin text-gray-600">Referral:</span>
@@ -650,7 +762,7 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
                 <div className="mt-8">
                   <Button
                     onClick={handleBooking}
-                    disabled={!user || !selectedServiceId || !selectedDate || !selectedTime || isLoading}
+                    disabled={!user || selectedServiceIds.length === 0 || !selectedDate || !selectedTime || isLoading}
                     className="w-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-black font-franklin font-semibold py-4 text-lg hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isLoading ? (

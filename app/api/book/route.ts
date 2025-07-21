@@ -47,15 +47,35 @@ function formatDateForDisplay(dateString: string, timeString: string, locale: st
   return { formattedDate, formattedTime };
 }
 
-// GET: Fetch available time slots for a specific date
+// GET: Fetch available time slots for specific services on a specific date
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const date = searchParams.get("date");
+    const services = searchParams.get("services");
 
     if (!date) {
       return NextResponse.json(
-        { error: "Date parameter is required" },
+        { error: "Date parameter is required", slots: [] },
+        { status: 400 }
+      );
+    }
+
+    if (!services || services.trim() === '') {
+      return NextResponse.json(
+        { error: "Services parameter is required", slots: [] },
+        { status: 400 }
+      );
+    }
+
+    // Parse selected services
+    const selectedServiceIds = services.split(',')
+      .map(id => id.trim())
+      .filter(id => id.length > 0);
+
+    if (selectedServiceIds.length === 0) {
+      return NextResponse.json(
+        { error: "At least one service must be provided", slots: [] },
         { status: 400 }
       );
     }
@@ -76,31 +96,62 @@ export async function GET(request: NextRequest) {
       date: date
     }).toArray();
 
-    // Extract booked times
-    const bookedTimes = existingBookings.map(booking => booking.time);
+    // Create available slots array based on service-specific conflicts
+    const availableSlots = allTimeSlots.map(time => {
+      // Check if any of the selected services are already booked at this time
+      const hasConflict = existingBookings.some(booking => {
+        if (booking.time !== time) return false;
+        
+        // Handle both single service (legacy) and multiple services (new) booking formats
+        let bookedServices: string[] = [];
+        
+        if (booking.services && Array.isArray(booking.services)) {
+          // New format: multiple services
+          bookedServices = booking.services.map((s: any) => s.id);
+        } else if (booking.service && booking.service.id) {
+          // Legacy format: single service
+          bookedServices = [booking.service.id];
+        }
+        
+        // Check if any of the user's selected services conflict with booked services
+        const conflict = selectedServiceIds.some(selectedServiceId => 
+          bookedServices.includes(selectedServiceId)
+        );
 
-    // Create available slots array
-    const availableSlots = allTimeSlots.map(time => ({
-      time,
-      available: !bookedTimes.includes(time)
-    }));
+        return conflict;
+      });
 
-    return NextResponse.json({
+      return {
+        time,
+        available: !hasConflict
+      };
+    });
+
+    const response = {
+      success: true,
       date: date,
+      services: selectedServiceIds,
       slots: availableSlots,
       totalBookings: existingBookings.length
-    });
+    };
+
+    return NextResponse.json(response);
 
   } catch (error) {
     console.error("Error fetching available slots:", error);
     return NextResponse.json(
-      { error: "Failed to fetch available slots" },
+      { 
+        success: false,
+        error: "Failed to fetch available slots",
+        slots: [],
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     );
   }
 }
 
-// POST: Create a new booking
+// POST: Create a new booking with multiple services
 export async function POST(request: NextRequest) {
   try {
     const { userId } = await auth();
@@ -112,14 +163,24 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { service, date, time, referralCode, referralUserEmail } = body;
+    const { services, date, time, comment, referralCode, referralUserEmail } = body;
 
     // Validate required fields
-    if (!service || !service.id || !service.name || !date || !time) {
+    if (!services || !Array.isArray(services) || services.length === 0 || !date || !time) {
       return NextResponse.json(
-        { error: "Service (with id and name), date, and time are required" },
+        { error: "Services (array), date, and time are required" },
         { status: 400 }
       );
+    }
+
+    // Validate services array structure
+    for (const service of services) {
+      if (!service.id || !service.name) {
+        return NextResponse.json(
+          { error: "Each service must have an id and name" },
+          { status: 400 }
+        );
+      }
     }
 
     // Connect to MongoDB
@@ -135,15 +196,46 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if the slot is already booked
+    // Check if any of the selected services are already booked at the same time
+    const selectedServiceIds = services.map(s => s.id);
     const existingBooking = await db.collection("bookings").findOne({
       date: date,
-      time: time
+      time: time,
+      $or: [
+        // Check new format (multiple services)
+        {
+          "services.id": { $in: selectedServiceIds }
+        },
+        // Check legacy format (single service) 
+        {
+          "service.id": { $in: selectedServiceIds }
+        }
+      ]
     });
 
     if (existingBooking) {
+      // Find which specific service(s) are conflicting
+      const conflictingServices = [];
+      
+      if (existingBooking.services) {
+        // New format
+        const bookedServiceIds = existingBooking.services.map((s: any) => s.id);
+        conflictingServices.push(...selectedServiceIds.filter(id => bookedServiceIds.includes(id)));
+      } else if (existingBooking.service) {
+        // Legacy format
+        if (selectedServiceIds.includes(existingBooking.service.id)) {
+          conflictingServices.push(existingBooking.service.id);
+        }
+      }
+
+      const conflictingServiceNames = conflictingServices.map(id => 
+        services.find(s => s.id === id)?.name
+      ).filter(Boolean);
+
       return NextResponse.json(
-        { error: "This time slot is already booked" },
+        { 
+          error: `The following service(s) are already booked at this time: ${conflictingServiceNames.join(', ')}. Please choose a different time or remove the conflicting services.` 
+        },
         { status: 409 }
       );
     }
@@ -165,13 +257,14 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Create booking document with separate date and time fields
+    // Create booking document with multiple services
     const bookingData = {
       userId: user._id,
       clerkId: userId,
-      service: service,
+      services: services, // New: multiple services
       date: date,
       time: time,
+      comment: comment || null, // New: optional comment
       // Keep dateTime for backward compatibility but as a simple string
       dateTime: `${date}T${time}:00`,
       referral: referralData,
@@ -188,7 +281,8 @@ export async function POST(request: NextRequest) {
       date: date,
       time: time,
       dateTime: `${date}T${time}:00`,
-      service: service,
+      services: services, // Store multiple services
+      comment: comment || null,
       referral: referralData,
       createdAt: new Date()
     };
@@ -212,7 +306,7 @@ export async function POST(request: NextRequest) {
               bookingId: bookingId,
               referredUserEmail: user.email,
               referredUserName: `${user.firstName} ${user.lastName}`,
-              service: service,
+              services: services, // Store multiple services
               date: date,
               time: time,
               dateTime: `${date}T${time}:00`,
@@ -226,15 +320,20 @@ export async function POST(request: NextRequest) {
     // Format date and time for emails
     const { formattedDate, formattedTime } = formatDateForDisplay(date, time);
 
+    // Create service names string for emails
+    const serviceNames = services.map(s => s.name).join(', ');
+
     // Send booking confirmation email to customer
     try {
       await sendBookingConfirmationEmail(user.email, {
         firstName: user.firstName || 'Valued Customer',
-        service: service.name,
+        service: serviceNames, // Multiple services as comma-separated string
+        services: services, // Pass services array for new email template
         date: formattedDate,
         time: formattedTime,
         artist: 'Our Expert Team',
-        location: 'HoodHub Studio'
+        location: 'HoodHub Studio',
+        comment: comment || null
       });
       
       console.log(`Booking confirmation email sent to ${user.email}`);
@@ -248,10 +347,12 @@ export async function POST(request: NextRequest) {
       await sendAdminBookingNotification({
         customerName: `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Customer',
         customerEmail: user.email,
-        service: service.name,
+        service: serviceNames, // Multiple services as comma-separated string
+        services: services, // Pass services array for new email template
         date: formattedDate,
         time: formattedTime,
         bookingId: bookingId.toString(),
+        comment: comment || null,
         referralCode: referralData?.referralCode || null,
         referralUserEmail: referralData?.referralUserEmail || null
       });
@@ -358,11 +459,25 @@ export async function DELETE(request: NextRequest) {
     const bookingTime = booking.time || booking.dateTime.split('T')[1].substring(0, 5);
     const { formattedDate, formattedTime } = formatDateForDisplay(bookingDate, bookingTime);
 
+    // Handle service names for email (support both old and new formats)
+    let serviceNames = '';
+    let services = null;
+    if (booking.services && Array.isArray(booking.services)) {
+      // New format: multiple services
+      serviceNames = booking.services.map((s: any) => s.name).join(', ');
+      services = booking.services;
+    } else if (booking.service) {
+      // Legacy format: single service
+      serviceNames = booking.service.name;
+      services = [booking.service];
+    }
+
     // Send booking cancellation email to customer
     try {
       await sendBookingCancellationEmail(user.email, {
         firstName: user.firstName || 'Valued Customer',
-        service: booking.service.name,
+        service: serviceNames,
+        services: services as any,
         date: formattedDate,
         time: formattedTime
       });
@@ -378,7 +493,8 @@ export async function DELETE(request: NextRequest) {
       await sendAdminCancellationNotification({
         customerName: `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Customer',
         customerEmail: user.email,
-        service: booking.service.name,
+        service: serviceNames,
+        services: services as any,
         date: formattedDate,
         time: formattedTime,
         bookingId: bookingId
