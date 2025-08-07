@@ -7,11 +7,29 @@ function isPastBooking(dateString: string, timeString: string): boolean {
   const [year, month, day] = dateString.split('-').map(Number);
   const [hours, minutes] = timeString.split(':').map(Number);
   
-  // Create date for comparison
+  // Create date for comparison (this will be in local timezone)
   const bookingDate = new Date(year, month - 1, day, hours, minutes);
   const now = new Date();
   
   return bookingDate < now;
+}
+
+// Helper function to format date string for display
+function formatDateString(dateString: string): string {
+  const [year, month, day] = dateString.split('-');
+  const monthNames = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+  ];
+  return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}, ${year}`;
+}
+
+// Helper function to format time string for display
+function formatTimeString(timeString: string): string {
+  const [hours, minutes] = timeString.split(':').map(Number);
+  const period = hours >= 12 ? 'PM' : 'AM';
+  const displayHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
+  return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
 }
 
 // GET: Fetch user's bookings
@@ -60,23 +78,20 @@ export async function GET(request: NextRequest) {
         services = [{ id: 'unknown', name: 'Unknown Service' }];
       }
 
-      // Handle dateTime construction
+      // Keep datetime as string for consistency, but construct it properly
       let dateTimeString: string;
       if (booking.date && booking.time) {
-        // Construct from separate date and time fields
-        const [year, month, day] = booking.date.split('-').map(Number);
-        const [hours, minutes] = booking.time.split(':').map(Number);
-        const constructedDate = new Date(year, month - 1, day, hours, minutes);
-        dateTimeString = constructedDate.toISOString();
+        // Construct ISO-like string but keep it simple
+        dateTimeString = `${booking.date}T${booking.time}:00`;
       } else if (booking.dateTime) {
-        // Use existing dateTime field
-        if (typeof booking.dateTime === 'string') {
-          dateTimeString = new Date(booking.dateTime).toISOString();
-        } else {
-          dateTimeString = new Date(booking.dateTime).toISOString();
-        }
+        // Use existing dateTime field as string
+        dateTimeString = booking.dateTime;
       } else {
-        dateTimeString = new Date().toISOString();
+        // Fallback to current date/time as string
+        const now = new Date();
+        const dateStr = now.toISOString().split('T')[0];
+        const timeStr = now.toTimeString().split(' ')[0].substring(0, 5);
+        dateTimeString = `${dateStr}T${timeStr}:00`;
       }
 
       return {
@@ -85,19 +100,21 @@ export async function GET(request: NextRequest) {
         service: services[0], // Keep legacy compatibility with first service
         date: booking.date,
         time: booking.time,
-        comment: booking.comment || null, // Include comment
+        comment: booking.comment || null,
         dateTime: dateTimeString,
+        formattedDate: formatDateString(booking.date),
+        formattedTime: formatTimeString(booking.time),
         referral: booking.referral || null,
         createdAt: booking.createdAt,
         isPast: isPast
       };
     });
 
-    // Sort bookings by date/time
+    // Sort bookings by date/time (simple string comparison for YYYY-MM-DD format)
     formattedBookings.sort((a, b) => {
-      const dateA = new Date(a.dateTime);
-      const dateB = new Date(b.dateTime);
-      return dateB.getTime() - dateA.getTime(); // Newest first
+      const dateTimeA = `${a.date} ${a.time}`;
+      const dateTimeB = `${b.date} ${b.time}`;
+      return dateTimeB.localeCompare(dateTimeA); // Newest first
     });
 
     // Separate into upcoming and past

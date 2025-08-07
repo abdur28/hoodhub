@@ -62,12 +62,16 @@ interface Service {
 
 interface Booking {
   id: string;
-  services?: Service[]; // New: multiple services
-  service?: Service; // Legacy: single service
+  services?: Service[];
+  service?: Service;
+  date: string;
+  time: string;
   dateTime: string;
+  formattedDate: string;
+  formattedTime: string;
   createdAt: string;
   isPast: boolean;
-  comment?: string; // New: comment field
+  comment?: string;
   referral?: {
     referralCode: string;
     referralUserEmail: string;
@@ -107,6 +111,12 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
   const [isUpdatingPhone, setIsUpdatingPhone] = useState(false);
 
   const user: User = JSON.parse(userAsString);
+
+  // Helper function to parse date from string (YYYY-MM-DD format)
+  const parseDate = (dateString: string): Date => {
+    const [year, month, day] = dateString.split('-').map(Number);
+    return new Date(year, month - 1, day);
+  };
 
   // Get service icon based on service ID
   const getServiceIcon = (serviceId: string) => {
@@ -261,7 +271,7 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
 
   const handleDeleteBooking = async (bookingId: string, booking: Booking) => {
     const serviceNames = getServiceNames(booking);
-    const dateTime = new Date(booking.dateTime).toLocaleDateString();
+    const dateTime = `${booking.formattedDate} at ${booking.formattedTime}`;
     setBookingToDelete({ id: bookingId, serviceNames, dateTime });
     setConfirmDialogOpen(true);
   };
@@ -312,7 +322,7 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
     }
   };
 
-  const formatDate = (date: Date) => {
+  const formatDateForCalendar = (date: Date) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
@@ -336,14 +346,11 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1));
   };
 
-  // Get bookings for a specific date
+  // Get bookings for a specific date (using string comparison)
   const getBookingsForDate = (date: Date) => {
     if (!bookings) return [];
-    const dateStr = formatDate(date);
-    return bookings.all.filter(booking => {
-      const bookingDate = new Date(booking.dateTime);
-      return formatDate(bookingDate) === dateStr;
-    });
+    const dateStr = formatDateForCalendar(date);
+    return bookings.all.filter(booking => booking.date === dateStr);
   };
 
   return (
@@ -469,7 +476,7 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
                                   <div
                                     key={i}
                                     className={`w-1 h-1 rounded-full ${serviceCount > 1 ? 'bg-green-500' : 'bg-yellow-500'}`}
-                                    title={`${getServiceNames(booking)} at ${new Date(booking.dateTime).toLocaleTimeString()}`}
+                                    title={`${getServiceNames(booking)} at ${booking.formattedTime}`}
                                   />
                                 );
                               })}
@@ -537,7 +544,7 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
                           <Input
                             value={phoneNumber}
                             onChange={(e) => setPhoneNumber(e.target.value)}
-                            placeholder="+7 123 456 7890"
+                            placeholder="+234 123 456 7890"
                             className="h-8 text-sm w-40"
                           />
                           <Button
@@ -666,7 +673,6 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
                     const services = getServicesArray(booking);
                     const serviceNames = getServiceNames(booking);
                     const serviceCount = getServiceCount(booking);
-                    const bookingDate = new Date(booking.dateTime);
                     
                     return (
                       <motion.div
@@ -679,14 +685,11 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
                           <div className="flex-1">
                             {/* Services Display */}
                             <div className="flex items-center gap-2 mb-3">
-                              {
-                                getServiceIcon(services[0]?.id || '')
-                              }
+                              {getServiceIcon(services[0]?.id || '')}
                               <div>
                                 <h3 className="font-franklin font-semibold text-gray-900">
                                   {serviceNames}
                                 </h3>
-                               
                               </div>
                             </div>
                             
@@ -694,11 +697,11 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
                             <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
                               <div className="flex items-center gap-2">
                                 <CalendarIcon className="w-4 h-4" />
-                                <span>{bookingDate.toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-US')}</span>
+                                <span>{booking.formattedDate}</span>
                               </div>
                               <div className="flex items-center gap-2">
                                 <Clock className="w-4 h-4" />
-                                <span>{bookingDate.toLocaleTimeString(lang === 'ru' ? 'ru-RU' : 'en-US', { hour: '2-digit', minute: '2-digit' })}</span>
+                                <span>{booking.formattedTime}</span>
                               </div>
                             </div>
 
@@ -766,7 +769,7 @@ const BookingsPage = ({ lang, dictionary, userAsString }: BookingsPageProps) => 
           <DialogHeader>
             <DialogTitle className="font-franklin">Cancel Booking</DialogTitle>
             <DialogDescription className="font-franklin">
-              {`${dictionary.bookings.alerts.confirmCancel} ${bookingToDelete && bookingToDelete.serviceNames} ${bookingToDelete && bookingToDelete.dateTime}`}
+              {`${dictionary.bookings.alerts.confirmCancel} ${bookingToDelete && bookingToDelete.serviceNames} on ${bookingToDelete && bookingToDelete.dateTime}`}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

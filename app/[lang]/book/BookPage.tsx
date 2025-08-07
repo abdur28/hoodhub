@@ -76,6 +76,7 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
   const services = [
     { id: "barbing", name: dictionary.book.services.barbing },
     { id: "braids", name: dictionary.book.services.braids },  
+    { id: "twists", name: dictionary.book.services.twists },
     { id: "locs", name: dictionary.book.services.locs },
     { id: "detox-hairCare", name: dictionary.book.services.detoxHairCare },
     { id: "manicure", name: dictionary.book.services.manicure },

@@ -64,11 +64,15 @@ interface Booking {
   _id: string;
   userId: string;
   clerkId: string;
-  services?: Service[]; // New: multiple services
-  service?: Service; // Legacy: single service
+  services?: Service[];
+  service?: Service;
+  date: string;
+  time: string;
   dateTime: string;
+  formattedDate: string;
+  formattedTime: string;
   createdAt: string;
-  comment?: string; // New: comment field
+  comment?: string;
   referral?: {
     referralCode: string;
     referralUserEmail: string;
@@ -100,6 +104,36 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
   const [cancellingBooking, setCancellingBooking] = useState(false);
   const [activeTab, setActiveTab] = useState("bookings");
   const [filterStatus, setFilterStatus] = useState("all");
+
+  // Helper function to check if booking is upcoming based on date/time strings
+  const isUpcoming = (dateString: string, timeString: string): boolean => {
+    const [year, month, day] = dateString.split('-').map(Number);
+    const [hours, minutes] = timeString.split(':').map(Number);
+    
+    // Create date for comparison (this will be in local timezone)
+    const bookingDate = new Date(year, month - 1, day, hours, minutes);
+    const now = new Date();
+    
+    return bookingDate > now;
+  };
+
+  // Helper function to format date string for display
+  const formatDateString = (dateString: string): string => {
+    const [year, month, day] = dateString.split('-');
+    const monthNames = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+    return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}, ${year}`;
+  };
+
+  // Helper function to format time string for display
+  const formatTimeString = (timeString: string): string => {
+    const [hours, minutes] = timeString.split(':').map(Number);
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const displayHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
+    return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
+  };
 
   // Admin tabs configuration  
   const adminTabs = [
@@ -246,14 +280,6 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
     }
   };
 
-  const isUpcoming = (dateTime: string) => {
-    const bookingDate = new Date(dateTime); // UTC stored date from database
-    const now = new Date(); // Current local time
-    
-    // Compare using UTC timestamps to ensure accuracy
-    return new Date(bookingDate) > now;
-  };
-
   const filteredBookings = bookings.filter(booking => {
     const serviceNames = getServiceNames(booking);
     const matchesSearch = 
@@ -266,33 +292,19 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
       booking.referral?.referralCode?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.referral?.referralUserEmail?.toLowerCase().includes(searchTerm.toLowerCase());
 
+    const upcoming = isUpcoming(booking.date, booking.time);
     const matchesFilter = 
       filterStatus === "all" ||
-      (filterStatus === "upcoming" && isUpcoming(booking.dateTime)) ||
-      (filterStatus === "past" && !isUpcoming(booking.dateTime)) ||
+      (filterStatus === "upcoming" && upcoming) ||
+      (filterStatus === "past" && !upcoming) ||
       (filterStatus === "referred" && booking.referral) ||
       (filterStatus === "multiple" && getServiceCount(booking) > 1);
 
     return matchesSearch && matchesFilter;
   });
 
-  const formatDateTime = (dateString: string) => {
-    const date = new Date(dateString);
-    return {
-      date: date.toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-US', {
-        year: 'numeric',
-        month: 'short', 
-        day: 'numeric'
-      }),
-      time: date.toLocaleTimeString(lang === 'ru' ? 'ru-RU' : 'en-US', {
-        hour: '2-digit',
-        minute: '2-digit'
-      })
-    };
-  };
-
-  const upcomingBookings = bookings.filter(booking => isUpcoming(booking.dateTime));
-  const pastBookings = bookings.filter(booking => !isUpcoming(booking.dateTime));
+  const upcomingBookings = bookings.filter(booking => isUpcoming(booking.date, booking.time));
+  const pastBookings = bookings.filter(booking => !isUpcoming(booking.date, booking.time));
   const referredBookings = bookings.filter(booking => booking.referral);
   const multipleServiceBookings = bookings.filter(booking => getServiceCount(booking) > 1);
 
@@ -341,7 +353,7 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
         {/* Stats */}
         <div className="flex gap-4">
           <div className="border p-3 min-w-24 rounded-lg">
-            <div className="text-2xl font-bold ">{upcomingBookings.length}</div>
+            <div className="text-2xl font-bold">{upcomingBookings.length}</div>
             <div className="text-xs">Upcoming</div>
           </div>
           <div className="border p-3 min-w-24 rounded-lg">
@@ -428,7 +440,7 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                   const services = getServicesArray(booking);
                   const serviceNames = getServiceNames(booking);
                   const serviceCount = getServiceCount(booking);
-                  const upcoming = isUpcoming(booking.dateTime);
+                  const upcoming = isUpcoming(booking.date, booking.time);
                   
                   return (
                     <tr key={booking._id} className="hover:bg-gray-50">
@@ -470,24 +482,22 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                       {/* Services */}
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center gap-2">
-                          
-                            <div className="flex items-center gap-2">
-                              {getServiceIcon(services[0]?.id || '')}
-                              <div className="text-sm text-gray-900">
-                                {serviceNames}
-                              </div>
+                          <div className="flex items-center gap-2">
+                            {getServiceIcon(services[0]?.id || '')}
+                            <div className="text-sm text-gray-900">
+                              {serviceNames}
                             </div>
-                          
+                          </div>
                         </div>
                       </td>
 
                       {/* Date & Time */}
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">
-                          {formatDateTime(booking.dateTime).date}
+                          {formatDateString(booking.date)}
                         </div>
                         <div className="text-sm text-gray-500">
-                          {formatDateTime(booking.dateTime).time}
+                          {formatTimeString(booking.time)}
                         </div>
                       </td>
 
@@ -540,7 +550,7 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
 
       {/* Booking Details Dialog */}
       <Dialog open={showBookingDetails} onOpenChange={setShowBookingDetails}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto ">
+        <DialogContent className="max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Booking Details</DialogTitle>
           </DialogHeader>
@@ -612,11 +622,11 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="flex items-center text-sm text-gray-900">
                       <Calendar className="w-4 h-4 mr-2 text-gray-400" />
-                      {formatDateTime(selectedBooking.dateTime).date}
+                      {formatDateString(selectedBooking.date)}
                     </div>
                     <div className="flex items-center text-sm text-gray-900">
                       <Clock className="w-4 h-4 mr-2 text-gray-400" />
-                      {formatDateTime(selectedBooking.dateTime).time}
+                      {formatTimeString(selectedBooking.time)}
                     </div>
                   </div>
                 </div>
@@ -670,7 +680,7 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                     <div>
                       <span className="text-gray-600">Created:</span>
                       <div className="text-gray-900">
-                        {new Date(selectedBooking.createdAt).toLocaleDateString()}
+                        {formatDateString(selectedBooking.createdAt.split('T')[0])}
                       </div>
                     </div>
                   </div>
@@ -703,7 +713,7 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                   </span>
                   <br />
                   <span className="text-sm text-gray-600">
-                    {formatDateTime(bookingToCancel.dateTime).date} at {formatDateTime(bookingToCancel.dateTime).time}
+                    {formatDateString(bookingToCancel.date)} at {formatTimeString(bookingToCancel.time)}
                   </span>
                 </>
               )}

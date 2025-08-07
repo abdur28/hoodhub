@@ -7,48 +7,33 @@ import {
   sendAdminCancellationNotification
 } from "@/lib/email";
 
-// Helper function to format date for display
-function formatDateForDisplay(booking: any) {
-  let bookingDate: string;
-  let bookingTime: string;
+// Helper function to format date string for display
+function formatDateString(dateString: string): string {
+  const [year, month, day] = dateString.split('-');
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  
+  const dayNames = [
+    'Sunday', 'Monday', 'Tuesday', 'Wednesday', 
+    'Thursday', 'Friday', 'Saturday'
+  ];
+  
+  // Create date to get day of week (but keep date as string)
+  const [y, m, d] = [parseInt(year), parseInt(month) - 1, parseInt(day)];
+  const dateObj = new Date(y, m, d);
+  const dayOfWeek = dayNames[dateObj.getDay()];
+  
+  return `${dayOfWeek}, ${monthNames[parseInt(month) - 1]} ${parseInt(day)}, ${year}`;
+}
 
-  if (booking.date && booking.time) {
-    bookingDate = booking.date;
-    bookingTime = booking.time;
-  } else if (booking.dateTime) {
-    const dateTimeString = typeof booking.dateTime === 'string' ? booking.dateTime : booking.dateTime.toISOString();
-    const dateParts = dateTimeString.split('T');
-    bookingDate = dateParts[0];
-    bookingTime = dateParts[1]?.substring(0, 5) || '00:00';
-  } else {
-    // Fallback
-    const now = new Date();
-    bookingDate = now.toISOString().split('T')[0];
-    bookingTime = '00:00';
-  }
-
-  const [year, month, day] = bookingDate.split('-').map(Number);
-  const [hours, minutes] = bookingTime.split(':').map(Number);
-  
-  const date = new Date(year, month - 1, day, hours, minutes);
-  
-  const dateOptions: Intl.DateTimeFormatOptions = {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  };
-  
-  const timeOptions: Intl.DateTimeFormatOptions = {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true
-  };
-  
-  const formattedDate = date.toLocaleDateString('en-US', dateOptions);
-  const formattedTime = date.toLocaleTimeString('en-US', timeOptions);
-  
-  return { formattedDate, formattedTime };
+// Helper function to format time string for display
+function formatTimeString(timeString: string): string {
+  const [hours, minutes] = timeString.split(':').map(Number);
+  const period = hours >= 12 ? 'PM' : 'AM';
+  const displayHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
+  return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
 }
 
 // GET: Fetch all bookings for admin
@@ -118,21 +103,22 @@ export async function GET(request: NextRequest) {
 
     // Format bookings for response with multiple services support
     const formattedBookings = bookings.map(booking => {
-      // Handle dateTime construction
+      // Handle dateTime construction but keep as string
       let dateTimeString: string;
       if (booking.date && booking.time) {
-        // Construct from separate date and time fields
-        const [year, month, day] = booking.date.split('-').map(Number);
-        const [hours, minutes] = booking.time.split(':').map(Number);
-        const constructedDate = new Date(year, month - 1, day, hours, minutes);
-        dateTimeString = constructedDate.toISOString();
+        // Construct ISO-like string but keep it simple
+        dateTimeString = `${booking.date}T${booking.time}:00`;
       } else if (booking.dateTime) {
-        // Use existing dateTime field
+        // Use existing dateTime field as string
         dateTimeString = typeof booking.dateTime === 'string' 
-          ? new Date(booking.dateTime).toISOString()
-          : new Date(booking.dateTime).toISOString();
+          ? booking.dateTime
+          : booking.dateTime.toISOString();
       } else {
-        dateTimeString = new Date().toISOString();
+        // Fallback to current date/time as string
+        const now = new Date();
+        const dateStr = now.toISOString().split('T')[0];
+        const timeStr = now.toTimeString().split(' ')[0].substring(0, 5);
+        dateTimeString = `${dateStr}T${timeStr}:00`;
       }
 
       // Handle both new (multiple services) and legacy (single service) formats
@@ -158,17 +144,19 @@ export async function GET(request: NextRequest) {
         time: booking.time,
         comment: booking.comment || null, // Include comment
         dateTime: dateTimeString,
+        formattedDate: formatDateString(booking.date),
+        formattedTime: formatTimeString(booking.time),
         createdAt: booking.createdAt,
         referral: booking.referral || null,
         user: booking.user
       };
     });
 
-    // Sort by dateTime, newest first
+    // Sort by date/time (simple string comparison for YYYY-MM-DD format)
     formattedBookings.sort((a, b) => {
-      const dateA = new Date(a.dateTime);
-      const dateB = new Date(b.dateTime);
-      return dateB.getTime() - dateA.getTime();
+      const dateTimeA = `${a.date} ${a.time}`;
+      const dateTimeB = `${b.date} ${b.time}`;
+      return dateTimeB.localeCompare(dateTimeA); // Newest first
     });
 
     return NextResponse.json({
@@ -275,8 +263,9 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // Format date and time for emails
-    const { formattedDate, formattedTime } = formatDateForDisplay(booking);
+    // Format date and time for emails using string functions
+    const formattedDate = formatDateString(booking.date);
+    const formattedTime = formatTimeString(booking.time);
 
     // Handle service names for email (support both old and new formats)
     let serviceNames = '';
