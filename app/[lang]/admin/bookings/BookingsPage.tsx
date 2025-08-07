@@ -69,8 +69,8 @@ interface Booking {
   date: string;
   time: string;
   dateTime: string;
-  formattedDate: string;
-  formattedTime: string;
+  formattedDate?: string; // New: formatted date from API
+  formattedTime?: string; // New: formatted time from API
   createdAt: string;
   comment?: string;
   referral?: {
@@ -107,32 +107,72 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
 
   // Helper function to check if booking is upcoming based on date/time strings
   const isUpcoming = (dateString: string, timeString: string): boolean => {
-    const [year, month, day] = dateString.split('-').map(Number);
-    const [hours, minutes] = timeString.split(':').map(Number);
-    
-    // Create date for comparison (this will be in local timezone)
-    const bookingDate = new Date(year, month - 1, day, hours, minutes);
-    const now = new Date();
-    
-    return bookingDate > now;
+    // Handle invalid dates/times
+    if (!dateString || !timeString || 
+        dateString === 'Invalid Date' || timeString === 'Invalid Time' ||
+        !dateString.includes('-') || !timeString.includes(':')) {
+      return false; // Treat invalid bookings as past
+    }
+
+    try {
+      const [year, month, day] = dateString.split('-').map(Number);
+      const [hours, minutes] = timeString.split(':').map(Number);
+      
+      // Validate the numbers
+      if (isNaN(year) || isNaN(month) || isNaN(day) || isNaN(hours) || isNaN(minutes)) {
+        return false;
+      }
+      
+      // Create date for comparison (this will be in local timezone)
+      const bookingDate = new Date(year, month - 1, day, hours, minutes);
+      const now = new Date();
+      
+      return bookingDate > now;
+    } catch (error) {
+      console.error('Error checking if booking is upcoming:', error);
+      return false; // Treat errors as past
+    }
   };
 
   // Helper function to format date string for display
   const formatDateString = (dateString: string): string => {
-    const [year, month, day] = dateString.split('-');
-    const monthNames = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-    ];
-    return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}, ${year}`;
+    // If API already formatted it or it's invalid, return as-is
+    if (!dateString || dateString === 'Invalid Date' || !dateString.includes('-')) {
+      return dateString || 'Invalid Date';
+    }
+
+    try {
+      const [year, month, day] = dateString.split('-');
+      const monthNames = [
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      ];
+      return `${monthNames[parseInt(month) - 1]} ${parseInt(day)}, ${year}`;
+    } catch (error) {
+      return 'Invalid Date';
+    }
   };
 
   // Helper function to format time string for display
   const formatTimeString = (timeString: string): string => {
-    const [hours, minutes] = timeString.split(':').map(Number);
-    const period = hours >= 12 ? 'PM' : 'AM';
-    const displayHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
-    return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
+    // If API already formatted it or it's invalid, return as-is
+    if (!timeString || timeString === 'Invalid Time' || !timeString.includes(':')) {
+      return timeString || 'Invalid Time';
+    }
+
+    try {
+      const [hours, minutes] = timeString.split(':').map(Number);
+      
+      if (isNaN(hours) || isNaN(minutes)) {
+        return 'Invalid Time';
+      }
+
+      const period = hours >= 12 ? 'PM' : 'AM';
+      const displayHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
+      return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
+    } catch (error) {
+      return 'Invalid Time';
+    }
   };
 
   // Admin tabs configuration  
@@ -494,10 +534,10 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                       {/* Date & Time */}
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">
-                          {formatDateString(booking.date)}
+                          {booking.formattedDate || formatDateString(booking.date)}
                         </div>
                         <div className="text-sm text-gray-500">
-                          {formatTimeString(booking.time)}
+                          {booking.formattedTime || formatTimeString(booking.time)}
                         </div>
                       </td>
 
@@ -622,11 +662,11 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="flex items-center text-sm text-gray-900">
                       <Calendar className="w-4 h-4 mr-2 text-gray-400" />
-                      {formatDateString(selectedBooking.date)}
+                      {selectedBooking.formattedDate || formatDateString(selectedBooking.date)}
                     </div>
                     <div className="flex items-center text-sm text-gray-900">
                       <Clock className="w-4 h-4 mr-2 text-gray-400" />
-                      {formatTimeString(selectedBooking.time)}
+                      {selectedBooking.formattedTime || formatTimeString(selectedBooking.time)}
                     </div>
                   </div>
                 </div>
@@ -680,7 +720,20 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                     <div>
                       <span className="text-gray-600">Created:</span>
                       <div className="text-gray-900">
-                        {formatDateString(selectedBooking.createdAt.split('T')[0])}
+                        {(() => {
+                          try {
+                            // Handle both ISO strings and date strings
+                            if (selectedBooking.createdAt.includes('T')) {
+                              return formatDateString(selectedBooking.createdAt.split('T')[0]);
+                            } else if (selectedBooking.createdAt.includes('-')) {
+                              return formatDateString(selectedBooking.createdAt);
+                            } else {
+                              return new Date(selectedBooking.createdAt).toLocaleDateString();
+                            }
+                          } catch (error) {
+                            return 'Invalid Date';
+                          }
+                        })()}
                       </div>
                     </div>
                   </div>
@@ -713,7 +766,7 @@ export default function BookingsPage({ lang, dictionary }: BookingsPageProps) {
                   </span>
                   <br />
                   <span className="text-sm text-gray-600">
-                    {formatDateString(bookingToCancel.date)} at {formatTimeString(bookingToCancel.time)}
+                    {bookingToCancel.formattedDate || formatDateString(bookingToCancel.date)} at {bookingToCancel.formattedTime || formatTimeString(bookingToCancel.time)}
                   </span>
                 </>
               )}

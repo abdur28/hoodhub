@@ -8,8 +8,18 @@ import {
 } from "@/lib/email";
 
 // Helper function to format date string for display
-function formatDateString(dateString: string): string {
-  const [year, month, day] = dateString.split('-');
+function formatDateString(dateString?: string): string {
+  // Handle null, undefined, or invalid date strings
+  if (!dateString || typeof dateString !== 'string' || !dateString.includes('-')) {
+    return 'Invalid Date';
+  }
+
+  const parts = dateString.split('-');
+  if (parts.length !== 3) {
+    return 'Invalid Date';
+  }
+
+  const [year, month, day] = parts;
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
@@ -20,20 +30,85 @@ function formatDateString(dateString: string): string {
     'Thursday', 'Friday', 'Saturday'
   ];
   
-  // Create date to get day of week (but keep date as string)
-  const [y, m, d] = [parseInt(year), parseInt(month) - 1, parseInt(day)];
-  const dateObj = new Date(y, m, d);
-  const dayOfWeek = dayNames[dateObj.getDay()];
+  // Validate year, month, day
+  const y = parseInt(year);
+  const m = parseInt(month);
+  const d = parseInt(day);
   
-  return `${dayOfWeek}, ${monthNames[parseInt(month) - 1]} ${parseInt(day)}, ${year}`;
+  if (isNaN(y) || isNaN(m) || isNaN(d) || m < 1 || m > 12 || d < 1 || d > 31) {
+    return 'Invalid Date';
+  }
+  
+  // Create date to get day of week (but keep date as string)
+  try {
+    const dateObj = new Date(y, m - 1, d);
+    const dayOfWeek = dayNames[dateObj.getDay()];
+    return `${dayOfWeek}, ${monthNames[m - 1]} ${d}, ${y}`;
+  } catch (error) {
+    return 'Invalid Date';
+  }
 }
 
 // Helper function to format time string for display
-function formatTimeString(timeString: string): string {
-  const [hours, minutes] = timeString.split(':').map(Number);
+function formatTimeString(timeString?: string): string {
+  // Handle null, undefined, or invalid time strings
+  if (!timeString || typeof timeString !== 'string' || !timeString.includes(':')) {
+    return 'Invalid Time';
+  }
+
+  const parts = timeString.split(':');
+  if (parts.length < 2) {
+    return 'Invalid Time';
+  }
+
+  const hours = parseInt(parts[0]);
+  const minutes = parseInt(parts[1]);
+  
+  if (isNaN(hours) || isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+    return 'Invalid Time';
+  }
+
   const period = hours >= 12 ? 'PM' : 'AM';
   const displayHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
   return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
+}
+
+// Helper function to extract date and time from various booking formats
+function extractDateAndTime(booking: any): { date: string; time: string } {
+  // First, try to use date and time fields directly
+  if (booking.date && booking.time) {
+    return { date: booking.date, time: booking.time };
+  }
+  
+  // If not available, try to extract from dateTime field
+  if (booking.dateTime) {
+    try {
+      let dateTimeStr: string;
+      if (typeof booking.dateTime === 'string') {
+        dateTimeStr = booking.dateTime;
+      } else if (booking.dateTime instanceof Date) {
+        dateTimeStr = booking.dateTime.toISOString();
+      } else {
+        // Assume it's a MongoDB date object
+        dateTimeStr = new Date(booking.dateTime).toISOString();
+      }
+      
+      // Extract date and time from ISO string
+      const [datePart, timePart] = dateTimeStr.split('T');
+      const time = timePart ? timePart.substring(0, 5) : '00:00'; // Get HH:MM
+      
+      return { date: datePart, time };
+    } catch (error) {
+      console.error('Error parsing dateTime:', error);
+    }
+  }
+  
+  // Fallback to current date/time
+  const now = new Date();
+  const date = now.toISOString().split('T')[0]; // YYYY-MM-DD
+  const time = now.toTimeString().split(' ')[0].substring(0, 5); // HH:MM
+  
+  return { date, time };
 }
 
 // GET: Fetch all bookings for admin
@@ -103,16 +178,14 @@ export async function GET(request: NextRequest) {
 
     // Format bookings for response with multiple services support
     const formattedBookings = bookings.map(booking => {
+      // Extract date and time safely from various formats
+      const { date, time } = extractDateAndTime(booking);
+
       // Handle dateTime construction but keep as string
       let dateTimeString: string;
-      if (booking.date && booking.time) {
+      if (date && time) {
         // Construct ISO-like string but keep it simple
-        dateTimeString = `${booking.date}T${booking.time}:00`;
-      } else if (booking.dateTime) {
-        // Use existing dateTime field as string
-        dateTimeString = typeof booking.dateTime === 'string' 
-          ? booking.dateTime
-          : booking.dateTime.toISOString();
+        dateTimeString = `${date}T${time}:00`;
       } else {
         // Fallback to current date/time as string
         const now = new Date();
@@ -140,12 +213,12 @@ export async function GET(request: NextRequest) {
         clerkId: booking.clerkId,
         services: services, // Always return as array
         service: services[0], // Keep legacy compatibility with first service
-        date: booking.date,
-        time: booking.time,
+        date: date,
+        time: time,
         comment: booking.comment || null, // Include comment
         dateTime: dateTimeString,
-        formattedDate: formatDateString(booking.date),
-        formattedTime: formatTimeString(booking.time),
+        formattedDate: formatDateString(date),
+        formattedTime: formatTimeString(time),
         createdAt: booking.createdAt,
         referral: booking.referral || null,
         user: booking.user
@@ -264,8 +337,9 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Format date and time for emails using string functions
-    const formattedDate = formatDateString(booking.date);
-    const formattedTime = formatTimeString(booking.time);
+    const { date, time } = extractDateAndTime(booking);
+    const formattedDate = formatDateString(date);
+    const formattedTime = formatTimeString(time);
 
     // Handle service names for email (support both old and new formats)
     let serviceNames = '';
