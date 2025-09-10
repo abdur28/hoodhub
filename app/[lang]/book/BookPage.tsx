@@ -74,10 +74,12 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
 
   // Services with translated names (categories removed)
   const services = [
+    { id: "homeServices", name: dictionary.book.services.homeServices },
     { id: "barbing", name: dictionary.book.services.barbing },
     { id: "braids", name: dictionary.book.services.braids },  
     { id: "twists", name: dictionary.book.services.twists },
     { id: "locs", name: dictionary.book.services.locs },
+    { id: "HairWash", name: dictionary.book.services.HairWash },
     { id: "detox-hairCare", name: dictionary.book.services.detoxHairCare },
     { id: "manicure", name: dictionary.book.services.manicure },
     { id: "pedicure", name: dictionary.book.services.pedicure },
@@ -280,6 +282,14 @@ const BookPage = ({ lang, dictionary, userAsString, selectedService, referral }:
         icon: <AlertTriangle className="w-4 h-4" />,
       });
       return;
+    }
+
+    if (selectedServiceIds.length === 1 && selectedServiceIds[0] === "homeServices") {
+      toast.warning("Please choose more than one service for home services", {
+        description: dictionary.book.alerts.selectAll,
+        icon: <AlertTriangle className="w-4 h-4" />,
+      })     
+      return; 
     }
 
     setIsLoading(true);

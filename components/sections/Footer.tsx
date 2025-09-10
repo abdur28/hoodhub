@@ -447,12 +447,14 @@ const Footer = ({ lang, dictionary }: FooterProps) => {
 
               {/* Legal Links */}
               <motion.div
-                className="flex flex-wrap items-center gap-6"
+                className="flex flex-wrap items-center justify-center gap-6"
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
                 viewport={{ once: true }}
               >
+                  <p className="font-franklin text-gray-600 text-xs">{`ИП: ФАСУЙИ ТАЙВО СТЕФАН`}</p>
+                  <p className="text-gray-600 font-franklin text-xs">{`ИНН: 771998885605`}</p>
                 {legalLinks.map((link, index) => (
                   <Link
                     key={index}

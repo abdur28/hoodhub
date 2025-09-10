@@ -952,6 +952,8 @@
         "days": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
       },
       "services": {
+        "homeServices": "Home Services",
+        "HairWash": "Hair Wash",
         "barbing": "Professional Barbing",
         "braids": "Braids",
         "twists": "Twists",
