@@ -4,6 +4,9 @@ import { motion } from "motion/react";
 import { ImageCard } from "@/components/ui/carousel";
 import { aboutData, getLocalizedData } from "@/constants";
 import type { Dictionary } from "@/app/[lang]/dictionaries";
+import Link from "next/link";
+import { Button } from "../ui/button";
+import { Calendar } from "lucide-react";
 
 interface AboutProps {
   lang: string;
@@ -39,6 +42,26 @@ const About = ({ lang, dictionary }: AboutProps) => {
         >
           {dictionary.home.about.subtitle}
         </motion.p>
+
+                  {/* CTA Buttons */}
+          <motion.div
+            className="flex gap-4 mt-8 -mb-4 md:gap-6 justify-start items-center"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            viewport={{ once: true }}
+          >
+            {/* Primary CTA */}
+            <Link href={`/${lang}/book`} className="group">
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-black font-franklin font-semibold px-8 md:px-10 py-3 md:py-4 text-base md:text-lg hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl group min-w-[200px]"
+              >
+                <Calendar className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" />
+                {dictionary.buttons.bookAppointment}
+              </Button>
+            </Link>
+          </motion.div>
       </div>
 
       {/* Responsive Grid */}

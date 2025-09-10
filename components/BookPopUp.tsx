@@ -61,7 +61,7 @@ const BookPopUp = ({ lang, dictionary }: BookPopUpProps) => {
                         </div>
 
                         {/* Book Button */}
-                        <Link href={`/${lang}/book?service=barbing`} className="group w-full">
+                        <Link href={`/${lang}/book`} className="group w-full">
                             <button className="w-full h-12 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 hover:from-yellow-500 hover:via-yellow-600 hover:to-yellow-700 text-black font-franklin font-semibold rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2">
                                 <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300">
                                     <path d="M8 2V5M16 2V5M3.5 9.09H20.5M21 8.5V17C21 20 19.5 22 16 22H8C4.5 22 3 20 3 17V8.5C3 5.5 4.5 3.5 8 3.5H16C19.5 3.5 21 5.5 21 8.5Z" stroke="currentColor" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
