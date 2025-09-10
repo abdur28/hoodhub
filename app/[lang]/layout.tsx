@@ -7,6 +7,7 @@ import { ClerkProvider } from '@clerk/nextjs'
 import WhatsappPopUp from "@/components/WhatsappPopUp";
 import { getDictionary } from './dictionaries';
 import { Toaster } from "@/components/ui/sonner";
+import BookPopUp from "@/components/BookPopUp";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -72,6 +73,7 @@ export default async function RootLayout({
         >
           {children}
           <Toaster richColors />
+          <BookPopUp lang={lang} dictionary={dictionary} />
           <WhatsappPopUp lang={lang} dictionary={dictionary} />
           <Footer lang={lang} dictionary={dictionary} />
         </body>

@@ -1043,6 +1043,12 @@
       "helpMessage": "How can We help you?",
       "openChat": "Open Chat"
     },
+    "bookingButton": {
+      "greeting": "Ready for a fresh look?",
+        "helpMessage": "Book your appointment now!",
+        "bookNow": "Book Now",
+        "quickBook": "Quick Booking"
+    },
     "admin": {
       "title": "Admin Dashboard",
       "subtitle": "Manage your business operations",
