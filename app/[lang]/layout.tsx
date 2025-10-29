@@ -60,16 +60,6 @@ export default async function RootLayout({
 }) {
   const { lang } = await params;
   const dictionary = await getDictionary(lang as 'en' | 'ru');
-
-    return (
-    <html lang={lang}>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${franklinGothic.variable} font-franklin antialiased`}
-      >
-        
-      </body>
-    </html>
-  );
   
   return (
     <ClerkProvider>
