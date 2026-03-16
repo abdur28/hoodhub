@@ -9,7 +9,7 @@
 ## Screenshots
 
 ### Homepage & Services
-![HoodHub Homepage](screenshot.png)
+![HoodHub Homepage](hoodhub.png)
 *Service categories: Barbing, Braids & Locks, Tattoo, Clothing, and Lifestyle (Manicure & Pedicure)*
 
 ---
