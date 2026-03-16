@@ -9,7 +9,7 @@
 ## Screenshots
 
 ### Homepage & Services
-![HoodHub Homepage](hoodhub.ru-HoodHub - Premium Fashion  Lifestyle Services-cvscreenshot.png)
+![HoodHub Homepage](./hoodhub.ru-HoodHub - Premium Fashion  Lifestyle Services-cvscreenshot.png)
 *Service categories: Barbing, Braids & Locks, Tattoo, Clothing, and Lifestyle (Manicure & Pedicure)*
 
 ---
