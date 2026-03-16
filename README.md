@@ -2,7 +2,7 @@
 
 > Where Style Meets Artistry. A full-service platform for barbing, braids & locs, tattoos, clothing, and lifestyle services — with online booking, multi-language support, and an admin dashboard.
 
-**Live:** [hoodhub.vercel.app](https://hoodhub.vercel.app)
+**Live:** [hoodhub](https://hoodhub.ru)
 
 ---
 
