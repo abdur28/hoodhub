@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HoodHub — Premium Fashion & Lifestyle Services
 
-## Getting Started
+> Where Style Meets Artistry. A full-service platform for barbing, braids & locs, tattoos, clothing, and lifestyle services — with online booking, multi-language support, and an admin dashboard.
 
-First, run the development server:
+**Live:** [hoodhub.vercel.app](https://hoodhub.vercel.app)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## Screenshots
+
+### Homepage & Services
+![HoodHub Homepage](screenshots/hoodhub-hero.png)
+*Service categories: Barbing, Braids & Locks, Tattoo, Clothing, and Lifestyle (Manicure & Pedicure)*
+
+---
+
+## What This Is
+
+HoodHub is the digital presence and booking platform for a premium fashion & lifestyle studio. It handles everything from showcasing services to letting customers book appointments online — all wrapped in a dark, editorial design that matches the brand's identity.
+
+This isn't a template. I built it from scratch for a real business that needed its physical brand translated into a web experience.
+
+## Key Features
+
+### Service Showcase
+Each service category — Barbing, Braids & Locks, Tattoo, Clothing Store, and Lifestyle (Manicure & Pedicure) — has its own dedicated section with a visual gallery, service descriptions, and pricing.
+
+### Online Booking System
+Customers can book appointments directly through the site. The booking flow handles service selection, date/time picking, and confirmation — integrated with WhatsApp for instant communication.
+
+### Multi-Language Support (i18n)
+The entire site is fully internationalized with a `[lang]` route parameter and a dictionaries system. Currently supports English and Russian, with the architecture ready for additional languages.
+
+### Admin Dashboard
+A protected admin panel for managing bookings, updating service information, and monitoring site activity. Role-based access ensures only authorized users can modify content.
+
+### Authentication
+Full auth flow with registration, login, and session management for both customers (booking history) and admin users.
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| **Framework** | Next.js 14 (App Router) |
+| **Styling** | TailwindCSS |
+| **Language** | TypeScript |
+| **i18n** | Custom dictionary-based system with `[lang]` routing |
+| **Auth** | Next-Auth / Custom auth |
+| **Email** | Transactional email integration |
+| **Deployment** | Vercel |
+| **SEO** | Dynamic sitemap, robots.txt, Yandex verification |
+
+## Architecture
+
+```
+app/
+├── [lang]/              # Internationalized routes
+│   ├── (auth)/          # Login, register
+│   ├── (legal)/         # Terms, privacy
+│   ├── admin/           # Admin dashboard
+│   ├── barbing/         # Barbing services
+│   ├── braids-locs/     # Braids & locks services
+│   ├── book/            # Booking flow
+│   ├── bookings/        # Booking management
+│   ├── contact/         # Contact page
+│   ├── dictionaries/    # i18n translation files
+│   ├── faq/             # FAQ section
+│   └── lifestyle/       # Lifestyle services
+├── api/                 # API routes
+├── components/          # Shared UI components
+├── constants/           # Site configuration
+├── emails/              # Email templates
+└── lib/                 # Utilities and helpers
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technical Decisions
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**Why `[lang]` routing over `next-intl`?** Full control over the translation pipeline without external dependencies. Each route is prefixed with a locale code, and dictionary files are loaded server-side — keeping the bundle lean.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Why server-side email templates?** Booking confirmations and admin notifications need to be reliable. Server-side rendering of email templates ensures consistent formatting across email clients.
 
-## Learn More
+## What I'd Improve
 
-To learn more about Next.js, take a look at the following resources:
+- **Add Stripe/Paystack for prepaid bookings** — currently bookings are pay-at-venue
+- **Build a CMS layer** — let the business owner update gallery photos and pricing without code changes
+- **Add automated testing** — Cypress for the booking flow, Jest for utility functions
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Built by [Abdurrahman Idris](https://abdurrahmanidris.com)** — Full Stack Developer
